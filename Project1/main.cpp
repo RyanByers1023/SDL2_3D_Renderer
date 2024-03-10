@@ -8,7 +8,7 @@
 #include "GlobalCoordinateSystem.h"
 
 int SDL_main(int arg, char* args[]) {
-	Screen screen(640, 480); //create the window, make it 640x480 resolution
+	Screen screen(1280, 720); //create the window, parameters indicate resolution
 	vec3 centerOfScreen = { screen.width / 2, screen.height / 2, 0};
 	Cube cube(screen, centerOfScreen, 100); //create a 100px x 100px x 100px cube in the center of the screen
 
