@@ -23,3 +23,5 @@ int SDL_main(int arg, char* args[]) {
 }
 
 //use the arrow keys to spin the box around
+
+//NOTE: The next thing I need to do is program a projection matrix. This will involve developement of a function that allows the capability of matrix multiplication
