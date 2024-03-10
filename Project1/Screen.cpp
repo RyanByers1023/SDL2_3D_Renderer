@@ -5,9 +5,8 @@ Screen::Screen(int screenWidth, int screenHeight) {
 	this->height = screenHeight;
 
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
-	SDL_SetWindowTitle(window, "SDL2 3-D Graphics Test");
-	SDL_RenderSetScale(renderer, 2, 2);
+	window = SDL_CreateWindow("SDL2 3-D Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+	renderer = SDL_CreateRenderer(window, -1, 0);
 }
 
 void Screen::CreatePixel(float x, float y) {
