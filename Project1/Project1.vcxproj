@@ -135,7 +135,6 @@
   <ItemGroup>
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Line.cpp" />
-    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="vertex.cpp" />
@@ -143,7 +142,6 @@
   <ItemGroup>
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Line.h" />
-    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
