@@ -19,6 +19,6 @@ private:
 	Screen* screenPtr; //this is the screen value that is used across many functions
 	mesh cubeMesh; //the mesh of the cube is stored here. Made up entirely of triangle objects. Triangle objects store 3 coordinates in 3 space. these are stored as vec3s. vec3s are float(x, y, z)
 	vec3 centeroid; //center coordinate of the cube. May return this as the position later on. Undecided if this would be a smart idea or not. Would be helpful in detecting collisions at least
-	vec3 position; //this may be = to the centeroid. For now, this = the north face, bottom left vertice.
+	vec3 position; //this may be = to the centeroid. For now, this = the north face, bottom left vertice. The user provides this value when creating the cube.
 	vec3 vertices[8]; //stores all of the vertices (corner points) of the cube, there are 8 vertices in a cube. Very helpful for calculating centeroid.
 };
