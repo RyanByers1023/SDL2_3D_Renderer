@@ -8,9 +8,9 @@
 #include "GlobalCoordinateSystem.h"
 
 int SDL_main(int arg, char* args[]) {
-	Screen screen(1280, 720); //create the window, parameters indicate resolution
-	vec3 centerOfScreen = { screen.width / 2, screen.height / 2, 0};
-	Cube cube(screen, centerOfScreen, 100); //create a 100px x 100px x 100px cube in the center of the screen
+	Screen screen(1280, 720); //create the window, parameters indicate resolution (width, height)
+	vec3 centerOfScreen = { screen.width / 2, screen.height / 2, 0}; //store the center of the screen
+	Cube cube(screen, centerOfScreen, 100); //create a 100px x 100px x 100px cube in the center of the screen. parameters: (Screen object, position to spawn object (vec3), size of cube (int in pixels))
 
 	while (true) {
 		cube.Draw(); //this adds all of the pixels needed to draw the cube into screen.vertices
