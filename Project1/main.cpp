@@ -38,7 +38,12 @@ int SDL_main(int arg, char* args[]) {
 		//	deltaTime = (currTime - prevTime)
 		//	prevTime = currTime
 
-		//deltaTime can be an attribute of screen. call using screen.deltaTime		
+		//deltaTime can be an attribute of screen. call using screen.deltaTime
+
+		/*milliseconds ms = duration_cast< milliseconds >(
+    		system_clock::now().time_since_epoch()
+		);*/
+		//above code can be used to retrieve time since 1970
 	}
 	return 0;
 }
