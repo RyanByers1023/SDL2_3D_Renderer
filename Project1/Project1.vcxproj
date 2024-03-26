@@ -136,12 +136,14 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Line.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>

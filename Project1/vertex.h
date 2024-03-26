@@ -6,23 +6,7 @@ struct vec3 {
 	float x, y, z;
 };
 
-struct mat4x4 {
-	float m[4][4] = { 0 };
-};
 
-mat4x4 multiplyMatrices(const mat4x4& mat1, const mat4x4& mat2) {
-	mat4x4 result;
-
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			for (int k = 0; k < 4; ++k) {
-				result.m[i][j] += mat1.m[i][k] * mat2.m[k][j];
-			}
-		}
-	}
-
-	return result;
-}
 
 
 class vertex {

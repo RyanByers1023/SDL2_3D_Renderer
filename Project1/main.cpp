@@ -5,12 +5,28 @@
 #include "Line.h"
 #include "vertex.h"
 #include "Cube.h"
-#include "GlobalCoordinateSystem.h"
+#include "Matrix.h"
 
 int SDL_main(int arg, char* args[]) {
 	Screen screen(1280, 720); //create the window, parameters indicate resolution
 	vec3 centerOfScreen = { screen.width / 2, screen.height / 2, 0};
 	Cube cube(screen, centerOfScreen, 100); //create a 100px x 100px x 100px cube in the center of the screen
+
+	//projection matrix
+	float fNear = 0.1f;
+	float fFar = 1000.0f;
+	float fFov = 90.0f;
+	float fAspectRation = screen.height / screen.width;
+	float fFovRad = 1.0f / tanf(fFov * 0.5f / 180.0f * 3.14159f);
+
+	Matrix matProj;
+
+	matProj.matrix[0][0] = fAspectRation * fFovRad;
+	matProj.matrix[1][1] = fFovRad;
+	matProj.matrix[2][2] = fFar / (fFar - fNear);
+	matProj.matrix[3][2] = (-fFar * fNear) / (fFar - fNear);
+	matProj.matrix[2][3] = 1.0f;
+	matProj.matrix[3][3] = 0.0f;
 
 	while (true) {
 		cube.Draw(); //this adds all of the pixels needed to draw the cube into screen.vertices
