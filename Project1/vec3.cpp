@@ -1,22 +1,25 @@
-#include "vertex.h"
+#include "vec3.h"
 #include <vector>
 
-vertex::vertex(float x, float y, float z) {
+vec3::vec3() {
+	this->x = 0;
+	this->y = 0;
+	this->z = 0;
+}
+
+vec3::vec3(float x, float y, float z) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
-	vec3 newPoint = { x, y, z };
-	this->point = newPoint;
 }
 
-vertex::vertex(vec3 point) {
-	this->x = point.x;
-	this->y = point.y;
-	this->z = point.z;
-	this->point = point;
+vec3::vec3(int x, int y, int z) {
+	this->x = static_cast<float>(x);
+	this->y = static_cast<float>(y);
+	this->z = static_cast<float>(z);
 }
 
-void vertex::rotate(vec3 rotationVector) { //values x, y, and z must = desired rotations in radians.
+void vec3::rotate(vec3 rotationVector) { //values x, y, and z must = desired rotations in radians.
 	float rad = 0;
 
 	rad = rotationVector.x;

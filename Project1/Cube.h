@@ -1,13 +1,15 @@
 #pragma once
 #include "screen.h"
-#include "vertex.h"
+#include "vec3.h"
 #include "Line.h"
+#include "Matrix.h"
+#include <iostream>
 #include <vector>
 
 class Cube { //i will eventually create a generic object class that will contain most of these methods as these will be used for more basic shapes than the cube. Anything marked GENERIC is fair game for inclusion
 public:
 	//constructor
-	Cube(Screen& screen, vec3 position = {0, 0, 0}, float size = 1);
+	Cube(Screen& screen, vec3 position = {0.0f, 0.0f, 0.0f}, float size = 1);
 	//public methods
 	void Draw(); //this passes all vertices and the pixels between them to the screen.vertices list. //GENERIC
 	vec3 GetPosition(); //will return (x,y,z) coordinates. Undecided whether I should return north face bottom left or centeroid. //GENERIC

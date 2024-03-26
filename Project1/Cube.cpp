@@ -45,15 +45,39 @@ Cube::Cube(Screen& screen, vec3 position, float size){ //default dimensions: 1px
 }
 
 void Cube::Draw() {
-	for (auto& triangle : cubeMesh.triangles) {
-		float x1 = triangle.p[0].x;
-		float y1 = triangle.p[0].y;
+	for (auto& tri : cubeMesh.triangles) {
+		Matrix4x4 projMatrix = screenPtr->projMatrix;
+		
+		//THIS IS THE PROBLEM
+		vec3 projectedVertex1; projMatrix.MultiplyVec3Matrix4x4(tri.p[0], projectedVertex1);
+		vec3 projectedVertex2; projMatrix.MultiplyVec3Matrix4x4(tri.p[1], projectedVertex2);
+		vec3 projectedVertex3; projMatrix.MultiplyVec3Matrix4x4(tri.p[2], projectedVertex3);
 
-		float x2 = triangle.p[1].x;
-		float y2 = triangle.p[1].y;
+		triangle projectedTriangle = { projectedVertex1, projectedVertex2, projectedVertex3 };
 
-		float x3 = triangle.p[2].x;
-		float y3 = triangle.p[2].y;
+		//need to scale the triangle into view
+		projectedTriangle.p[0].x += 1.0f; projectedTriangle.p[0].y += 1.0f;
+		projectedTriangle.p[1].x += 1.0f; projectedTriangle.p[1].y += 1.0f;
+		projectedTriangle.p[2].x += 1.0f; projectedTriangle.p[2].y += 1.0f;
+
+		float halfScreenWidth = static_cast<float>(screenPtr->width) * 0.5f;
+		float halfScreenHeight = static_cast<float>(screenPtr->height) * 0.5f;
+
+		projectedTriangle.p[0].x *= halfScreenWidth;
+		projectedTriangle.p[0].y *= halfScreenHeight;
+		projectedTriangle.p[1].x *= halfScreenWidth;
+		projectedTriangle.p[1].y *= halfScreenHeight;
+		projectedTriangle.p[2].x *= halfScreenWidth;
+		projectedTriangle.p[2].y *= halfScreenHeight;
+
+		float x1 = projectedTriangle.p[0].x;
+		float y1 = projectedTriangle.p[0].y;
+
+		float x2 = projectedTriangle.p[1].x;
+		float y2 = projectedTriangle.p[1].y;
+
+		float x3 = projectedTriangle.p[2].x;
+		float y3 = projectedTriangle.p[2].y;
 
 		Line line1(*screenPtr, x1, y1, x2, y2); //first line of triangle (side a)
 		line1.Draw();
@@ -101,19 +125,19 @@ void Cube::Rotate() {
 		}
 		for (int i = 0; i < 3; i++) {
 			if (screenPtr->leftInput) {	
-				vec3 leftRotation = { 0.000 , negativeRotation, 0 };
+				vec3 leftRotation = { 0.00f, negativeRotation, 0.00f };;
 				triangle.p[i].rotate(leftRotation); //rotate right
 			}
 			if (screenPtr->rightInput) {
-				vec3 rightRotation = { 0.000, positiveRotation, 0 };
+				vec3 rightRotation = { 0.00f, positiveRotation, 0.00f };
 				triangle.p[i].rotate(rightRotation); //rotate left
 			}
 			if (screenPtr->upInput) {
-				vec3 upRotation = { positiveRotation, 0.000, 0 };
+				vec3 upRotation = { positiveRotation, 0.00f, 0.00f };
 				triangle.p[i].rotate(upRotation); //rotate upwards
 			}
 			if (screenPtr->downInput) {
-				vec3 downRotation = { negativeRotation, 0.000, 0 };
+				vec3 downRotation = { negativeRotation, 0.00f, 0.00f };
 				triangle.p[i].rotate(downRotation); //rotate downwards
 			}	
 		}

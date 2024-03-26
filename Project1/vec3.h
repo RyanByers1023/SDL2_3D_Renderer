@@ -2,31 +2,22 @@
 #include <cmath>
 #include <vector>
 
-struct vec3 {
-	float x, y, z;
-};
-
-
-
-
-class vertex {
+class vec3 {
 public:
 	//contructors
-	vertex(float x, float y, float z);
-	vertex(vec3 point);
+	vec3();
+	vec3(float x, float y, float z);
+	vec3(int x, int y, int z);
 	//public attributes
 	float x;
 	float y;
 	float z;
 	//public methods
 	void rotate(vec3 rotationVector);
-private:
-	//private attributes
-	vec3 point;
 };
 
 struct triangle {
-	vertex p[3];
+	vec3 p[3];
 };
 
 struct mesh {

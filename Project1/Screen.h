@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <vector>
 #include <chrono>
+#include "Matrix.h"
 
 class Screen {
 private:
@@ -10,6 +11,7 @@ private:
 	SDL_Renderer* renderer;
 	std::vector<SDL_FPoint> vertices;
 	std::chrono::steady_clock::time_point prevTime;
+	
 public:
 	Screen(int screenWidth, int screenHeight); //initialize SDL_VIDEO, create window and renderer, and set scale of renderer
 	void CreatePixel(float x, float y); //enter new vertex into vertices vector
@@ -31,4 +33,6 @@ public:
 	bool dInput = false;
 
 	float deltaTime;
+
+	Matrix4x4 projMatrix;
 };

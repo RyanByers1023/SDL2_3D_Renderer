@@ -3,30 +3,32 @@
 #include <SDL.h>
 #include "Screen.h"
 #include "Line.h"
-#include "vertex.h"
+#include "vec3.h"
 #include "Cube.h"
 #include "Matrix.h"
 
 int SDL_main(int arg, char* args[]) {
 	Screen screen(1280, 720); //create the window, parameters indicate resolution (width, height)
-	vec3 centerOfScreen = { screen.width / 2, screen.height / 2, 0}; //store the center of the screen
-	Cube cube(screen, centerOfScreen, 100); //create a 100px x 100px x 100px cube in the center of the screen. parameters: (Screen object, position to spawn object (vec3), size of cube (int in pixels))
-
-	//projection matrix
+	
+	// Projection matrix construction
 	float fNear = 0.1f;
 	float fFar = 1000.0f;
 	float fFov = 90.0f;
-	float fAspectRation = screen.height / screen.width;
+	float fAspectRatio = static_cast<float>(screen.height) / screen.width;
 	float fFovRad = 1.0f / tanf(fFov * 0.5f / 180.0f * 3.14159f);
 
-	Matrix matProj;
+	Matrix4x4 projMatrix;
 
-	matProj.matrix[0][0] = fAspectRation * fFovRad;
-	matProj.matrix[1][1] = fFovRad;
-	matProj.matrix[2][2] = fFar / (fFar - fNear);
-	matProj.matrix[3][2] = (-fFar * fNear) / (fFar - fNear);
-	matProj.matrix[2][3] = 1.0f;
-	matProj.matrix[3][3] = 0.0f;
+	projMatrix.matrix[0][0] = fAspectRatio * fFovRad;
+	projMatrix.matrix[1][1] = fFovRad;
+	projMatrix.matrix[2][2] = fFar / (fFar - fNear);
+	projMatrix.matrix[3][2] = (-fFar * fNear) / (fFar - fNear);
+	projMatrix.matrix[2][3] = 1.0f;
+	projMatrix.matrix[3][3] = 0.0f;
+
+	screen.projMatrix = projMatrix;
+
+	Cube cube(screen, { 20.0f, 40.0f, 90.0f }, 100); //create a 100px x 100px x 100px cube in the center of the screen. parameters: (Screen object, position to spawn object (vec3), size of cube (int in pixels))
 
 	while (true) {
 		screen.CalcDeltaTime(); //calculate the time since the last frame has occured
@@ -40,5 +42,3 @@ int SDL_main(int arg, char* args[]) {
 }
 
 //use the arrow keys to spin the box around
-
-//NOTE: The next thing I need to do is program a projection matrix. This will involve developement of a function that allows the capability of matrix multiplication
