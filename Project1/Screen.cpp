@@ -98,3 +98,16 @@ void Screen::CheckForInput() {
 	}
 }
 
+//need time since last update (store as msec since last update as a float, deltaTime)
+//any changes made using frame changes as a unit of time need to be multiplied by deltaTime (i think this is commonly referred to as normalization)
+//possible that it may be efficient to store this value, deltaTime, in screen as an attribute eg. screen.deltaTime.
+//reasoning: screen is passed to mostly everything as this is a required parameter of most if not all of the SDL2 methods i am using, so I may as well store it here if I need such constant access to it
+//this (deltaTime) will have the effect of making both physics calculations and any transformations, rotations, etc. not change their speed when framerate increases (increase in speed) or when the framerate decreases (decrease in speed)
+//the framerate will fluctuate depending on the hardware used to run the simulation. dont want this. deltaTime should solve this dilemma.
+
+void Screen::CalcDeltaTime() {
+	std::chrono::milliseconds currTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()); //gets time in msec since last epoch (1970)
+	deltaTime = (currTime - prevTime); //calculate the time since the last frame
+	prevTime = currTime; //make the prevTime msec value = to the current time for use in the next iteration
+}
+
