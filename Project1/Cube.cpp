@@ -88,6 +88,11 @@ void Cube::CalcCenteroid() {
 }
 
 void Cube::Rotate() {
+	float negativeRotation = -1.0;
+	float positiveRotation = 1.0;
+	negativeRotation *= screenPtr->deltaTime;
+	positiveRotation *= screenPtr->deltaTime;
+
 	for (auto& triangle : cubeMesh.triangles) {
 		for (int i = 0; i < 3; i++) {
 			triangle.p[i].x -= centeroid.x;
@@ -96,16 +101,20 @@ void Cube::Rotate() {
 		}
 		for (int i = 0; i < 3; i++) {
 			if (screenPtr->leftInput) {	
-				triangle.p[i].rotate(0.000, -0.010, 0); //rotate right
+				vec3 leftRotation = { 0.000 , negativeRotation, 0 };
+				triangle.p[i].rotate(leftRotation); //rotate right
 			}
 			if (screenPtr->rightInput) {
-				triangle.p[i].rotate(0.000, 0.010, 0); //rotate left
+				vec3 rightRotation = { 0.000, positiveRotation, 0 };
+				triangle.p[i].rotate(rightRotation); //rotate left
 			}
 			if (screenPtr->upInput) {
-				triangle.p[i].rotate(0.010, 0.000, 0); //rotate upwards
+				vec3 upRotation = { positiveRotation, 0.000, 0 };
+				triangle.p[i].rotate(upRotation); //rotate upwards
 			}
 			if (screenPtr->downInput) {
-				triangle.p[i].rotate(-0.010, 0.000, 0); //rotate downwards
+				vec3 downRotation = { negativeRotation, 0.000, 0 };
+				triangle.p[i].rotate(downRotation); //rotate downwards
 			}	
 		}
 		for (int i = 0; i < 3; i++) {

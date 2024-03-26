@@ -2,8 +2,6 @@
 
 class Matrix {
 public:
-	//default contructor
-	Matrix();
 	//operator overloaders
 	Matrix operator*(const Matrix& other);
 	Matrix operator=(const Matrix& other);

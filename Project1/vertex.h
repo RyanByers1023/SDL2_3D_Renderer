@@ -19,7 +19,7 @@ public:
 	float y;
 	float z;
 	//public methods
-	void rotate(float x, float y, float z);
+	void rotate(vec3 rotationVector);
 private:
 	//private attributes
 	vec3 point;

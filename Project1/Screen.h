@@ -9,7 +9,7 @@ private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	std::vector<SDL_FPoint> vertices;
-	std::chrono::milliseconds prevTime;
+	std::chrono::steady_clock::time_point prevTime;
 public:
 	Screen(int screenWidth, int screenHeight); //initialize SDL_VIDEO, create window and renderer, and set scale of renderer
 	void CreatePixel(float x, float y); //enter new vertex into vertices vector
@@ -29,6 +29,6 @@ public:
 	bool aInput = false;
 	bool sInput = false;
 	bool dInput = false;
-	
-	std::chrono::milliseconds deltaTime;
+
+	float deltaTime;
 };

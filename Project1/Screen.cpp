@@ -7,6 +7,8 @@ Screen::Screen(int screenWidth, int screenHeight) {
 	SDL_Init(SDL_INIT_VIDEO);
 	window = SDL_CreateWindow("SDL2 3-D Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, 0);
+
+	prevTime = std::chrono::high_resolution_clock::now(); //intialize prevTime for first deltaTime calculation	
 }
 
 void Screen::CreatePixel(float x, float y) {
@@ -106,8 +108,14 @@ void Screen::CheckForInput() {
 //the framerate will fluctuate depending on the hardware used to run the simulation. dont want this. deltaTime should solve this dilemma.
 
 void Screen::CalcDeltaTime() {
-	std::chrono::milliseconds currTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()); //gets time in msec since last epoch (1970)
-	deltaTime = (currTime - prevTime); //calculate the time since the last frame
+	typedef std::chrono::high_resolution_clock Time;
+	typedef std::chrono::milliseconds ms;
+	typedef std::chrono::steady_clock::time_point TimePoint;
+
+	TimePoint currTime = Time::now(); //get the current time
+	std::chrono::duration<float> deltaTimeInSeconds = currTime - prevTime; //calculate the time since the last time this code was executed (last frame)
 	prevTime = currTime; //make the prevTime msec value = to the current time for use in the next iteration
+
+	this->deltaTime = deltaTimeInSeconds.count();
 }
 

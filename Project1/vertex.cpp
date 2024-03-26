@@ -16,18 +16,18 @@ vertex::vertex(vec3 point) {
 	this->point = point;
 }
 
-void vertex::rotate(float x, float y, float z) { //values x, y, and z must = desired rotations in radians.
+void vertex::rotate(vec3 rotationVector) { //values x, y, and z must = desired rotations in radians.
 	float rad = 0;
 
-	rad = x;
+	rad = rotationVector.x;
 	this->y = cos(rad) * this->y - sin(rad) * this->z;
 	this->z = sin(rad) * this->y + cos(rad) * this->z;
 
-	rad = y;
+	rad = rotationVector.y;
 	this->x = cos(rad) * this->x + sin(rad) * this->z;
 	this->z = -sin(rad) * this->x + cos(rad) * this->z;
 
-	rad = z;
+	rad = rotationVector.z;
 	this->x = cos(rad) * this->x - sin(rad) * this->y;
 	this->y = sin(rad) * this->x + cos(rad) * this->y;
 }
