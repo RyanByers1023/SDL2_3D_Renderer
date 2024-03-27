@@ -83,11 +83,13 @@ void Cube::Draw() {
 		Line line2(*screenPtr, x2, y2, x3, y3); //second line of triangle (side b)
 		line2.Draw();
 
-		Line line3(*screenPtr, x3, y3, x1, y1); //third line of trianle (side c) -- this is the hypotenuse
+		Line line3(*screenPtr, x3, y3, x1, y1); //third line of triangle (side c) -- this is the hypotenuse
 		line3.Draw();
 	}
 
 	if (screenPtr->leftInput || screenPtr->rightInput || screenPtr->upInput || screenPtr->downInput) Rotate();
+	if (screenPtr->wInput || screenPtr->qInput || screenPtr->sInput || screenPtr->dInput) Translate();
+	if(screenPtr->plusInput || screenPtr->minusInput) Scale();
 }
 
 void Cube::CalcCenteroid() {
