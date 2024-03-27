@@ -3,7 +3,6 @@
 #include "vec3.h"
 #include "Line.h"
 #include "Matrix.h"
-#include <iostream>
 #include <vector>
 
 class Cube { //i will eventually create a generic object class that will contain most of these methods as these will be used for more basic shapes than the cube. Anything marked GENERIC is fair game for inclusion
@@ -22,5 +21,5 @@ private:
 	mesh cubeMesh; //the mesh of the cube is stored here. Made up entirely of triangle objects. Triangle objects store 3 coordinates in 3 space. these are stored as vec3s. vec3s are float(x, y, z)
 	vec3 centeroid; //center coordinate of the cube. May return this as the position later on. Undecided if this would be a smart idea or not. Would be helpful in detecting collisions at least //GENERIC
 	vec3 position; //this may be = to the centeroid. For now, this = the north face, bottom left vertice. The user provides this value when creating the cube. //GENERIC
-	vec3 vertices[8]; //stores all of the vertices (corner points) of the cube, there are 8 vertices in a cube. Very helpful for calculating centeroid. //Possibly GENERIC. would need to be made into a vector for sure though
+	std::vector<vec3> vertices; //stores all of the vertices (corner points) of the cube, there are 8 vertices in a cube. Very helpful for calculating centeroid. //Possibly GENERIC. would need to be made into a vector for sure though
 };
