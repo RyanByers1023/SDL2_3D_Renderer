@@ -19,14 +19,12 @@ int SDL_main(int arg, char* args[]) {
 
 	Matrix4x4 projMatrix;
 
-	projMatrix.matrix[0][0] = fAspectRatio * fFovRad;
-	projMatrix.matrix[1][1] = fFovRad;
-	projMatrix.matrix[2][2] = fFar / (fFar - fNear);
-	projMatrix.matrix[3][2] = (-fFar * fNear) / (fFar - fNear);
-	projMatrix.matrix[2][3] = 1.0f;
-	projMatrix.matrix[3][3] = 0.0f;
-
-	screen.projMatrix = projMatrix;
+	screen.projMatrix.matrix[0][0] = fAspectRatio * fFovRad;
+	screen.projMatrix.matrix[1][1] = fFovRad;
+	screen.projMatrix.matrix[2][2] = fFar / (fFar - fNear);
+	screen.projMatrix.matrix[3][2] = (-fFar * fNear) / (fFar - fNear);
+	screen.projMatrix.matrix[2][3] = 1.0f;
+	screen.projMatrix.matrix[3][3] = 0.0f;
 
 	Cube cube(screen, { 20.0f, 40.0f, 90.0f }, 100); //create a 100px x 100px x 100px cube in the center of the screen. parameters: (Screen object, position to spawn object (vec3), size of cube (int in pixels))
 

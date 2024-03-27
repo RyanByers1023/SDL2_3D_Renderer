@@ -48,14 +48,12 @@ void Cube::Draw() {
 	for (auto& tri : cubeMesh.triangles) {
 		Matrix4x4 projMatrix = screenPtr->projMatrix;
 		
-		//THIS IS THE PROBLEM
-		vec3 projectedVertex1; projMatrix.MultiplyVec3Matrix4x4(tri.p[0], projectedVertex1);
-		vec3 projectedVertex2; projMatrix.MultiplyVec3Matrix4x4(tri.p[1], projectedVertex2);
-		vec3 projectedVertex3; projMatrix.MultiplyVec3Matrix4x4(tri.p[2], projectedVertex3);
+		triangle projectedTriangle;
 
-		triangle projectedTriangle = { projectedVertex1, projectedVertex2, projectedVertex3 };
+		for (int i = 0; i < 3; i++) {
+			projMatrix.MultiplyVec3Matrix4x4(tri.p[i], projectedTriangle.p[i]);
+		}
 
-		//need to scale the triangle into view
 		projectedTriangle.p[0].x += 1.0f; projectedTriangle.p[0].y += 1.0f;
 		projectedTriangle.p[1].x += 1.0f; projectedTriangle.p[1].y += 1.0f;
 		projectedTriangle.p[2].x += 1.0f; projectedTriangle.p[2].y += 1.0f;
