@@ -31,6 +31,8 @@ public:
 	bool aInput = false;
 	bool sInput = false;
 	bool dInput = false;
+	bool zInput = false;
+	bool xInput = false;
 
 	float deltaTime = 0;
 

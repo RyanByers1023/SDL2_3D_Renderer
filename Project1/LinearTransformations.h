@@ -6,7 +6,7 @@ class PrimitiveObject; // Forward declaration to avoid circular dependency issue
 
 class LinearTransformations {
 public:
-	//void ApplyTransformation(PrimitiveObject& object, vec3 dp);
+	void ApplyTransformation(PrimitiveObject& object);
 	void ApplyRotation(PrimitiveObject& object);
 	//void ApplyScaling(PrimitiveObject& object, float scalar);
 };

@@ -44,6 +44,7 @@ void PrimitiveObject::Draw() {
 	LinearTransformations transform;
 
 	if (screenPtr->leftInput || screenPtr->rightInput || screenPtr->upInput || screenPtr->downInput) transform.ApplyRotation(*this); //FIX-ME--maybe best to include this in its own method later on...
+	if (screenPtr->wInput || screenPtr->aInput || screenPtr->sInput || screenPtr->dInput) transform.ApplyTransformation(*this);
 }
 
 void PrimitiveObject::CalcCenteroid() {
@@ -63,10 +64,6 @@ void PrimitiveObject::CalcCenteroid() {
 	float avgZ = sumZ / 8.0f;
 
 	this->centeroid = { avgX, avgY, avgZ };
-}
-
-vec3 PrimitiveObject::GetPosition() {
-	return this->vertices[0]; //return corner point of object
 }
 
 vec3 PrimitiveObject::GetCenteroid() {

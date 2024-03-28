@@ -65,7 +65,14 @@ void Screen::CheckForInput() {
 			case SDLK_d:
 				dInput = true;
 				break;
+			case SDLK_z:
+				zInput = true;
+				break;
+			case SDLK_x:
+				xInput = true;
+				break;
 			}
+
 
 		}
 		if (event.type == SDL_KEYUP) {
@@ -94,6 +101,12 @@ void Screen::CheckForInput() {
 				break;
 			case SDLK_d:
 				dInput = false;
+				break;
+			case SDLK_z:
+				zInput = false;
+				break;
+			case SDLK_x:
+				xInput = false;
 				break;
 			}
 		}
