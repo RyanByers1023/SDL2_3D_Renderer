@@ -135,8 +135,9 @@
   <ItemGroup>
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Line.cpp" />
+    <ClCompile Include="LinearTransformations.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="Basic4x4Matrices.cpp" />
     <ClCompile Include="PrimitiveObject.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="vec3.cpp" />
@@ -144,7 +145,8 @@
   <ItemGroup>
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Line.h" />
-    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="LinearTransformations.h" />
+    <ClInclude Include="Basic4x4Matrices.h" />
     <ClInclude Include="PrimitiveObject.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="vec3.h" />

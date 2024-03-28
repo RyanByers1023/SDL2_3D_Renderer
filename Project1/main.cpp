@@ -3,7 +3,7 @@
 #include "Line.h"
 #include "vec3.h"
 #include "Cube.h"
-#include "Matrix.h"
+#include "Basic4x4Matrices.h"
 
 int SDL_main(int arg, char* args[]) {
 	Screen screen(1280, 720); //create the window, parameters indicate resolution (width, height)
@@ -32,7 +32,7 @@ int SDL_main(int arg, char* args[]) {
 		screen.Show(); //will go through screen.vertices and draw each vertex (pixel) to the screen
 		screen.Clear(); //clear the screen (will also clear out screen.vertices)
 		screen.CheckForInput(); //check for user input
-		SDL_Delay(5); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Higher framerate = faster simulation speed. I will need to solve this problem later.
+		SDL_Delay(15); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Higher framerate = faster simulation speed. I will need to solve this problem later.
 	}
 	return 0;
 }
