@@ -2,7 +2,7 @@
 #include <cmath>
 #include <vector>
 
-class vec3 {
+class vec3 { //a point (represented by floats) in 3-Space (x, y, z)
 public:
 	//contructors
 	vec3();
@@ -13,10 +13,10 @@ public:
 	float y;
 	float z;
 	//public methods
-	void rotate(vec3 rotationVector);
+	void Rotate(vec3 rotationVector);
 };
 
-struct triangle {
+struct triangle { //triangle = 3 x vec3 --> {(x, y, z), (x, y, z), (x, y, z)}
 	vec3 p[3];
 };
 

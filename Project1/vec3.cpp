@@ -2,9 +2,9 @@
 #include <vector>
 
 vec3::vec3() {
-	this->x = 0;
-	this->y = 0;
-	this->z = 0;
+	this->x = 0.0f;
+	this->y = 0.0f;
+	this->z = 0.0f;
 }
 
 vec3::vec3(float x, float y, float z) {
@@ -19,7 +19,7 @@ vec3::vec3(int x, int y, int z) {
 	this->z = static_cast<float>(z);
 }
 
-void vec3::rotate(vec3 rotationVector) { //values x, y, and z must = desired rotations in radians.
+void vec3::Rotate(vec3 rotationVector) { //values x, y, and z must = desired rotations in radians.
 	float rad = 0;
 
 	rad = rotationVector.x;

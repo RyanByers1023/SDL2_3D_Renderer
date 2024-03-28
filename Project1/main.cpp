@@ -1,5 +1,3 @@
-#include <iostream>
-#include <vector>
 #include <SDL.h>
 #include "Screen.h"
 #include "Line.h"

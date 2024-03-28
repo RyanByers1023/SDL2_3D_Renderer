@@ -32,7 +32,7 @@ public:
 	bool sInput = false;
 	bool dInput = false;
 
-	float deltaTime;
+	float deltaTime = 0;
 
 	Matrix4x4 projMatrix;
 };

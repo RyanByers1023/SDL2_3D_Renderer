@@ -137,6 +137,7 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="PrimitiveObject.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="vec3.cpp" />
   </ItemGroup>
@@ -144,6 +145,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="PrimitiveObject.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>

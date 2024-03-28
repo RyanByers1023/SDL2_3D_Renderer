@@ -5,7 +5,7 @@ void PrimitiveObject::Draw() {
 		triangle projectedTriangle;
 
 		for (int i = 0; i < 3; i++) {
-			screenPtr->ProjMatrix.MultiplyVec3Matrix4x4(tri.p[i], projectedTriangle.p[i]);
+			screenPtr->projMatrix.MultiplyVec3Matrix4x4(tri.p[i], projectedTriangle.p[i]);
 		}
 
 		projectedTriangle.p[0].x += 1.0f; projectedTriangle.p[0].y += 1.0f;
@@ -69,7 +69,7 @@ void PrimitiveObject::Rotate() {
 	negativeRotation *= screenPtr->deltaTime; //normalize rotation
 	positiveRotation *= screenPtr->deltaTime; 
 
-	for (auto& triangle : cubeMesh.triangles) {
+	for (auto& triangle : this->primitiveMesh.triangles) {
 		for (int i = 0; i < 3; i++) {
 			triangle.p[i].x -= centeroid.x;
 			triangle.p[i].y -= centeroid.y;
@@ -78,33 +78,33 @@ void PrimitiveObject::Rotate() {
 		for (int i = 0; i < 3; i++) {
 			if (screenPtr->leftInput) {	
 				vec3 leftRotation = { 0.00f, negativeRotation, 0.00f };;
-				triangle.p[i].rotate(leftRotation); //rotate left
+				triangle.p[i].Rotate(leftRotation); //Rotate left
 			}
 			if (screenPtr->rightInput) {
 				vec3 rightRotation = { 0.00f, positiveRotation, 0.00f };
-				triangle.p[i].rotate(rightRotation); //rotate right
+				triangle.p[i].Rotate(rightRotation); //Rotate right
 			}
 			if (screenPtr->upInput) {
 				vec3 upRotation = { positiveRotation, 0.00f, 0.00f };
-				triangle.p[i].rotate(upRotation); //rotate upwards
+				triangle.p[i].Rotate(upRotation); //Rotate upwards
 			}
 			if (screenPtr->downInput) {
 				vec3 downRotation = { negativeRotation, 0.00f, 0.00f };
-				triangle.p[i].rotate(downRotation); //rotate downwards
+				triangle.p[i].Rotate(downRotation); //Rotate downwards
 			}	
 		}
 		for (int i = 0; i < 3; i++) {
-			triangle.p[i].x += centeroid.x;
-			triangle.p[i].y += centeroid.y;
-			triangle.p[i].z += centeroid.z;
+			triangle.p[i].x += this->centeroid.x;
+			triangle.p[i].y += this->centeroid.y;
+			triangle.p[i].z += this->centeroid.z;
 		}
 	}
 }
 
 vec3 PrimitiveObject::GetPosition() {
-	return vertices[0]; //return corner point of object
+	return this->vertices[0]; //return corner point of object
 }
 
-vec3 PrimitiveObject::GetCentroid() {
-	return centeroid; //return centroid of object
+vec3 PrimitiveObject::GetCenteroid() {
+	return this->centeroid; //return centroid of object
 }
