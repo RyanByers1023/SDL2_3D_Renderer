@@ -5,7 +5,7 @@ void PrimitiveObject::Draw() {
 		triangle projectedTriangle;
 
 		for (int i = 0; i < 3; i++) {
-			screenPtr->projMatrix.MultiplyVec3Matrix4x4(tri.p[i], projectedTriangle.p[i]);
+			projectedTriangle.p[i] = tri.p[i] * screenPtr->projMatrix;
 		}
 
 		projectedTriangle.p[0].x += 1.0f; projectedTriangle.p[0].y += 1.0f;
@@ -41,7 +41,9 @@ void PrimitiveObject::Draw() {
 		line3.Draw();
 	}
 
-	if (screenPtr->leftInput || screenPtr->rightInput || screenPtr->upInput || screenPtr->downInput) Rotate(); //FIX-ME--maybe best to include this in its own method later on...
+	LinearTransformations transform;
+
+	if (screenPtr->leftInput || screenPtr->rightInput || screenPtr->upInput || screenPtr->downInput) transform.ApplyRotation(*this); //FIX-ME--maybe best to include this in its own method later on...
 }
 
 void PrimitiveObject::CalcCenteroid() {
@@ -61,44 +63,6 @@ void PrimitiveObject::CalcCenteroid() {
 	float avgZ = sumZ / 8.0f;
 
 	this->centeroid = { avgX, avgY, avgZ };
-}
-
-void PrimitiveObject::Rotate() {
-	float negativeRotation = -1.0; //modifies how fast rotation occurs
-	float positiveRotation = 1.0; 
-	negativeRotation *= screenPtr->deltaTime; //normalize rotation
-	positiveRotation *= screenPtr->deltaTime; 
-
-	for (auto& triangle : this->primitiveMesh.triangles) {
-		for (int i = 0; i < 3; i++) {
-			triangle.p[i].x -= centeroid.x;
-			triangle.p[i].y -= centeroid.y;
-			triangle.p[i].z -= centeroid.z;
-		}
-		for (int i = 0; i < 3; i++) {
-			if (screenPtr->leftInput) {	
-				vec3 leftRotation = { 0.00f, negativeRotation, 0.00f };;
-				triangle.p[i].Rotate(leftRotation); //Rotate left
-			}
-			if (screenPtr->rightInput) {
-				vec3 rightRotation = { 0.00f, positiveRotation, 0.00f };
-				triangle.p[i].Rotate(rightRotation); //Rotate right
-			}
-			if (screenPtr->upInput) {
-				vec3 upRotation = { positiveRotation, 0.00f, 0.00f };
-				triangle.p[i].Rotate(upRotation); //Rotate upwards
-			}
-			if (screenPtr->downInput) {
-				vec3 downRotation = { negativeRotation, 0.00f, 0.00f };
-				triangle.p[i].Rotate(downRotation); //Rotate downwards
-			}	
-		}
-		for (int i = 0; i < 3; i++) {
-			triangle.p[i].x += this->centeroid.x;
-			triangle.p[i].y += this->centeroid.y;
-			triangle.p[i].z += this->centeroid.z;
-		}
-	}
 }
 
 vec3 PrimitiveObject::GetPosition() {
