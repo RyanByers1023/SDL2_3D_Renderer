@@ -2,7 +2,6 @@
 #include <SDL.h>
 #include <vector>
 #include <chrono>
-#include "Basic4x4Matrices.h"
 
 class Screen {
 private:
@@ -19,8 +18,8 @@ public:
 	void Clear(); //clear vertices vector
 	void CheckForInput(); //check for user input
 	void CalcDeltaTime(); //calulate the time since the last frame
-	int width;
-	int height;
+	int width; //width of screen in pixels
+	int height; //height of screen in pixels
 
 	bool leftInput = false;
 	bool rightInput = false;
@@ -35,6 +34,4 @@ public:
 	bool xInput = false;
 
 	float deltaTime = 0;
-
-	Matrix4x4 projMatrix;
 };
