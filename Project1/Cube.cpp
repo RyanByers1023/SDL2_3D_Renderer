@@ -1,7 +1,6 @@
 #include "Cube.h"
 
-Cube::Cube(Screen& screen, vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below pretend values are constructed with these inputs in mind as an example
-	this->screenPtr = &screen;
+Cube::Cube(vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below commented values are constructed with these inputs in mind as an example
 	this->position = position;
 
 	// Definition of the vertices of the cube

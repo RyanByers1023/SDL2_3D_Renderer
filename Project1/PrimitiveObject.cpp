@@ -18,7 +18,3 @@ void PrimitiveObject::CalcCenteroid() {
 
 	this->centeroid = { avgX, avgY, avgZ };
 }
-
-vec3 PrimitiveObject::GetCenteroid() {
-	return this->centeroid; //return centroid of object
-}

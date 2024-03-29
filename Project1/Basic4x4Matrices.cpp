@@ -27,9 +27,9 @@ Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& other) {
 
 //Projection Matrix:
 
-ProjectionMatrix::ProjectionMatrix(Screen& screen, float fov, float fFar, float fNear) {
+ProjectionMatrix::ProjectionMatrix(int screenWidth, int screenHeight, float fov, float fFar, float fNear) {
 
-	float fAspectRatio = static_cast<float>(screen.height) / screen.width;
+	float fAspectRatio = static_cast<float>(screenHeight) / screenWidth;
 	float fFovRad = 1.0f / tanf(fov * 0.5f / 180.0f * 3.14159f);
 
 	this->matrix[0][0] = fAspectRatio * fFovRad;
@@ -68,14 +68,6 @@ RotationMatrix::RotationMatrix(float xRadians, float yRadians, float zRadians) {
 	this->matrix[2][1] = cosGamma * sinBeta * sinAlpha - sinGamma * cosAlpha;
 	this->matrix[2][2] = cosGamma * cosBeta;
 
-	//Debug code for testing matrix values
-	/*for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			std::cout << "Row " << i + 1 << " Column " << j + 1 << " = " << this->matrix[i][j] << std::endl;
-		}
-	}
-	*/
-
 	// Set the last row and column to maintain a 3x3 rotation matrix
 	this->matrix[3][0] = 0;
 	this->matrix[3][1] = 0;
@@ -83,5 +75,13 @@ RotationMatrix::RotationMatrix(float xRadians, float yRadians, float zRadians) {
 	this->matrix[0][3] = 0;
 	this->matrix[1][3] = 0;
 	this->matrix[2][3] = 0;
-	this->matrix[3][3] = 1;	
+	this->matrix[3][3] = 1;
+
+	//Debug code for testing matrix values
+	/*for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			std::cout << "Row " << i + 1 << " Column " << j + 1 << " = " << this->matrix[i][j] << std::endl;
+		}
+	}
+	*/
 }
