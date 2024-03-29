@@ -1,18 +1,41 @@
 #include "Renderer.h"
 
-Renderer::Renderer(Screen* screenPtr, ProjectionMatrix& projMatrix) {
-	this->screenPtr = screenPtr;
-	this->projMatrix = projMatrix;
+Renderer::Renderer(int windowWidth, int windowHeight) {
+	this->screenPtr = new Screen(windowWidth, windowHeight);
+	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
 }
 
-void Renderer::Render() { //may eventually change this to render a list of items. Only renders one item at a time for now, which is okay
+Renderer::~Renderer() {
+	delete this->screenPtr;
+	delete this->projMatrixPtr;
+}
 
-	for (auto& object : worldObjects) {
-		for (auto& tri : object.primitiveMesh.triangles) {
+void Renderer::StartRendering() {
+	while (true) {
+		screenPtr->CalcDeltaTime(); //calculate the time since the last frame has occured
+		if (!Render()) break; //this adds all of the pixels needed to draw all shapes in worldObjects vector into screen.vertices
+		screenPtr->Show(); //will go through screen.vertices and draw each vertex (pixel) to the screen
+		screenPtr->Clear(); //clear the screen (will also clear out screen.vertices)
+		screenPtr->CheckForInput(); //check for user input
+		SDL_Delay(15); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Higher framerate = faster simulation speed. I will need to solve this problem later.
+	}
+
+	std::cout << "Renderer has been shut down. Check above message for reason. Closing in 5 seconds..." << std::endl;
+	SDL_Delay(5000); //wait for 5 seconds
+}
+
+bool Renderer::Render() {
+	if (worldObjects.empty()) {
+		std::cout << "There are no objects to render. Renderer shutting down..." << std::endl;
+		return false;
+	}
+
+	for (const auto& it : worldObjects) {
+		for (auto& tri : it.second.primitiveMesh.triangles) {
 			triangle projectedTriangle;
 
 			for (int i = 0; i < 3; i++) {
-				projectedTriangle.p[i] = tri.p[i] * projMatrix;
+				projectedTriangle.p[i] = tri.p[i] * *projMatrixPtr;
 			}
 
 			projectedTriangle.p[0].x += 1.0f; projectedTriangle.p[0].y += 1.0f;
@@ -48,6 +71,8 @@ void Renderer::Render() { //may eventually change this to render a list of items
 			line3.Draw();
 		}
 	}
+
+	return true;
 
 	/* move below code to its own function
 	LinearTransformations transform;
