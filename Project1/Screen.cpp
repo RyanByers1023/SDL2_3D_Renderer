@@ -32,7 +32,7 @@ void Screen::Clear() {
 	vertices.clear();
 }
 
-void Screen::CheckForInput() {
+void Screen::CheckForInput() { //move to seperate class
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT) {
 			SDL_Quit();
@@ -120,7 +120,7 @@ void Screen::CheckForInput() {
 //this (deltaTime) will have the effect of making both physics calculations and any transformations, rotations, etc. not change their speed when framerate increases (increase in speed) or when the framerate decreases (decrease in speed)
 //the framerate will fluctuate depending on the hardware used to run the simulation. dont want this. deltaTime should solve this dilemma.
 
-void Screen::CalcDeltaTime() {
+void Screen::CalcDeltaTime() { //move to seperate class
 	typedef std::chrono::high_resolution_clock Time;
 	typedef std::chrono::milliseconds ms;
 	typedef std::chrono::steady_clock::time_point TimePoint;
