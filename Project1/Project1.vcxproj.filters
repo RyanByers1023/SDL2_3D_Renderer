@@ -39,6 +39,12 @@
     <ClCompile Include="LinearTransformations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StartRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Screen.h">
@@ -60,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LinearTransformations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StartRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -134,6 +134,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="StartRenderer.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LinearTransformations.cpp" />
     <ClCompile Include="main.cpp" />
@@ -144,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="StartRenderer.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="LinearTransformations.h" />
     <ClInclude Include="Basic4x4Matrices.h" />
