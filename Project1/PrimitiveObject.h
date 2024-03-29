@@ -3,14 +3,10 @@
 #include "screen.h"
 #include "vec3.h"
 #include "Line.h"
-#include "Basic4x4Matrices.h"
-#include "LinearTransformations.h"
-#include <iostream>
 
 class PrimitiveObject {
 	//public methods
 public:
-	void Draw(); //this will draw/project the primitive 3-D shape when provided with an acceptable mesh (counter-clockwise ordered vertices) (may make this into its own class)
 	//public getters
 	vec3 GetCenteroid(); //will return the center point of the object
 	//public attributes
