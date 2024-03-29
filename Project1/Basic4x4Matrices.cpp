@@ -1,5 +1,4 @@
 #include "Basic4x4Matrices.h"
-#include <iostream>
 
 Matrix4x4 Matrix4x4::operator=(const Matrix4x4& inputMatrix) {
 	Matrix4x4 result;
@@ -24,6 +23,21 @@ Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& other) {
 		}
 	}
 	return result;
+}
+
+//Projection Matrix:
+
+ProjectionMatrix::ProjectionMatrix(Screen& screen, float fov, float fFar, float fNear) {
+
+	float fAspectRatio = static_cast<float>(screen.height) / screen.width;
+	float fFovRad = 1.0f / tanf(fov * 0.5f / 180.0f * 3.14159f);
+
+	this->matrix[0][0] = fAspectRatio * fFovRad;
+	this->matrix[1][1] = fFovRad;
+	this->matrix[2][2] = fFar / (fFar - fNear);
+	this->matrix[3][2] = (-fFar * fNear) / (fFar - fNear);
+	this->matrix[2][3] = 1.0f;
+	this->matrix[3][3] = 0.0f;
 }
 
 //Linear Transformation Matrices:
@@ -69,7 +83,5 @@ RotationMatrix::RotationMatrix(float xRadians, float yRadians, float zRadians) {
 	this->matrix[0][3] = 0;
 	this->matrix[1][3] = 0;
 	this->matrix[2][3] = 0;
-	this->matrix[3][3] = 1;
-
-	
+	this->matrix[3][3] = 1;	
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include "screen.h"
 
 class Matrix4x4 {
 public:
@@ -9,6 +10,12 @@ public:
 	//public attributes
 	float matrix[4][4] = { 0 };
 	//public methods
+};
+
+class ProjectionMatrix : public Matrix4x4 {
+public:
+	//constructor -- Initializes the projection matrix
+	ProjectionMatrix(Screen& screen, float fov = 90.0f, float fFar = 1000.0f, float fNear = 0.1f);
 };
 
 class RotationMatrix : public Matrix4x4 {
