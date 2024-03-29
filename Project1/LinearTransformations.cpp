@@ -45,7 +45,7 @@ void LinearTransformations::ApplyRotation(PrimitiveObject& object) { //rotates r
 void LinearTransformations::ApplyTransformation(PrimitiveObject& object) {
 	float dx = 0, dy = 0, dz = 0;
 
-	float distanceToMove = 40.0f;
+	float distanceToMove = 80.0f;
 
 	if (object.screenPtr->wInput) dy = -distanceToMove * object.screenPtr->deltaTime; //up
 	if (object.screenPtr->aInput) dx = -distanceToMove * object.screenPtr->deltaTime; //left
