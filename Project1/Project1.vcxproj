@@ -143,7 +143,6 @@
     <ClCompile Include="Basic4x4Matrices.cpp" />
     <ClCompile Include="PrimitiveObject.cpp" />
     <ClCompile Include="Screen.cpp" />
-    <ClCompile Include="Time.cpp" />
     <ClCompile Include="vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +155,6 @@
     <ClInclude Include="Basic4x4Matrices.h" />
     <ClInclude Include="PrimitiveObject.h" />
     <ClInclude Include="Screen.h" />
-    <ClInclude Include="Time.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
