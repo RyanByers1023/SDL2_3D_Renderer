@@ -136,6 +136,7 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LinearTransformations.cpp" />
@@ -143,10 +144,13 @@
     <ClCompile Include="Basic4x4Matrices.cpp" />
     <ClCompile Include="PrimitiveObject.cpp" />
     <ClCompile Include="Screen.cpp" />
+    <ClCompile Include="StartMe.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="vec3.cpp" />
+    <ClCompile Include="WorldObjects.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="Renderer.h" />
@@ -156,8 +160,10 @@
     <ClInclude Include="Basic4x4Matrices.h" />
     <ClInclude Include="PrimitiveObject.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="StartMe.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="vec3.h" />
+    <ClInclude Include="WorldObjects.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
