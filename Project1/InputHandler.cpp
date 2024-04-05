@@ -39,6 +39,12 @@ void InputHandler::CheckForInput() {
 			case SDLK_x:
 				xInput = true;
 				break;
+			case SDLK_q:
+				qInput = true;
+				break;
+			case SDLK_e:
+				eInput = true;
+				break;
 			}
 
 
@@ -75,6 +81,12 @@ void InputHandler::CheckForInput() {
 				break;
 			case SDLK_x:
 				xInput = false;
+				break;
+			case SDLK_q:
+				qInput = false;
+				break;
+			case SDLK_e:
+				eInput = false;
 				break;
 			}
 		}
