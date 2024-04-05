@@ -1,11 +1,8 @@
-#include "Renderer.h"
-#include "Spawner.h"
+#include "StartMe.h"
 
 int SDL_main(int arg, char* args[]) {
-	int screenWidth = 1280, screenHeight = 720; //set screenWidth and screenHeight values, measured in pixels. Determines window size.
-	Renderer renderer(screenWidth, screenHeight); //create renderer
-	SpawnCube(renderer, "cube1"); //spawner needs access to the renderer and it also needs a unique name for the object to be spawned
-	renderer.StartRendering(); //begin rendering
+	StartMe programHandler;
+	programHandler.StartRendering();
 	return 0;
 }
 
