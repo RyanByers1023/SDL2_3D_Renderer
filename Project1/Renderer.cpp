@@ -1,40 +1,23 @@
 #include "Renderer.h"
 
-Renderer::Renderer(int windowWidth, int windowHeight) {
+Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjectsPtr) {
 	this->screenPtr = new Screen(windowWidth, windowHeight);
 	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
-	this->inputHandlerPtr = new InputHandler();
-	this->timePtr = new Time();
+	this->worldObjectsPtr = worldObjectsPtr;
 }
 
 Renderer::~Renderer() {
 	delete this->screenPtr;
 	delete this->projMatrixPtr;
-	delete this->inputHandlerPtr;
-	delete this->timePtr;
-}
-
-void Renderer::StartRendering() {
-	while (true) {
-		timePtr->Tick(); //calculate the time since the last frame has occured
-		inputHandlerPtr->CheckForInput(); //check for user input
-		if (!Render()) break; //this adds all of the pixels needed to draw all shapes in worldObjects vector into screen.vertices
-		screenPtr->Show(); //will go through screen.vertices and draw each vertex (pixel) to the screen
-		screenPtr->Clear(); //clear the screen (will also clear out screen.vertices)
-		SDL_Delay(15); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Is normalized using Time.deltaTime;
-	}
-
-	std::cout << "Renderer has been shut down due to an error. Check above message for reason. Closing in 5 seconds..." << std::endl;
-	SDL_Delay(5000); //wait for 5 seconds
 }
 
 bool Renderer::Render() { //draws all objects contained within worldObjects to the screen
-	if (worldObjects.empty()) {
+	if (worldObjectsPtr->objects.empty()) {
 		std::cout << "There are no objects to render. Renderer shutting down..." << std::endl;
 		return false;
 	}
 
-	for (const auto& it : worldObjects) {
+	for (const auto& it : worldObjectsPtr->objects) {
 		for (auto& tri : it.second.primitiveMesh.triangles) {
 			triangle projectedTriangle;
 
@@ -76,10 +59,9 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 		}
 	}
 
-	LinearTransformations transform;
-
-	if (inputHandlerPtr->leftInput || inputHandlerPtr->rightInput || inputHandlerPtr->upInput || inputHandlerPtr->downInput) transform.ApplyRotation(inputHandlerPtr, timePtr, worldObjects["cube1"]); //this will be changed later on to be generalized. Can pick and choose which shape to modify
-	if (inputHandlerPtr->wInput || inputHandlerPtr->aInput || inputHandlerPtr->sInput || inputHandlerPtr->dInput || inputHandlerPtr->zInput || inputHandlerPtr->xInput) transform.ApplyTransformation(inputHandlerPtr, timePtr, worldObjects["cube1"]);
+	screenPtr->Show(); //will go through screen.vertices and draw each vertex (pixel) to the screen
+	screenPtr->Clear(); //clear the screen (will also clear out screen.vertices)
+	SDL_Delay(15); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Is normalized using Time.deltaTime;
 
 	return true;
 }
