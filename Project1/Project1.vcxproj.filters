@@ -104,5 +104,8 @@
     <ClInclude Include="WorldObjects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Triangle2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

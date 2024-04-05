@@ -1,6 +1,8 @@
 #pragma once
 #include "Screen.h"
 #include "WorldObjects.h"
+#include "Triangle2D.h"
+#include <vector>
 #include <iostream>
 
 
@@ -15,9 +17,12 @@ public:
 private:
 	void CalculateNormalVector(const triangle tri);
 	bool ShouldRender(const triangle tri);
+	void Shade(triangle& triangleCopy);
+	void SortVerticesByYCoordinates(triangle& triangleCopy);
+	float CalculateSlope(const triangle triangleCopy);
 	Screen* screenPtr;
 	ProjectionMatrix* projMatrixPtr;
 	WorldObjects* worldObjectsPtr; //use this to store all of the objects and their respective names. names are currently used to differentiate between objects in the game world.
 	vec3 normal;
-	vec3 cameraLocation;
+	vec3 cameraLocation; //this will be its own object at one point or another (playerCamera.cpp or something or another)
 };

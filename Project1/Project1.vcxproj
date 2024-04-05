@@ -150,6 +150,7 @@
     <ClCompile Include="WorldObjects.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Triangle2D.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="InputHandler.h" />

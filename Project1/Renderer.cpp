@@ -46,7 +46,24 @@ bool Renderer::ShouldRender(const triangle tri) {
 	//if this value is negative, then draw the triangle.
 	return (normal.x * (tri.p[0].x - cameraLocation.x) +
 			normal.y * (tri.p[0].y - cameraLocation.y) +
-			normal.z * (tri.p[0].z - cameraLocation.z)) < 0.0f;
+			normal.z * (tri.p[0].z - cameraLocation.z)) < 0.0f; //Notice: if you change this statement to instead evaluate true for dotproductN > 0.0f, the object will be renderered inside out...
+}
+
+void Renderer::SortVerticesByYCoordinates(triangle& triangleCopy) { //sort in ascending order to make shading easier
+	if (triangleCopy.p[0].y > triangleCopy.p[1].y) std::swap(triangleCopy.p[0].y, triangleCopy.p[1].y);
+	if (triangleCopy.p[0].y > triangleCopy.p[2].y) std::swap(triangleCopy.p[0].y, triangleCopy.p[2].y);
+	if (triangleCopy.p[1].y > triangleCopy.p[2].y) std::swap(triangleCopy.p[1].y, triangleCopy.p[2].y);
+}
+
+float Renderer::CalculateSlope(const triangle triangleCopy) {
+	float slopeRise = triangleCopy.p[1].y - triangleCopy.p[0].y;
+	float slopeRun = triangleCopy.p[1].x - triangleCopy.p[0].x;
+	if (slopeRise == 0) return 0; //avoid division by zero
+	else return (slopeRise / slopeRun);
+}
+
+void Renderer::Shade(triangle& triangleCopy) {
+	SortVerticesByYCoordinates(triangleCopy);
 }
 
 bool Renderer::Render() { //draws all objects contained within worldObjects to the screen
@@ -78,17 +95,22 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 				projectedTriangle.p[1].x *= halfScreenWidth; projectedTriangle.p[1].y *= halfScreenHeight;
 				projectedTriangle.p[2].x *= halfScreenWidth; projectedTriangle.p[2].y *= halfScreenHeight;
 
-				float x1 = projectedTriangle.p[0].x; float y1 = projectedTriangle.p[0].y; //get the values needed to draw the lines to the screen (all of the vertices that make up the edges of the triangles in 2-space)
-				float x2 = projectedTriangle.p[1].x; float y2 = projectedTriangle.p[1].y;
-				float x3 = projectedTriangle.p[2].x; float y3 = projectedTriangle.p[2].y;
+				Triangle2D triangleToDraw = { //why this no work
+					{projectedTriangle.p[0].x, projectedTriangle.p[0].y},
+					{projectedTriangle.p[1].x, projectedTriangle.p[1].y},
+					{projectedTriangle.p[2].x, projectedTriangle.p[2].y}
+				};
+				
 
-				Line line1(*screenPtr, x1, y1, x2, y2); //first line of triangle (side a)
+
+
+				Line line1(*screenPtr, triangleToDraw.triangle[0].x, triangleToDraw.triangle[0].y, triangleToDraw.triangle[1].x, triangleToDraw.triangle[1].y); //first line of triangle (side a)
 				line1.Draw();
 
-				Line line2(*screenPtr, x2, y2, x3, y3); //second line of triangle (side b)
+				Line line2(*screenPtr, triangleToDraw.triangle[1].x, triangleToDraw.triangle[1].y, triangleToDraw.triangle[2].x, triangleToDraw.triangle[2].y); //second line of triangle (side b)
 				line2.Draw();
 
-				Line line3(*screenPtr, x3, y3, x1, y1); //third line of triangle (side c) -- this is the hypotenuse
+				Line line3(*screenPtr, triangleToDraw.triangle[2].x, triangleToDraw.triangle[2].y, triangleToDraw.triangle[0].x, triangleToDraw.triangle[0].y); //third line of triangle (side c) -- this is the hypotenuse
 				line3.Draw();
 			}
 		}		
