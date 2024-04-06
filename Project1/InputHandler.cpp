@@ -45,7 +45,14 @@ void InputHandler::CheckForInput() {
 			case SDLK_e:
 				eInput = true;
 				break;
+			case SDLK_MINUS:
+				minusInput = true;
+				break;
+			case SDLK_PLUS:
+				plusInput = true;
+				break;
 			}
+			
 
 
 		}
@@ -88,7 +95,14 @@ void InputHandler::CheckForInput() {
 			case SDLK_e:
 				eInput = false;
 				break;
+			case SDLK_MINUS:
+				minusInput = false;
+				break;
+			case SDLK_PLUS:
+				plusInput = false;
+				break;
 			}
+			
 		}
 	}
 }

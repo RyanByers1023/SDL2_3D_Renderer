@@ -1,12 +1,24 @@
-#include "vec3.h"
+#include "Vec3.h"
 
-vec3::vec3() {
+Vec3::Vec3() {
 	this->x = 0.0f;
 	this->y = 0.0f;
 	this->z = 0.0f;
 }
 
-vec3& vec3::operator*=(const Matrix4x4& transformationMatrix) {
+Vec3::Vec3(float x, float y, float z) {
+    this->x = x;
+    this->y = y;
+    this->z = z;
+}
+
+Vec3::Vec3(int x, int y, int z) {
+    this->x = static_cast<float>(x);
+    this->y = static_cast<float>(y);
+    this->z = static_cast<float>(z);
+}
+
+Vec3& Vec3::operator*=(const Matrix4x4& transformationMatrix) {
     // Perform the transformation in place
     float newX = x * transformationMatrix.matrix[0][0] + y * transformationMatrix.matrix[1][0] + z * transformationMatrix.matrix[2][0] + transformationMatrix.matrix[3][0];
     float newY = x * transformationMatrix.matrix[0][1] + y * transformationMatrix.matrix[1][1] + z * transformationMatrix.matrix[2][1] + transformationMatrix.matrix[3][1];
@@ -29,8 +41,8 @@ vec3& vec3::operator*=(const Matrix4x4& transformationMatrix) {
     return *this;
 }
 
-vec3 vec3::operator*(const Matrix4x4& transformationMatrix) const {
-    vec3 outputVector;
+Vec3 Vec3::operator*(const Matrix4x4& transformationMatrix) const {
+    Vec3 outputVector;
 
     outputVector.x = x * transformationMatrix.matrix[0][0] + y * transformationMatrix.matrix[1][0] + z * transformationMatrix.matrix[2][0] + transformationMatrix.matrix[3][0];
     outputVector.y = x * transformationMatrix.matrix[0][1] + y * transformationMatrix.matrix[1][1] + z * transformationMatrix.matrix[2][1] + transformationMatrix.matrix[3][1];
@@ -45,16 +57,4 @@ vec3 vec3::operator*(const Matrix4x4& transformationMatrix) const {
     }
 
     return outputVector;
-}
-
-vec3::vec3(float x, float y, float z) {
-	this->x = x;
-	this->y = y;
-	this->z = z;
-}
-
-vec3::vec3(int x, int y, int z) {
-	this->x = static_cast<float>(x);
-	this->y = static_cast<float>(y);
-	this->z = static_cast<float>(z);
 }

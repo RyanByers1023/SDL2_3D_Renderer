@@ -19,6 +19,8 @@ public:
 	bool xInput = false;
 	bool qInput = false;
 	bool eInput = false;
+	bool minusInput = false;
+	bool plusInput = false;
 
 private:
 	//private attributes:

@@ -19,13 +19,13 @@ void Controller::ChangeControllerFocus() {
 		selectedObject--; //move to the previous object in the worldObjects unordered_map
 	}
 
-	else if (inputHandlerPtr->eInput) {
+	 if (inputHandlerPtr->eInput) {
 		SDL_Delay(100); //delay to prevent multiple inputs from being registered
 		selectedObject++; //move to the next object in the worldObjects unordered_map
 		if (selectedObject == worldObjectsPtr->objects.end()) {
 			selectedObject = worldObjectsPtr->objects.begin(); //if we reach the end of the unordered_map, loop back to the beginning
 		}
-	}
+	 }
 }
 
 PrimitiveObject* Controller::GetCurrentlyControlledObject() {

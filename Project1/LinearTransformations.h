@@ -8,5 +8,5 @@ class LinearTransformations {
 public:
 	void ApplyTransformation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object);
 	void ApplyRotation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object);
-	//void ApplyScaling(PrimitiveObject& object, float scalar); //FIX-ME: AS OF YET IMPLEMENTED
+	void ApplyScaling(InputHandler* inputHandlerPtr, PrimitiveObject& object, Time* timePtr, float scalar = 1.1f);
 };

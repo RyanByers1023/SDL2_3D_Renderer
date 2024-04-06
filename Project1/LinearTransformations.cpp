@@ -5,7 +5,8 @@ void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* t
 	float xRadians = 0, yRadians = 0, zRadians = 0;
 	float radiansToRotate = 1;
 
-	vec3 centeroid = object.centeroid;
+	
+	Vec3 centeroid = object.centeroid;
 
 	if (inputHandlerPtr->leftInput) yRadians = radiansToRotate * timePtr->deltaTime;
 	if (inputHandlerPtr->rightInput) yRadians = -radiansToRotate * timePtr->deltaTime;
@@ -14,9 +15,9 @@ void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* t
 
 	for (auto& tri : object.primitiveMesh.triangles) { //normalization
 		for (int i = 0; i < 3; ++i) {
-			tri.p[i].x -= centeroid.x;
-			tri.p[i].y -= centeroid.y;
-			tri.p[i].z -= centeroid.z;
+			tri.point[i].x -= centeroid.x;
+			tri.point[i].y -= centeroid.y;
+			tri.point[i].z -= centeroid.z;
 		}
 		
 		//Debugging code for testing radian values
@@ -32,13 +33,13 @@ void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* t
 		*/
 
 		for (int i = 0; i < 3; i++) {
-			tri.p[i] *= rotationMatrix;
+			tri.point[i] *= rotationMatrix;
 		}
 
 		for (int i = 0; i < 3; ++i) { //revert normalization operation
-			tri.p[i].x += centeroid.x;
-			tri.p[i].y += centeroid.y;
-			tri.p[i].z += centeroid.z;
+			tri.point[i].x += centeroid.x;
+			tri.point[i].y += centeroid.y;
+			tri.point[i].z += centeroid.z;
 		}
 	}
 }
@@ -59,9 +60,9 @@ void LinearTransformations::ApplyTransformation(InputHandler* inputHandlerPtr, T
 
 	for (auto& tri : object.primitiveMesh.triangles) {
 		for (int i = 0; i < 3; ++i) {
-			tri.p[i].x += dx;
-			tri.p[i].y += dy;
-			tri.p[i].z += dz;
+			tri.point[i].x += dx;
+			tri.point[i].y += dy;
+			tri.point[i].z += dz;
 		}
 	}
 	
@@ -75,7 +76,20 @@ void LinearTransformations::ApplyTransformation(InputHandler* inputHandlerPtr, T
 	object.CalcCenteroid(); //we've moved the object. Centeroid has changed, need to recalculate it.
 }
 
-/*void LinearTransformations::ApplyScaling(PrimitiveObject& object, float scalar) {
+void LinearTransformations::ApplyScaling(InputHandler* inputHandlerPtr, PrimitiveObject& object, Time* timePtr, float scalar) {
+	if (inputHandlerPtr->minusInput) scalar -= 0.2f;
 
+	float normalizedScalar = scalar * timePtr->deltaTime;
+
+	for (auto point : object.vertices) {
+		point.x *= normalizedScalar;
+		point.y *= normalizedScalar;
+		point.z *= normalizedScalar;
+	}
+
+	for (auto point : object.primitiveMesh.triangles) { //mark work
+		point.point
+	}
+
+	
 }
-*/

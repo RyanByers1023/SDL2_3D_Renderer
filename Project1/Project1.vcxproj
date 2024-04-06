@@ -146,11 +146,12 @@
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="StartMe.cpp" />
     <ClCompile Include="Time.cpp" />
-    <ClCompile Include="vec3.cpp" />
+    <ClCompile Include="Vec2.cpp" />
+    <ClCompile Include="Vec3.cpp" />
     <ClCompile Include="WorldObjects.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Triangle2D.h" />
+    <ClInclude Include="Vec2.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="InputHandler.h" />
@@ -163,7 +164,7 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="StartMe.h" />
     <ClInclude Include="Time.h" />
-    <ClInclude Include="vec3.h" />
+    <ClInclude Include="Vec3.h" />
     <ClInclude Include="WorldObjects.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

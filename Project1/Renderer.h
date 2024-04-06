@@ -1,7 +1,7 @@
 #pragma once
 #include "Screen.h"
 #include "WorldObjects.h"
-#include "Triangle2D.h"
+#include "Vec2.h"
 #include <vector>
 #include <iostream>
 
@@ -15,14 +15,14 @@ public:
 	//public methods:
 	bool Render(); //render objects to the screen. Returns false if there was an error (no items to render)
 private:
-	void CalculateNormalVector(const triangle tri);
-	bool ShouldRender(const triangle tri);
-	void Shade(triangle& triangleCopy);
-	void SortVerticesByYCoordinates(triangle& triangleCopy);
-	float CalculateSlope(const triangle triangleCopy);
+	void CalculateNormalVector(const Triangle3D tri);
+	bool ShouldRender(const Triangle3D tri);
+	void Shade(Triangle2D& triangleCopy);
+	void SortVerticesByYCoordinates(Triangle2D& triangleCopy);
+	float CalculateSlope(const Triangle2D triangleCopy);
 	Screen* screenPtr;
 	ProjectionMatrix* projMatrixPtr;
 	WorldObjects* worldObjectsPtr; //use this to store all of the objects and their respective names. names are currently used to differentiate between objects in the game world.
-	vec3 normal;
-	vec3 cameraLocation; //this will be its own object at one point or another (playerCamera.cpp or something or another)
+	Vec3 normal;
+	Vec3 cameraLocation; //this will be its own object at one point or another (playerCamera.cpp or something or another)
 };
