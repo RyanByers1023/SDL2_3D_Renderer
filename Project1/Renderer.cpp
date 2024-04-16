@@ -14,7 +14,7 @@ Renderer::~Renderer() {
 	delete this->projMatrixPtr;
 }
 
-void Renderer::CalculateNormalVector(const Triangle3D tri) {
+void Renderer::CalculateNormalVector(const Triangle3D tri) { //put in RendererHelperFunctions.cpp
 	//need to determine whether or not we need to draw the triangle based on perspective (eg. we don't want to render the back side of the triangle if we are viewing the front)...
 	//use the cross product of two vectors to determine the normal vector, use this to determine angle with respect to camera.
 	//this angle is useful to determine if a certain triangle should be visible to the camera or not
@@ -40,7 +40,7 @@ void Renderer::CalculateNormalVector(const Triangle3D tri) {
 	this->normal.x /= magnitude; this->normal.y /= magnitude; this->normal.z /= magnitude;
 }
 
-bool Renderer::ShouldRender(const Triangle3D tri) {
+bool Renderer::ShouldRender(const Triangle3D tri) { //put in RendererHelperFunctions.cpp
 	//determine whether or not the triangle should be rendered...
 	//calculate the dot product between the normal, the camera and a triangle that is on the same plane. Trivially, the first point was selected. Could have been p[1] or p[2], it would still work regardless.
 	//if this value is negative, then draw the triangle.
@@ -49,22 +49,22 @@ bool Renderer::ShouldRender(const Triangle3D tri) {
 			normal.z * (tri.point[0].z - cameraLocation.z)) < 0.0f; //Notice: if you change this statement to instead evaluate true for dotproductN > 0.0f, the object will be renderered inside out...
 }
 
-void Renderer::SortVerticesByYCoordinates(Triangle2D& triangleCopy) { //sort in ascending order to make shading easier
+void Renderer::SortVerticesByYCoordinates(Triangle2D& triangleCopy) { //sort in ascending order to make shading easier ////put in ShaderHelperFunctions.cpp
 	if (triangleCopy.point[0].y > triangleCopy.point[1].y) std::swap(triangleCopy.point[0].y, triangleCopy.point[1].y);
 }
 
-float Renderer::CalculateSlope(const Triangle2D triangleCopy) {
+float Renderer::CalculateSlope(const Triangle2D triangleCopy) { //put in RendererHelperFunctions.cpp
 	float slopeRise = triangleCopy.point[1].y - triangleCopy.point[0].y;
 	float slopeRun = triangleCopy.point[1].x - triangleCopy.point[0].x;
 	if (slopeRise == 0) return 0; //avoid division by zero
 	else return (slopeRise / slopeRun);
 }
 
-void Renderer::Shade(Triangle2D& triangleCopy) {
+void Renderer::Shade(Triangle2D& triangleCopy) { //put in Shader.cpp
 	SortVerticesByYCoordinates(triangleCopy);
 }
 
-bool Renderer::Render() { //draws all objects contained within worldObjects to the screen
+bool Renderer::Render() { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
 	if (worldObjectsPtr->objects.empty()) {
 		std::cout << "There are no objects to render. Renderer shutting down..." << std::endl;
 		return false;
