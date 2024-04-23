@@ -76,6 +76,7 @@ void LinearTransformations::ApplyTransformation(InputHandler* inputHandlerPtr, T
 	object.CalcCenteroid(); //we've moved the object. Centeroid has changed, need to recalculate it.
 }
 
+/*
 void LinearTransformations::ApplyScaling(InputHandler* inputHandlerPtr, PrimitiveObject& object, Time* timePtr, float scalar) {
 	if (inputHandlerPtr->minusInput) scalar -= 0.2f;
 
@@ -88,8 +89,7 @@ void LinearTransformations::ApplyScaling(InputHandler* inputHandlerPtr, Primitiv
 	}
 
 	for (auto point : object.primitiveMesh.triangles) { //mark work
-		point.point
+		point.point;
 	}
+*/
 
-	
-}
