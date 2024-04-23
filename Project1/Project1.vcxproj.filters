@@ -5,110 +5,153 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Source Files\World Objects">
+      <UniqueIdentifier>{29540c77-2042-4967-8ade-414bb9ce9f18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Source Files\World Objects\Primitives">
+      <UniqueIdentifier>{abb653d7-8117-43b2-9d57-663c87a7cbf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer">
+      <UniqueIdentifier>{6b9a138b-438c-4c65-b6b4-80fd3a251d26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Matrices">
+      <UniqueIdentifier>{0cb0c454-ee47-42a9-9aba-2582777c4e95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Matrices\Vectors">
+      <UniqueIdentifier>{c2e16208-f26c-4e35-932e-1cecfe1d6522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{72442a26-5ce6-4b25-9cd4-a8182fbbf99d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Starter Files">
+      <UniqueIdentifier>{8573c647-a100-4fbe-8408-00d622909dfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Time">
+      <UniqueIdentifier>{f83b97ab-ba4c-4f5e-9378-516a88aa6998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Line">
+      <UniqueIdentifier>{7938e53c-02ce-4b20-88a7-26e12ffc22e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Linear Transformations">
+      <UniqueIdentifier>{3876371d-c724-48ad-89ad-aa387bfd137f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer\Screen">
+      <UniqueIdentifier>{5be6ffcd-1d19-4a91-9842-74d70f970bbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World Objects\Spawner">
+      <UniqueIdentifier>{348e3473-3f84-4996-b6d3-eba8760407f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer\Shader">
+      <UniqueIdentifier>{e8070acd-acef-46aa-b452-0472898585bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Line.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vec3.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="WorldObjects.cpp">
+      <Filter>Source Files\World Objects</Filter>
     </ClCompile>
     <ClCompile Include="Cube.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Basic4x4Matrices.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\World Objects\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="PrimitiveObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LinearTransformations.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\World Objects\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="InputHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Spawner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Time.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StartMe.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldObjects.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Vec3.cpp">
+      <Filter>Source Files\Matrices\Vectors</Filter>
     </ClCompile>
     <ClCompile Include="Vec2.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Matrices\Vectors</Filter>
+    </ClCompile>
+    <ClCompile Include="Basic4x4Matrices.cpp">
+      <Filter>Source Files\Matrices</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="StartMe.cpp">
+      <Filter>Source Files\Starter Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\Starter Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Source Files\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Source Files\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="LinearTransformations.cpp">
+      <Filter>Source Files\Linear Transformations</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.cpp">
+      <Filter>Source Files\Renderer\Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawner.cpp">
+      <Filter>Source Files\World Objects\Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererHelperFunctions.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Renderer\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Screen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Line.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vec3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Basic4x4Matrices.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\World Objects\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="PrimitiveObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LinearTransformations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spawner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StartMe.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\World Objects\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="WorldObjects.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\World Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Source Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3.h">
+      <Filter>Source Files\Matrices\Vectors</Filter>
     </ClInclude>
     <ClInclude Include="Vec2.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Matrices\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="Basic4x4Matrices.h">
+      <Filter>Source Files\Matrices</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="StartMe.h">
+      <Filter>Source Files\Starter Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Source Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Source Files\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearTransformations.h">
+      <Filter>Source Files\Linear Transformations</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Source Files\Renderer\Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Spawner.h">
+      <Filter>Source Files\World Objects\Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererHelperFunctions.h">
+      <Filter>Source Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Source Files\Renderer\Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

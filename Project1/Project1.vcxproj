@@ -137,6 +137,8 @@
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="RendererHelperFunctions.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LinearTransformations.cpp" />
@@ -151,6 +153,8 @@
     <ClCompile Include="WorldObjects.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RendererHelperFunctions.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Cube.h" />
