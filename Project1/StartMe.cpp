@@ -32,7 +32,7 @@ void StartMe::StartRendering() {
 
 		if (inputHandlerPtr->leftInput || inputHandlerPtr->rightInput || inputHandlerPtr->upInput || inputHandlerPtr->downInput) transform.ApplyRotation(inputHandlerPtr, timePtr, *selectedObject);
 		if (inputHandlerPtr->wInput || inputHandlerPtr->aInput || inputHandlerPtr->sInput || inputHandlerPtr->dInput || inputHandlerPtr->zInput || inputHandlerPtr->xInput) transform.ApplyTransformation(inputHandlerPtr, timePtr, *selectedObject);
-		if (inputHandlerPtr->minusInput || inputHandlerPtr->plusInput) transform.ApplyScaling(inputHandlerPtr, *selectedObject, timePtr);
+		//if (inputHandlerPtr->minusInput || inputHandlerPtr->plusInput) transform.ApplyScaling(inputHandlerPtr, *selectedObject, timePtr);
 	}
 
 	std::cout << "Renderer has been shut down due to an error. Check above message for reason. Closing in 5 seconds..." << std::endl;
