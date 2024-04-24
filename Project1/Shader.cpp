@@ -1,5 +1,10 @@
 #include "Shader.h"
 
+struct BoundingBox{ //used for determing the area we need to check for intersections
+    Vec2 minPoint; // -- > top-left corner of bounding box
+    Vec2 maxPoint; // -- > bottom-right corner of bounding box
+}
+
 Shader::Shader(Screen* screenPtr) {
 	this->screenPtr = screenPtr;
 	linePtr = new Line(screenPtr);
@@ -10,40 +15,38 @@ Shader::~Shader(){
 }
 
 void Shader::FillTriangle(const Triangle2D& projTriangle) {
-    Vec2 p1, p2, p3;
-    p1 = projTriangle.point[0]; p2 = projTriangle.point[1]; p3 = projTriangle.point[2];
+    BoundingBox boundingBox = GetBoundingBox(projTriangle);
+}
 
-    //find triangle bounds
-    int minX = std::min({ p1.x, p2.x, p3.x });
-    int maxX = std::max({ p1.x, p2.x, p3.x });
-    int minY = std::min({ p1.y, p2.y, p3.y });
-    int maxY = std::max({ p1.y, p2.y, p3.y });
+BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
+    BoundingBox boundingBox;
 
-    //iterate over each scanline
-    for (int y = minY; y <= maxY; ++y) {
-        linePtr->y1 = y;
-        //initialize intersection points
-        int x1 = INT_MAX, x2 = INT_MIN;
+    //calculate the minimum x coordinate (closest to origin) and minimum y coordinate
+    float minX = std::min(projTriangle.point[0].x, projTriangle.point[1].x projTriangle.point[2].x);
+    float minY = std::min(projTriangle.point[0].y, projTriangle.point[1].y projTriangle.point[2].y);
+    float maxX = std::max(projTriangle.point[0].x, projTriangle.point[1].x projTriangle.point[2].x);
+    float maxY = std::max(projTriangle.point[0].y, projTriangle.point[1].y projTriangle.point[2].y);
 
-        //find intersection points with each edge
-        if ((y - p1.y) * (p2.x - p1.x) - (p2.y - p1.y) * (p1.x - x1) > 0)
-            x1 = p1.x + (y - p1.y) * (p2.x - p1.x) / (p2.y - p1.y);
-        if ((y - p1.y) * (p3.x - p1.x) - (p3.y - p1.y) * (p1.x - x1) > 0)
-            x1 = p1.x + (y - p1.y) * (p3.x - p1.x) / (p3.y - p1.y);
-        if ((y - p2.y) * (p3.x - p2.x) - (p3.y - p2.y) * (p2.x - x2) < 0)
-            x2 = p2.x + (y - p2.y) * (p3.x - p2.x) / (p3.y - p2.y);
-        if ((y - p2.y) * (p1.x - p2.x) - (p1.y - p2.y) * (p2.x - x2) < 0)
-            x2 = p2.x + (y - p2.y) * (p1.x - p2.x) / (p1.y - p2.y);
-        if ((y - p3.y) * (p1.x - p3.x) - (p1.y - p3.y) * (p3.x - x2) > 0)
-            x2 = p3.x + (y - p3.y) * (p1.x - p3.x) / (p1.y - p3.y);
-        if ((y - p3.y) * (p2.x - p3.x) - (p2.y - p3.y) * (p3.x - x2) > 0)
-            x2 = p3.x + (y - p3.y) * (p2.x - p3.x) / (p2.y - p3.y);
+    //store these values in our boundingBox object for later use
+    boundingBox.minPoint.x = minX;
+    boundingBox.minPoint.y = minY;
+    boundingBox.maxPoint.x = maxX;
+    boundingBox.maxPoint.y = maxY;
 
-        //draw horizontal line between intersection points
-        if (x1 <= x2) {
-            linePtr->x1 = x1; linePtr->x2 = x2; linePtr->y1 = y;
-            linePtr->DrawHorizontalLine();
-        }
-    }
+    return boundingBox;
+}
+
+bool Shader::IsInsideTriangle(const Vec2& pointToRender, const Triangle2D& projTriangle){ //if all of the below statements equate to true (all cross product operations >= 0 --- meaning pointToRender is within projTriangle) we want to draw this point.
+    return GetEdgeFunctionValue(pointToRender, projTriangle.point[0], projTriangle.point[1]) >= 0 &&
+           GetEdgeFunctionValue(pointToRender, projTriangle.point[1], projTriangle.point[2]) >= 0 &&
+           GetEdgeFunctionValue(pointToRender, projTriangle.point[2], projTriangle.point[0]) >= 0;
+}
+
+ float Shader::GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to pointToRender (the vertices that define this particular edge).
+    //Pos vals fall within the triangle, negative vals fall on the outside.
+    //If evaluates to 0, this point (x, y) falls on the edge exactly.
+    //find the cross product of two inputted vectors with respect to pointToRender:
+    float edgeFunctionValue = (v1.x - v0.y) * (pointToRender.y * v0.y) - (v1.y - v0.y) * (pointToRender.x - v0.x);
+    return edgeFunctionValue;
 }
 
