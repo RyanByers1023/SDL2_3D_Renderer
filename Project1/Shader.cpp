@@ -14,6 +14,12 @@ Shader::~Shader(){
 	delete this->linePtr;
 }
 
+//in its current state, this rendering process WILL NOT work. Objects that fall outside of the viewing frustrum
+//(determined by the camera pos and the projection matrix inputs) will have their x-coordinates
+//(or y-coordinates --- depending on what part of the shape lies outside of the viewing frustrum) increase
+//towards +inf. causes instability problems like incredibly large fps drops and visual glitches.
+//clipping function NEEDS to be implemented for this engine to work at all at this state in the project
+
 void Shader::FillTriangle(const Triangle2D& projTriangle) {
     BoundingBox boundingBox = GetBoundingBox(projTriangle); //check for pixel only within this area
     for(int y = boundingBox.minPoint.y; y < boundingBox.maxPoint.y; ++y){ //area to search in y
