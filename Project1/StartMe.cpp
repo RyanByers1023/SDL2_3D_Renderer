@@ -17,8 +17,8 @@ StartMe::~StartMe(){
 
 void StartMe::StartRendering() {
 	SpawnCube(worldObjectsPtr, "cube1"); //spawner needs access to the renderer and it also needs a unique name for the object to be spawned
-	SpawnCube(worldObjectsPtr, "cube2");
-	SpawnCube(worldObjectsPtr, "cube3");
+	//SpawnCube(worldObjectsPtr, "cube2");
+	//SpawnCube(worldObjectsPtr, "cube3");
 
 	while (true) {
 		timePtr->Tick(); //calculate the time since the last frame has occured
@@ -35,6 +35,6 @@ void StartMe::StartRendering() {
 		//if (inputHandlerPtr->minusInput || inputHandlerPtr->plusInput) transform.ApplyScaling(inputHandlerPtr, *selectedObject, timePtr);
 	}
 
-	std::cout << "Renderer has been shut down due to an error. Check above message for reason. Closing in 5 seconds..." << std::endl;
-	SDL_Delay(5000); //wait for 5 seconds
+	std::cout << "Renderer has been shut down due to an unexpected error. Check above message for details. Force closing in 5 seconds..." << std::endl;
+	SDL_Delay(5000); //wait for 5 seconds to allow user to see this error message
 }

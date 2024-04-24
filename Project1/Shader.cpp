@@ -19,7 +19,7 @@ void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
     BoundingBox boundingBox = GetBoundingBox(projTriangle); //check for pixel only within this area
     for(int y = boundingBox.minPoint.y; y < boundingBox.maxPoint.y; ++y){ //area to search in y
         for(int x = boundingBox.minPoint.x; x < boudingBox.maxPoint.x; ++x){ //area to search in x
-            if(IsInsideTriangle(x, y, projTriangle)){ //determine if the pixel we are looking at (within boundingBox) is within or on the triangle. If it is, draw it to the screen
+            if(IsInsideTriangle(x, y, projTriangle)){ //determine if the pixel we are looking at (within boundingBox) is within or on one of the edges of the triangle. If it is, draw it to the screen
                 //Apply shading to pixel (not implemented as of yet)
                 //Color pixel (not implemented as of yet)
                 //drawPixel(x, y); (need to implement this)

@@ -4,5 +4,5 @@
 #include <string>
 #include <iostream>
 
-void SpawnCube(WorldObjects* worldObjectsPtr, std::string name, Vec3 position = { 40.0f, 20.0f, 90.0f }, int size = 100);
+void SpawnCube(WorldObjects* worldObjectsPtr, std::string name, Vec3 position = { 40.0f, 20.0f, 180.0f }, int size = 100);
 	
