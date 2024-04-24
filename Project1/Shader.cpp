@@ -1,10 +1,5 @@
 #include "Shader.h"
 
-struct BoundingBox{ //used for determing the area we need to check for intersections
-    Vec2 minPoint; // -- > top-left corner of bounding box
-    Vec2 maxPoint; // -- > bottom-right corner of bounding box
-}
-
 Shader::Shader(Screen* screenPtr) {
 	this->screenPtr = screenPtr;
 	linePtr = new Line(screenPtr);
@@ -20,7 +15,7 @@ Shader::~Shader(){
 //towards +inf. causes instability problems like incredibly large fps drops and visual glitches.
 //clipping function NEEDS to be implemented for this engine to work at all at this state in the project
 
-void Shader::FillTriangle(const Triangle2D& projTriangle) {
+void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
     BoundingBox boundingBox = GetBoundingBox(projTriangle); //check for pixel only within this area
     for(int y = boundingBox.minPoint.y; y < boundingBox.maxPoint.y; ++y){ //area to search in y
         for(int x = boundingBox.minPoint.x; x < boudingBox.maxPoint.x; ++x){ //area to search in x
@@ -53,9 +48,9 @@ BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
 }
 
 bool Shader::IsInsideTriangle(const Vec2& pointToRender, const Triangle2D& projTriangle){ //if all of the below statements equate to true (all cross product operations >= 0 --- meaning pointToRender is within projTriangle) we want to draw this point.
-    return GetEdgeFunctionValue(pointToRender, projTriangle.point[0], projTriangle.point[1]) >= 0 &&
-           GetEdgeFunctionValue(pointToRender, projTriangle.point[1], projTriangle.point[2]) >= 0 &&
-           GetEdgeFunctionValue(pointToRender, projTriangle.point[2], projTriangle.point[0]) >= 0;
+    return GetEdgeFunctionValue(pointToRender, projTriangle.point[0], projTriangle.point[1]) >= 0 && //edge from p0 to p1
+           GetEdgeFunctionValue(pointToRender, projTriangle.point[1], projTriangle.point[2]) >= 0 && //edge from p1 to p2
+           GetEdgeFunctionValue(pointToRender, projTriangle.point[2], projTriangle.point[0]) >= 0;   //edge from p2 to p0
 }
 
  float Shader::GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to pointToRender (the vertices that define this particular edge).
