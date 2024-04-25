@@ -15,6 +15,7 @@ class ProjectionMatrix : public Matrix4x4 {
 public:
 	//constructor -- Initializes the projection matrix.
 	ProjectionMatrix(int screenWidth, int screenHeight, float fov = 90.0f, float fFar = 1000.0f, float fNear = 0.1f);
+	void Invert();
 };
 
 class RotationMatrix : public Matrix4x4 {
