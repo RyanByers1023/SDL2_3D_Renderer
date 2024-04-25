@@ -53,11 +53,17 @@ bool Shader::IsInsideTriangle(const Vec2& pointToRender, const Triangle2D& projT
            GetEdgeFunctionValue(pointToRender, projTriangle.point[2], projTriangle.point[0]) >= 0;   //edge from p2 to p0
 }
 
- float Shader::GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to pointToRender (the vertices that define this particular edge).
+float Shader::GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to pointToRender (the vertices that define this particular edge).
     //Pos vals fall within the triangle, negative vals fall on the outside.
     //If evaluates to 0, this point (x, y) falls on the edge exactly.
     //find the cross product of two inputted vectors with respect to pointToRender:
     float edgeFunctionValue = (v1.x - v0.y) * (pointToRender.y * v0.y) - (v1.y - v0.y) * (pointToRender.x - v0.x);
     return edgeFunctionValue;
+}
+
+void Shader::ClipTriangles(){ //this will use a process referred to as: homogeneous clipping.
+    //how it works:
+    //determine whether or not a triangle edge (v0 -> v1) needs to be clipped (something to do with the projection matrix w value < 0???)
+    //if so, find where it needs to be clipped along the edge v0 -> v1 and discard the rest that goes past this point
 }
 
