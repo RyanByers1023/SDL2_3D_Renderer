@@ -1,6 +1,6 @@
 #include "Basic4x4Matrices.h"
 
-Matrix4x4 Matrix4x4::operator=(const Matrix4x4& inputMatrix) {
+Matrix4x4 Matrix4x4::operator=(const Matrix4x4& inputMatrix) { //assignment operator overloader
 	Matrix4x4 result;
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
@@ -12,7 +12,7 @@ Matrix4x4 Matrix4x4::operator=(const Matrix4x4& inputMatrix) {
 	return result;
 }
 
-Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& other) {
+Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& other) { //standard 4x4 x 4x4 matrix multiplication. Outputs a 4x4 matrix
 	Matrix4x4 result;
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
