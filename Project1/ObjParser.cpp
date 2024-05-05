@@ -6,10 +6,10 @@ primitiveMesh GetMesh(std::string fileName){
     std::ifstream objFile;
     if(OpenObjFile(fileName, objFile)){
         //objFile should point to the correct file at this point in time
-        //want to enter into 
-        IterateThroughObjFile(objFile, mesh)
+        //want to enter into the main getline loop that is used to parse the file...
+        IterateThroughObjFile(objFile, mesh); //do this here. This will also populate the mesh
     }
-    return mesh;
+    return mesh; //return the complete mesh
 }
 
 bool OpenObjFile(std::string fileName, std::ifstream& objFile){ //this parser assumes the obj file only contains vertex information (will crash otherwise, i should probably handle this)
@@ -44,7 +44,7 @@ Vec3 GetVertex(std::istringstream& vertexStream, Vec3 newVertex){
 }
 
 //initialize a triangle
-Vec3 GetTriangle(std::istringstream vertexStream){
+Vec3 GetTriangle(std::istringstream& vertexStream){
     Triangle3D newTriangle;
     for(int i = 0; i < 3; ++i){ //populate the triangle with our three new vertices
         Vec3 newVertex; //create a new Vec3 object to store the newly found vertex
