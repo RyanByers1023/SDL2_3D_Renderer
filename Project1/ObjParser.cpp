@@ -1,47 +1,54 @@
 #include "ObjParser.h"
 
-//this will be the main function that returns the entire comepleted mesh
-primitiveMesh GetMesh(){
-
+//this will be the main function that returns the entire completed mesh
+primitiveMesh GetMesh(std::string fileName){
+    std::vector<Triangle3D> mesh;
+    std::ifstream objFile;
+    if(OpenObjFile(fileName, objFile)){
+        //objFile should point to the correct file at this point in time
+        //want to enter into 
+        IterateThroughObjFile(objFile, mesh)
+    }
+    return mesh;
 }
 
-bool OpenObjFile(string filename){ //this parser assumes the obj file only contains vertex information (will crash otherwise, i should probably handle this)
-    std::ifstream objFile (filename);
-
-    if(objFile.is_open()){ //file was found in program main directory
-        GetLine()
-    }
-    else{ //file was not found in program main directory
+bool OpenObjFile(std::string fileName, std::ifstream& objFile){ //this parser assumes the obj file only contains vertex information (will crash otherwise, i should probably handle this)
+    if(!objFile.is_open()){ //.obj file was not found in program main directory, return false.
         std::cerr<< "Failed to open object file. File not found. Did you enter the correct .obj File name?"<< std::endl;
         return false;
-    }    
-    return true;
+    }
+    return true; //[filename].obj exists, and we have opened it, return true
 }
 
-bool GetLines(const std::ifstream& objFile, string& line){
-    if(getline(objFile, line)){
-        return true;
-    }
-    else{
-        return false;
+void IterateThroughObjFile(const std::ifstream& objFile, std::vector<Triangle3D> mesh){
+    while(std::getline(objFile, line)){
+        std::istringstream vertexStream(line);
+        char vertexCheck; //first character of a line defining a vertex will be 'v'
+        vertexStream >> vertexCheck; //stream the first character of the line into vertexCheck
+        if(vertexCheck == 'v'){ //there is a definition for a vertex here...
+            Triangle3D newTriangle;
+            GetTriangle(vertexStream, newTriangle); //create a triangle     
+        }
+        mesh.push_back(newTriangle); //store our new triangle in the mesh
     }
 }
 
-Vec3 GetVertex(std::string line){ 
-    char vertexCheck;
+//intitialize a vertex
+Vec3 GetVertex(std::istringstream& vertexStream, Vec3 newVertex){ 
+    float x, y, z;
+    vertexStream >> x >> y >> z;
 
-    while(GetLines()){ //the current line from objFile is now = to line
-            std::istringstream vertexLine(line);
-            vertexLine >> vertexCheck;
-            if(vertexCheck == 'v'){ //this is a line that is going to give me vertex information
-                float x, y, z;
-                vertexLine >> x >> y >> z;
-                //create a new vec3 object and intialize with these values
-                Vec3 vertex;
-                vertex.x = x;
-                vertex.y = y;
-                vertex.z = z;
-                //we now have extracted a vertex from the obj file that is to be a part of the mesh
-            }
+    newVertex.x = x;
+    newVertex.y = y;
+    newVertex.z = z;
+}
+
+//initialize a triangle
+Vec3 GetTriangle(std::istringstream vertexStream){
+    Triangle3D newTriangle;
+    for(int i = 0; i < 3; ++i){ //populate the triangle with our three new vertices
+        Vec3 newVertex; //create a new Vec3 object to store the newly found vertex
+        GetVertex(std::istringstream& vertexStream, newVertex); //now the new vertex from the .obj file is stored in newVertex
+        newTriangle.point[i] = newVertex; //populate vertex i of the triangle with the new vertex
     }
 }
