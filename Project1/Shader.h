@@ -1,6 +1,7 @@
 #pragma once
 #include "Screen.h"
 #include "Vec2.h"
+#include "Pixel.h"
 
 struct BoundingBox{ //used for determing the area we need to check for intersections
     Vec2 minPoint; // -- > top-left corner of bounding box

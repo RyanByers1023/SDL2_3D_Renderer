@@ -2,15 +2,14 @@
 
 Shader::Shader(Screen* screenPtr) {
 	this->screenPtr = screenPtr;
-	linePtr = new Line(screenPtr);
 }
 
 Shader::~Shader(){
-	delete this->linePtr;
+	delete this->pixelPtr;
 }
 
 //in its current state, this rendering process WILL NOT work. Objects that fall outside of the viewing frustrum
-//(determined by the camera pos and the projection matrix inputs) will have their x-coordinates
+//(determined by the camera pos and the 3-D -> 2-D projection matrix transformation inputs) will have their x-coordinates
 //(or y-coordinates --- depending on what part of the shape lies outside of the viewing frustrum) increase
 //towards +inf. causes instability problems like incredibly large fps drops and visual glitches.
 //clipping function NEEDS to be implemented for this engine to work at all at this state in the project
@@ -22,7 +21,10 @@ void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
             if(IsInsideTriangle(x, y, projTriangle)){ //determine if the pixel we are looking at (within boundingBox) is within or on one of the edges of the triangle. If it is, draw it to the screen
                 //Apply shading to pixel (not implemented as of yet)
                 //Color pixel (not implemented as of yet)
-                //drawPixel(x, y); (need to implement this)
+
+                //Draw the pixel
+                Pixel newPixel(screenPtr, x, y); 
+                newPixel.Draw();
             }
         }
     }
