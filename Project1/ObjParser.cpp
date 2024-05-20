@@ -33,8 +33,8 @@ void ObjFile::IterateThroughObjFile(const std::ifstream& objFile){
         vertexStream >> vertexCheck; //stream the first character of the line into vertexCheck
         if(vertexCheck == 'v'){ //there is a definition for a vertex here...
             Triangle3D newTriangle = CreateTriangle(vertexStream, newTriangle); //the next three rows will be vertices for a triangle, create a new triangle with them 
+            mesh.push_back(newTriangle); //store our new triangle in the mesh
         }
-        mesh.push_back(newTriangle); //store our new triangle in the mesh
     }
 }
 
