@@ -4,10 +4,6 @@ Shader::Shader(Screen* screenPtr) {
 	this->screenPtr = screenPtr;
 }
 
-Shader::~Shader(){
-	delete this->pixelPtr;
-}
-
 //in its current state, this rendering process WILL NOT work. Objects that fall outside of the viewing frustrum
 //(determined by the camera pos and the 3-D -> 2-D projection matrix transformation inputs) will have their x-coordinates
 //(or y-coordinates --- depending on what part of the shape lies outside of the viewing frustrum) increase

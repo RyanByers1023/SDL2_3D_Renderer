@@ -12,7 +12,6 @@ struct BoundingBox{ //used for determing the area we need to check for intersect
 class Shader {
 public:
 	Shader(Screen* screenPtr);
-	~Shader();
 	void ShadeTriangle(const Triangle2D& projTriangle);
 private:
 	BoundingBox GetBoundingBox(const Triangle2d& projTriangle);
