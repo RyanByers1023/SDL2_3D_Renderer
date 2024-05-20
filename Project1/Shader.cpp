@@ -64,7 +64,7 @@ bool Shader::IntersectsTriangle(const Vec2& currPoint, const Triangle2D& projTri
 }
 
 float Shader::GetEdgeFunctionValue(const Vec2& currPoint, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to currPoint
-    //How to evaluate this functions output:
+    //How to interpret this function's output:
     //Pos vals fall within the triangle (RENDER)
     //Neg vals fall outside of the triangle (DO NOT RENDER)
     //If evaluates to 0, this point (x, y) falls on the edge exactly. (RENDER)
