@@ -16,7 +16,7 @@ public:
 private:
 	BoundingBox GetBoundingBox(const Triangle2d& projTriangle);
 	void ClampBoundingBox(BoundingBox& boundingBox);
-	bool IsInsideTriangle(const Vec2& pointToRender, const Triangle2D& projTriangle);
+	bool IntersectsTriangle(const Vec2& pointToCheck, const Triangle2D& projTriangle);
 	float GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1);
 	Screen* screenPtr;
 };

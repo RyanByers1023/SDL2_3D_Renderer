@@ -12,15 +12,17 @@ Shader::Shader(Screen* screenPtr) {
 
 void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
     BoundingBox boundingBox = GetBoundingBox(projTriangle); //check for pixel only within this area
+
     for(int y = boundingBox.minPoint.y; y < boundingBox.maxPoint.y; y++){ //area to search in y
         for(int x = boundingBox.minPoint.x; x < boundingBox.maxPoint.x; x++){ //area to search in x
-            if(IsInsideTriangle(x, y, projTriangle)){ //determine if the pixel we are looking at (within boundingBox) is within or on one of the edges of the triangle. If it is, draw it to the screen
+            Vec2 currPoint = {x, y}; //create a Vec2 that represents the current point within the boundingbox we are currently checking for intersections with the projected triangle projTriangle
+            if(IntersectsTriangle(currPoint, projTriangle)){ //determine if the pixel we are looking at is within or on one of the edges of the triangle. If it is, draw it to the screen
                 //Apply shading to pixel (not implemented as of yet)
                 //Color pixel (not implemented as of yet)
 
-                //Draw the pixel -- hopefully this works
-                Pixel newPixel(screenPtr, x, y); 
-                newPixel.Draw();
+                //Draw the pixel (add to list of pixels that are to be rendered in screen object)
+                Pixel newPixel(screenPtr, x, y); //create the pixel
+                newPixel.Draw(); //add to list of pixels to be drawn on screen.show() call (called within Renderer.cpp)
             }
         }
     }
@@ -55,18 +57,21 @@ void Shader::ClampBoundingBox(BoundingBox& boundingBox){//process that clamps th
     boundingBox.maxPoint.y = std::min(screenHeight - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.y))); //clamp between screenHeight - 1 and the max y val of the boundingBox (if a float, it is rounded up)
 }
 
-bool Shader::IsInsideTriangle(const Vec2& pointToRender, const Triangle2D& projTriangle){ //if all of the below statements equate to true (all cross product operations >= 0 --- meaning pointToRender is within projTriangle) we want to draw this point.
-    return GetEdgeFunctionValue(pointToRender, projTriangle.point[0], projTriangle.point[1]) >= 0 && //edge from p0 to p1
-           GetEdgeFunctionValue(pointToRender, projTriangle.point[1], projTriangle.point[2]) >= 0 && //edge from p1 to p2
-           GetEdgeFunctionValue(pointToRender, projTriangle.point[2], projTriangle.point[0]) >= 0;   //edge from p2 to p0
+bool Shader::IntersectsTriangle(const Vec2& currPoint, const Triangle2D& projTriangle){ //if all of the below statements equate to true (all cross product operations >= 0) the point intersects projTriangle, therfore we want to draw this point.
+    return GetEdgeFunctionValue(currPoint, projTriangle.point[0], projTriangle.point[1]) >= 0 && //edge from p0 to p1
+           GetEdgeFunctionValue(currPoint, projTriangle.point[1], projTriangle.point[2]) >= 0 && //edge from p1 to p2
+           GetEdgeFunctionValue(currPoint, projTriangle.point[2], projTriangle.point[0]) >= 0;   //edge from p2 to p0
 }
 
-float Shader::GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to pointToRender (the vertices that define this particular edge).
-    //Pos vals fall within the triangle, negative vals fall on the outside.
-    //If evaluates to 0, this point (x, y) falls on the edge exactly.
-    //find the cross product of two inputted vectors with respect to pointToRender:
-    float edgeFunctionValue = (v1.x - v0.y) * (pointToRender.y * v0.y) - (v1.y - v0.y) * (pointToRender.x - v0.x);
-    return edgeFunctionValue;
+float Shader::GetEdgeFunctionValue(const Vec2& currPoint, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to currPoint
+    //How to evaluate this functions output:
+    //Pos vals fall within the triangle (RENDER)
+    //Neg vals fall outside of the triangle (DO NOT RENDER)
+    //If evaluates to 0, this point (x, y) falls on the edge exactly. (RENDER)
+
+    //calculate the cross product of two inputted vectors with respect to currPoint:
+    float edgeFunctionValue = (v1.x - v0.y) * (currPoint.y - v0.y) - (v1.y - v0.y) * (currPoint.x - v0.x);
+    return edgeFunctionValue; //return value for evaluation in IntersectsTriangle
 }
 
 bool Shader::IsWithinScreenBounds(BoundingBox boundingBox){
