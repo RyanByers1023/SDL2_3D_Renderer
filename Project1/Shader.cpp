@@ -74,10 +74,3 @@ float Shader::GetEdgeFunctionValue(const Vec2& currPoint, const Vec2& v0, const 
     return edgeFunctionValue; //return value for evaluation in IntersectsTriangle
 }
 
-bool Shader::IsWithinScreenBounds(BoundingBox boundingBox){
-    boundingBox.minPoint.x = std::max(0, boundingBox.minPoint.x);
-    boundingBox.minPoint.y = std::max(0, boundingBox.minPoint.y);
-    boundingBox.maxPoint.x = std::min(screenWidth - 1, boundingBox.maxPoint.x);
-    boundingBox.maxPoint.y = std::min(screenHeight - 1, boundingBox.maxPoint.y);
-}
-
