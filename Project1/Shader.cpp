@@ -16,13 +16,13 @@ Shader::~Shader(){
 
 void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
     BoundingBox boundingBox = GetBoundingBox(projTriangle); //check for pixel only within this area
-    for(int y = boundingBox.minPoint.y; y < boundingBox.maxPoint.y; ++y){ //area to search in y
-        for(int x = boundingBox.minPoint.x; x < boudingBox.maxPoint.x; ++x){ //area to search in x
+    for(int y = boundingBox.minPoint.y; y < boundingBox.maxPoint.y; y++){ //area to search in y
+        for(int x = boundingBox.minPoint.x; x < boundingBox.maxPoint.x; x++){ //area to search in x
             if(IsInsideTriangle(x, y, projTriangle)){ //determine if the pixel we are looking at (within boundingBox) is within or on one of the edges of the triangle. If it is, draw it to the screen
                 //Apply shading to pixel (not implemented as of yet)
                 //Color pixel (not implemented as of yet)
 
-                //Draw the pixel
+                //Draw the pixel -- hopefully this works
                 Pixel newPixel(screenPtr, x, y); 
                 newPixel.Draw();
             }
@@ -46,7 +46,17 @@ BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
     boundingBox.maxPoint.x = maxX;
     boundingBox.maxPoint.y = maxY;
 
+    //now we need to clip the bounding box
+    ClipBoundingBox(boundingBox);
+
     return boundingBox;
+}
+
+void Shader::ClipBoundingBox(BoundingBox& boundingBox){//process that clips the boundingBox to be within the screen space, and convert floats to integers for easy iteration through the bounding box
+    boundingBox.minPoint.x = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.x)));
+    boundingBox.minPoint.y = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.y)));
+    boundingBox.maxPoint.x = std::min(screenWidth - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.x)));
+    boundingBox.maxPoint.y = std::min(screenHeight - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.y)));
 }
 
 bool Shader::IsInsideTriangle(const Vec2& pointToRender, const Triangle2D& projTriangle){ //if all of the below statements equate to true (all cross product operations >= 0 --- meaning pointToRender is within projTriangle) we want to draw this point.
@@ -63,9 +73,10 @@ float Shader::GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, co
     return edgeFunctionValue;
 }
 
-void Shader::ClipTriangles(){ //this will use a process referred to as: homogeneous clipping.
-    //how it works:
-    //determine whether or not a triangle edge (v0 -> v1) needs to be clipped (something to do with the projection matrix w value < 0???)
-    //if so, find where it needs to be clipped along the edge v0 -> v1 and discard the rest that goes past this point
+bool Shader::IsWithinScreenBounds(BoundingBox boundingBox){
+    boundingBox.minPoint.x = std::max(0, boundingBox.minPoint.x);
+    boundingBox.minPoint.y = std::max(0, boundingBox.minPoint.y);
+    boundingBox.maxPoint.x = std::min(screenWidth - 1, boundingBox.maxPoint.x);
+    boundingBox.maxPoint.y = std::min(screenHeight - 1, boundingBox.maxPoint.y);
 }
 
