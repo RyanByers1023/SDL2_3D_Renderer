@@ -42,20 +42,16 @@ void ObjFile::IterateThroughObjFile(const std::ifstream& objFile){
 Triangle3D CreateTriangle(std::istringstream& vertexStream){
     Triangle3D newTriangle;
     for(int i = 0; i < 3; ++i){ //populate the triangle with the next three vertices
-        Vec3 newVertex = CreateVertex(std::istringstream& vertexStream, newVertex); //create a new Vec3 object to store the vertex
+        Vec3 newVertex = CreateVertex(vertexStream); //create a new Vec3 object to store the vertex
         newTriangle.point[i] = newVertex; //populate vertex i of the triangle with the new vertex
     }
     return newTriangle;
 }
 
 //intitialize a vertex
-Vec3 ObjFile::CreateVertex(std::istringstream& vertexStream, Vec3 newVertex){ 
-    float x, y, z;
-    vertexStream >> x >> y >> z;
-
-    newVertex.x = x;
-    newVertex.y = y;
-    newVertex.z = z;
+Vec3 ObjFile::CreateVertex(std::istringstream& vertexStream){ 
+    Vec3 newVertex;
+    vertexStream >> newVertex.x >> newVertex.y >> newVertex.z;
 
     return newVertex;
 }
