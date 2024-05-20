@@ -53,10 +53,10 @@ BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
 }
 
 void Shader::ClampBoundingBox(BoundingBox& boundingBox){//process that clamps the boundingBox to be within the screen space, and convert floats to integers for easy iteration through the bounding box
-    boundingBox.minPoint.x = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.x)));
-    boundingBox.minPoint.y = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.y)));
-    boundingBox.maxPoint.x = std::min(screenWidth - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.x)));
-    boundingBox.maxPoint.y = std::min(screenHeight - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.y)));
+    boundingBox.minPoint.x = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.x))); //clamp between 0 and the min x val of the boundingBox (if a float, it is rounded down)
+    boundingBox.minPoint.y = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.y))); //clamp between 0 and the min y val of the boundingBox (if a float, it is rounded down)
+    boundingBox.maxPoint.x = std::min(screenWidth - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.x))); //clamp between screenWidth - 1 and the max x val of the boundingBox (if a float, it is rounded up)
+    boundingBox.maxPoint.y = std::min(screenHeight - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.y))); //clamp between screenHeight - 1 and the max y val of the boundingBox (if a float, it is rounded up)
 }
 
 bool Shader::IsInsideTriangle(const Vec2& pointToRender, const Triangle2D& projTriangle){ //if all of the below statements equate to true (all cross product operations >= 0 --- meaning pointToRender is within projTriangle) we want to draw this point.

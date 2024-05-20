@@ -16,7 +16,7 @@ public:
 	void ShadeTriangle(const Triangle2D& projTriangle);
 private:
 	BoundingBox GetBoundingBox(const Triangle2d& projTriangle);
-	vodi ClampBoundingBox(BoundingBox& boundingBox);
+	void ClampBoundingBox(BoundingBox& boundingBox);
 	bool IsInsideTriangle(const Vec2& pointToRender, const Triangle2D& projTriangle);
 	float GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1);
 	Screen* screenPtr;
