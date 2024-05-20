@@ -47,12 +47,12 @@ BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
     boundingBox.maxPoint.y = maxY;
 
     //now we need to clip the bounding box
-    ClipBoundingBox(boundingBox);
+    ClampBoundingBox(boundingBox);
 
     return boundingBox;
 }
 
-void Shader::ClipBoundingBox(BoundingBox& boundingBox){//process that clips the boundingBox to be within the screen space, and convert floats to integers for easy iteration through the bounding box
+void Shader::ClampBoundingBox(BoundingBox& boundingBox){//process that clamps the boundingBox to be within the screen space, and convert floats to integers for easy iteration through the bounding box
     boundingBox.minPoint.x = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.x)));
     boundingBox.minPoint.y = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.y)));
     boundingBox.maxPoint.x = std::min(screenWidth - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.x)));
