@@ -14,6 +14,10 @@ void Screen::CreatePixel(float x, float y) {
 	vertices.push_back(newPoint); //create new SDL_FPoint object and push to vertices vector
 }
 
+void Screen:CreatePixel(Vec2 newPoint){
+	vertices.push_back(newPoint);
+}
+
 void Screen::Show() {
 	SDL_SetRenderDrawColor(SDLRenderer, 0, 0, 0, 255); //set color to black
 	SDL_RenderClear(SDLRenderer);
