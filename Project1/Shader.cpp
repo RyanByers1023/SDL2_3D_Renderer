@@ -10,7 +10,8 @@ Shader::Shader(Screen* screenPtr) {
 //towards +inf. causes instability problems like incredibly large fps drops and visual glitches.
 //clipping function NEEDS to be implemented for this engine to work at all at this state in the project
 
-//leaving above for later reference but this is possibly fixed?
+//leaving above for later reference but this is possibly fixed due to the implementation of the bounding box?
+//would like to introduce triangle clipping at a later point, but for now, this should work decently well
 
 void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
     BoundingBox boundingBox = GetBoundingBox(projTriangle); //check for pixel only within this area
