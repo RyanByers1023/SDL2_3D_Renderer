@@ -68,11 +68,11 @@ float Shader::GetEdgeFunctionDet(const Vec2& currPoint, const Vec2& v0, const Ve
     //det(A, B, C) = (Bx - Ax) * (Cy - Ay) * (By - Ay) * (Cx - Ax)
 
     //How to interpret this function's output:
-    //Pos vals fall within the triangle (RENDER)
-    //Neg vals fall outside of the triangle (DO NOT RENDER)
-    //If evaluates to 0, this point (x, y) falls on the edge exactly. (RENDER)
+    //Pos vals fall to the right of the edge (RENDER)
+    //Neg vals fall to the left of the edge (DO NOT RENDER)
+    //If evaluates to 0, currPoint falls directly on the edge (RENDER)
 
     float edgeFunctionValue = (v1.x - v0.x) * (currPoint.y - v0.y) * (v1.y - v0.y) * (currPoint.x - v0.x);
-    return edgeFunctionValue; //return value for evaluation in IntersectsTriangle
+    return edgeFunctionValue; //return value for above evaluation in IntersectsTriangle
 }
 
