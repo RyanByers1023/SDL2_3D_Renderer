@@ -57,24 +57,22 @@ void Shader::ClampBoundingBox(BoundingBox& boundingBox){//process that clamps th
 }
 
 bool Shader::IntersectsTriangle(const Vec2& currPoint, const Triangle2D& projTriangle){ //if all of the below statements equate to true (all cross product operations >= 0) the point intersects projTriangle, therfore we want to draw this point.
-    return GetEdgeFunctionValue(currPoint, projTriangle.point[0], projTriangle.point[1]) >= 0 && //edge from p0 to p1
-           GetEdgeFunctionValue(currPoint, projTriangle.point[1], projTriangle.point[2]) >= 0 && //edge from p1 to p2
-           GetEdgeFunctionValue(currPoint, projTriangle.point[2], projTriangle.point[0]) >= 0;   //edge from p2 to p0
+    return GetEdgeFunctionDet(currPoint, projTriangle.point[0], projTriangle.point[1]) >= 0 && //edge from v0 to v1
+           GetEdgeFunctionDet(currPoint, projTriangle.point[1], projTriangle.point[2]) >= 0 && //edge from v1 to v2
+           GetEdgeFunctionDet(currPoint, projTriangle.point[2], projTriangle.point[0]) >= 0;   //edge from v2 to v0
 }
 
-float Shader::GetEdgeFunctionValue(const Vec2& currPoint, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to currPoint
+//*this was a confusing thing for me for some reason so there are a lot of comments so I dont forget how this all works
+float Shader::GetEdgeFunctionDet(const Vec2& currPoint, const Vec2& v0, const Vec2& v1){ //Computes cross product between edge v0 -> v1 with respect to currPoint
     //Edge function equation: Given A, B, and C, where A and B define an edge in 2-space and C is the desired point to test:
     //det(A, B, C) = (Bx - Ax) * (Cy - Ay) * (By - Ay) * (Cx - Ax)
+
     //How to interpret this function's output:
     //Pos vals fall within the triangle (RENDER)
     //Neg vals fall outside of the triangle (DO NOT RENDER)
     //If evaluates to 0, this point (x, y) falls on the edge exactly. (RENDER)
 
-    //calculates the orientation of a point (currPoint) with respect to an edge (v0 -> v1)
-    //returns a determinant that can be used in the above test to determine if it is to the left, right, or on the edge
-
-    //calculate the cross product of two inputted vectors with respect to currPoint:
-    float edgeFunctionValue = (v0.x * v1.x) * (currPoint.y - v0.y) - (v1.y - v0.y) * (currPoint.x - v0.x);
+    float edgeFunctionValue = (v1.x - v0.x) * (currPoint.y - v0.y) * (v1.y - v0.y) * (currPoint.x - v0.x);
     return edgeFunctionValue; //return value for evaluation in IntersectsTriangle
 }
 
