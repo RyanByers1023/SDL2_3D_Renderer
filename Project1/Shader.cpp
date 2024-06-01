@@ -13,16 +13,15 @@ Shader::Shader(Screen* screenPtr) {
 void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
     BoundingBox boundingBox = GetBoundingBox(projTriangle); //check for pixel only within this area
 
-    for(int y = boundingBox.minPoint.y; y < boundingBox.maxPoint.y; y++){ //area to search in y
-        for(int x = boundingBox.minPoint.x; x < boundingBox.maxPoint.x; x++){ //area to search in x
-            Vec2 currPoint = {x, y}; //create a Vec2 that represents the current point within the boundingbox we are currently checking for intersections with the projected triangle projTriangle
+    for(int y = boundingBox.minPoint.y; y <= boundingBox.maxPoint.y; y++){ //area to search in y
+        for(int x = boundingBox.minPoint.x; x <= boundingBox.maxPoint.x; x++){ //area to search in x
+            Vec2 currPoint = Vec2{x, y}; //create a Vec2 that represents the current point within the boundingbox we are currently checking for intersections with the projected triangle projTriangle
             if(IntersectsTriangle(currPoint, projTriangle)){ //determine if the pixel we are looking at is within or on one of the edges of the triangle. If it is, draw it to the screen
                 //Apply shading to pixel (not implemented as of yet)
                 //Color pixel (not implemented as of yet)
 
                 //Draw the pixel (add to list of pixels that are to be rendered in screen object)
-                Pixel newPixel(screenPtr, x, y); //create the pixel
-                newPixel.Draw(); //add to list of pixels to be drawn on screen.show() call (called within Renderer.cpp)
+                screenPtr->CreatePixel(currPoint);
             }
         }
     }
@@ -33,10 +32,10 @@ BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
     BoundingBox boundingBox;
 
     //calculate the minimum x coordinate (closest to origin) and minimum y coordinate
-    float minX = std::min(projTriangle.point[0].x, projTriangle.point[1].x projTriangle.point[2].x);
-    float minY = std::min(projTriangle.point[0].y, projTriangle.point[1].y projTriangle.point[2].y);
-    float maxX = std::max(projTriangle.point[0].x, projTriangle.point[1].x projTriangle.point[2].x);
-    float maxY = std::max(projTriangle.point[0].y, projTriangle.point[1].y projTriangle.point[2].y);
+    float minX = std::min({projTriangle.point[0].x, projTriangle.point[1].x, projTriangle.point[2].x});
+    float minY = std::min({projTriangle.point[0].y, projTriangle.point[1].y, projTriangle.point[2].y});
+    float maxX = std::max({projTriangle.point[0].x, projTriangle.point[1].x, projTriangle.point[2].x});
+    float maxY = std::max({projTriangle.point[0].y, projTriangle.point[1].y, projTriangle.point[2].y});
 
     //store these values in our boundingBox object for later use
     boundingBox.minPoint.x = minX;
@@ -44,17 +43,17 @@ BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
     boundingBox.maxPoint.x = maxX;
     boundingBox.maxPoint.y = maxY;
 
-    //now we need to clip the bounding box
+    //now we need to clamp the bounding box to the screen coordinates
     ClampBoundingBox(boundingBox);
 
     return boundingBox;
 }
 
 void Shader::ClampBoundingBox(BoundingBox& boundingBox){//process that clamps the boundingBox to be within the screen space, and convert floats to integers for easy iteration through the bounding box
-    boundingBox.minPoint.x = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.x))); //clamp between 0 and the min x val of the boundingBox (if a float, it is rounded down)
-    boundingBox.minPoint.y = std::max(0, static_cast<int>(std::floor(boundingBox.minPoint.y))); //clamp between 0 and the min y val of the boundingBox (if a float, it is rounded down)
-    boundingBox.maxPoint.x = std::min(screenWidth - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.x))); //clamp between screenWidth - 1 and the max x val of the boundingBox (if a float, it is rounded up)
-    boundingBox.maxPoint.y = std::min(screenHeight - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.y))); //clamp between screenHeight - 1 and the max y val of the boundingBox (if a float, it is rounded up)
+    boundingBox.minPoint.x = std::max({0, static_cast<int>(std::floor(boundingBox.minPoint.x))}); //clamp between 0 and the min x val of the boundingBox (if a float, it is rounded down)
+    boundingBox.minPoint.y = std::max({0, static_cast<int>(std::floor(boundingBox.minPoint.y))}); //clamp between 0 and the min y val of the boundingBox (if a float, it is rounded down)
+    boundingBox.maxPoint.x = std::min({screenWidth - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.x))}); //clamp between screenWidth - 1 and the max x val of the boundingBox (if a float, it is rounded up)
+    boundingBox.maxPoint.y = std::min({screenHeight - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.y))}); //clamp between screenHeight - 1 and the max y val of the boundingBox (if a float, it is rounded up)
 }
 
 bool Shader::IntersectsTriangle(const Vec2& currPoint, const Triangle2D& projTriangle){ //if all of the below statements equate to true (all cross product operations >= 0) the point intersects projTriangle, therfore we want to draw this point.
@@ -64,13 +63,18 @@ bool Shader::IntersectsTriangle(const Vec2& currPoint, const Triangle2D& projTri
 }
 
 float Shader::GetEdgeFunctionValue(const Vec2& currPoint, const Vec2& v0, const Vec2& v1){ //Computes cross product between v0 and v1 with respect to currPoint
+    //Edge function equation: Given A, B, and C, where A and B define an edge in 2-space and C is the desired point to test:
+    //det(A, B, C) = (Bx - Ax) * (Cy - Ay) * (By - Ay) * (Cx - Ax)
     //How to interpret this function's output:
     //Pos vals fall within the triangle (RENDER)
     //Neg vals fall outside of the triangle (DO NOT RENDER)
     //If evaluates to 0, this point (x, y) falls on the edge exactly. (RENDER)
 
+    //calculates the orientation of a point (currPoint) with respect to an edge (v0 -> v1)
+    //returns a determinant that can be used in the above test to determine if it is to the left, right, or on the edge
+
     //calculate the cross product of two inputted vectors with respect to currPoint:
-    float edgeFunctionValue = (v1.x - v0.y) * (currPoint.y - v0.y) - (v1.y - v0.y) * (currPoint.x - v0.x);
+    float edgeFunctionValue = (v0.x * v1.x) * (currPoint.y - v0.y) - (v1.y - v0.y) * (currPoint.x - v0.x);
     return edgeFunctionValue; //return value for evaluation in IntersectsTriangle
 }
 
