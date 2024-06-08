@@ -85,7 +85,3 @@ RotationMatrix::RotationMatrix(float xRadians, float yRadians, float zRadians) {
 	}
 	*/
 }
-
-void ProjectionMatrix::Invert(){
-	
-}
