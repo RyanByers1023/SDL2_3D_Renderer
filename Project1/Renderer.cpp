@@ -41,14 +41,23 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 				std::cout << "\n\n\n";
 				*/
 
-				projectedTriangle.point[0].x += 1.0f; projectedTriangle.point[0].y += 1.0f; //make sure when we draw our objects, we draw them in front of the camera (this may be removed later)
+				//make sure when we draw our objects, we draw them in front of the camera
+				//this is only for when I DO NOT have a camera object with clipping enabled
+				//once I implement this, there will be no need for the below code
+
+				//make the lowest x and y values at least 1 so they can be scaled
+				projectedTriangle.point[0].x += 1.0f; projectedTriangle.point[0].y += 1.0f; 
 				projectedTriangle.point[1].x += 1.0f; projectedTriangle.point[1].y += 1.0f;
 				projectedTriangle.point[2].x += 1.0f; projectedTriangle.point[2].y += 1.0f;
 
-				float halfScreenWidth = static_cast<float>(screenPtr->width) * 0.5f; //get the values corresponding to the middle of the screen (this may be removed later)
+				//get the values corresponding to the middle of the screen
+				//later on I will have a camera object that will use clipping to determine whether or not a triangle should be rendered on the screen (and where it should be rendered)
+				float halfScreenWidth = static_cast<float>(screenPtr->width) * 0.5f;
 				float halfScreenHeight = static_cast<float>(screenPtr->height) * 0.5f;
 
-				projectedTriangle.point[0].x *= halfScreenWidth; projectedTriangle.point[0].y *= halfScreenHeight; //draw the objects in the middle of the screen (this may be removed later)
+				//apply the scalars calculated above to the projected triangle
+				//this will position the triangle in the center of the screen, assuming the triangle was 
+				projectedTriangle.point[0].x *= halfScreenWidth; projectedTriangle.point[0].y *= halfScreenHeight; 
 				projectedTriangle.point[1].x *= halfScreenWidth; projectedTriangle.point[1].y *= halfScreenHeight;
 				projectedTriangle.point[2].x *= halfScreenWidth; projectedTriangle.point[2].y *= halfScreenHeight;
 
