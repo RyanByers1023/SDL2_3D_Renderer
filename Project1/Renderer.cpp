@@ -61,7 +61,7 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 				projectedTriangle.point[1].x *= halfScreenWidth; projectedTriangle.point[1].y *= halfScreenHeight;
 				projectedTriangle.point[2].x *= halfScreenWidth; projectedTriangle.point[2].y *= halfScreenHeight;
 
-				shaderPtr->FillTriangle(projectedTriangle);		
+				shaderPtr->ShadeTriangle(projectedTriangle);		
 			}
 		}		
 	}
