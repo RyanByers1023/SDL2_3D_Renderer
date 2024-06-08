@@ -2,12 +2,21 @@
 
 void InputHandler::CheckForInput() { 
 	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_QUIT) {
+		if (event.type == SDL_QUIT) { //user is trying to exit the program via the exit button
 			SDL_Quit();
 			exit(0);
 		}
-		if (event.type == SDL_KEYDOWN) {
-			switch (event.key.keysym.sym) {
+		if (event.type == SDL_KEYDOWN) { //user has pressed a key
+			HandleKeyDown(event);
+		}
+		if (event.type == SDL_KEYUP) { //a key that was pressed down has been let go
+			HandleKeyUp(event);
+		}
+	}
+
+	void InputHandler::HandleKeyDown(SDL_Event event){
+		switch (event.key.keysym.sym) { //switch used to determine which key has been pressed
+			//arrow keys
 			case SDLK_LEFT:
 				leftInput = true;
 				break;
@@ -21,6 +30,7 @@ void InputHandler::CheckForInput() {
 				downInput = true;
 				break;
 
+			//WASD keys (XY plane movement)
 			case SDLK_w:
 				wInput = true;
 				break;
@@ -33,31 +43,34 @@ void InputHandler::CheckForInput() {
 			case SDLK_d:
 				dInput = true;
 				break;
+			
+			//Rotation keys Z/X
 			case SDLK_z:
 				zInput = true;
 				break;
 			case SDLK_x:
 				xInput = true;
 				break;
+
+			//Scaling keys Q/E
 			case SDLK_q:
 				qInput = true;
 				break;
 			case SDLK_e:
 				eInput = true;
 				break;
+
+			//+/- keys Z plane movement
 			case SDLK_MINUS:
 				minusInput = true;
 				break;
 			case SDLK_PLUS:
 				plusInput = true;
 				break;
-			}
-			
-
-
 		}
-		if (event.type == SDL_KEYUP) {
-			switch (event.key.keysym.sym) {
+
+		void InputHandler::HandleKeyUp(SDL_Event event){
+			switch (event.key.keysym.sym) { //switch used to determine which key was undepressed
 			case SDLK_LEFT:
 				leftInput = false;
 				break;
@@ -102,7 +115,6 @@ void InputHandler::CheckForInput() {
 				plusInput = false;
 				break;
 			}
-			
 		}
 	}
 }

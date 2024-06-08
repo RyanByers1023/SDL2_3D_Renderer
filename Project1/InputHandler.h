@@ -5,7 +5,7 @@ class InputHandler {
 public:
 	//public methods:
 	void CheckForInput();
-	//public input flags:
+	//input flags:
 	bool leftInput = false;
 	bool rightInput = false;
 	bool upInput = false;
@@ -25,4 +25,7 @@ public:
 private:
 	//private attributes:
 	SDL_Event event;
+	//private methods:
+	void HandleKeyDown(SDL_Event event);
+	void HandleKeyUp(SDL_Event event);
 };
