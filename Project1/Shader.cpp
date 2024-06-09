@@ -33,6 +33,7 @@ void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
 //the below function is not required for the rasterization process... but significantly improves performance. Caps the number of pixels that are required to be checked for itersection with the triangle's edges
 //I would like to replace this method (or add on to it) by implementing triangle clipping
 //I need to do research into how this is done...
+//"Sutherland-Hodgman" algo was recommended by chatGPT
 BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
     BoundingBox boundingBox;
 
@@ -70,14 +71,14 @@ bool Shader::IntersectsTriangle(const Vec2& currPoint, const Triangle2D& projTri
 //*this was a confusing thing for me for some reason so there are a lot of comments so I dont forget how this all works
 float Shader::GetEdgeFunctionDet(const Vec2& currPoint, const Vec2& v0, const Vec2& v1){ //Computes cross product between edge v0 -> v1 with respect to currPoint
     //Edge function equation: Given A, B, and C, where A and B define an edge in 2-space and C is the desired point to test:
-    //det(A, B, C) = (Bx - Ax) * (Cy - Ay) * (By - Ay) * (Cx - Ax)
+    //det(A, B, C) = (Bx - Ax) * (Cy - Ay) - (By - Ay) * (Cx - Ax)
 
     //How to interpret this function's output:
     //Pos vals fall to the right of the edge (RENDER)
     //Neg vals fall to the left of the edge (DO NOT RENDER)
     //If evaluates to 0, currPoint falls directly on the edge (RENDER)
 
-    float edgeFunctionValue = (v1.x - v0.x) * (currPoint.y - v0.y) * (v1.y - v0.y) * (currPoint.x - v0.x);
+    float edgeFunctionValue = (v1.x - v0.x) * (currPoint.y - v0.y) - (v1.y - v0.y) * (currPoint.x - v0.x);
     return edgeFunctionValue; //return value for above evaluation in IntersectsTriangle
 }
 
