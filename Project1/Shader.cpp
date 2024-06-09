@@ -31,6 +31,8 @@ void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
 }
 
 //the below function is not required for the rasterization process... but significantly improves performance. Caps the number of pixels that are required to be checked for itersection with the triangle's edges
+//I would like to replace this method (or add on to it) by implementing triangle clipping
+//I need to do research into how this is done...
 BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
     BoundingBox boundingBox;
 

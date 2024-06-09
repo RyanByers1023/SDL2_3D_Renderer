@@ -1,7 +1,6 @@
 #pragma once
 #include "Screen.h"
 #include "Vec2.h"
-#include "Pixel.h"
 #include <cmath>
 
 struct BoundingBox{ //used for determing the area we need to check for intersections
@@ -17,6 +16,6 @@ private:
 	BoundingBox GetBoundingBox(const Triangle2d& projTriangle);
 	void ClampBoundingBox(BoundingBox& boundingBox);
 	bool IntersectsTriangle(const Vec2& pointToCheck, const Triangle2D& projTriangle);
-	float GetEdgeFunctionValue(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1);
+	float GetEdgeFunctionDet(const Vec2& pointToRender, const Vec2& v0, const Vec2& v1);
 	Screen* screenPtr;
 };
