@@ -45,7 +45,7 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 				//this is only for when I DO NOT have a camera object with clipping enabled
 				//once I implement this, there will be no need for the below code
 
-				//make the lowest x and y values at least 1 so they can be scaled
+				//make the x and y values at least 1 so they can be scaled
 				projectedTriangle.point[0].x += 1.0f; projectedTriangle.point[0].y += 1.0f; 
 				projectedTriangle.point[1].x += 1.0f; projectedTriangle.point[1].y += 1.0f;
 				projectedTriangle.point[2].x += 1.0f; projectedTriangle.point[2].y += 1.0f;
