@@ -20,7 +20,7 @@ void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
         for(int x = boundingBox.minPoint.x; x <= boundingBox.maxPoint.x; x++){ //area to search in x
             Vec2 currPoint = Vec2{x, y}; //create a Vec2 that represents the current point within the boundingbox we are currently checking for intersections with the projected triangle projTriangle
             if(IntersectsTriangle(currPoint, projTriangle)){ //determine if the pixel we are looking at is within or on one of the edges of the triangle. If it is, draw it to the screen
-                //Apply shading to pixel (not implemented as of yet)
+                //Apply light based shadinh to pixel (not implemented as of yet)
                 //Color pixel (not implemented as of yet)
 
                 //Draw the pixel (add to list of pixels that are to be rendered in screen object)
