@@ -14,7 +14,3 @@ public:
 struct Triangle2D {
 	Vec2 point[3];
 };
-
-struct Polygon2D{
-	std::vector<Vec2> polyVertices;
-}
