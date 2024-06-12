@@ -28,8 +28,7 @@
     //5. save intersections in new list respective to four above relationships
     //6. repeat steps 4 and 5 for all edges of clipping window
 
-std::vector<Vec2> ClipVertices(const Edge& clipWindowEdge, const Triangle2D& triToClip){ //return a list of vertices that should have an edge rendered between them
-    std::vector<Vec2> newVertices; //used to store the clipped vertices --> will return this list
+void ClipVertices(std::vector<Vec2>& newVertices, const Edge& clipWindowEdge, const Triangle2D& triToClip){ //return a list of vertices that should have an edge rendered between them
     Vec2 intercept; //used to store intercept between triangle edge and clipWindowEdge
     Edge triEdge; //stores current edge this function is trying to clip
 
@@ -53,8 +52,7 @@ std::vector<Vec2> ClipVertices(const Edge& clipWindowEdge, const Triangle2D& tri
             newVertices.push_back(intercept);
         }
         //If none of these are eval. to true, then the verts are both outside -- do not keep any vertices
-    }  
-    return newVertices; 
+    } 
 }
 
 float GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex){ //Computes cross product between edge v1 -> v2 with respect to currVertex
