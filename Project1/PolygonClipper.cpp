@@ -32,14 +32,15 @@ std::vector<Vec2> ClipVertices(const Edge& clipWindowEdge, const Triangle2D& tri
     std::vector<Vec2> newVertices; //used to store the clipped vertices --> will return this list
     Vec2 intercept; //used to store intercept between triangle edge and clipWindowEdge
     Edge triEdge; //stores current edge this function is trying to clip
+
     for(int i = 0; i < triToClip.vertices.size(); ++i){
         //set up vertices vi -> vi+1 that make up the edge I want to check for
         triEdge.v1 = triToClip.vertices[i];
-        triEdge.v2 = (i + 1 == 3) ? vertices[0] : vertices[i + 1]; //v[0] on last iteration v1 -> v3
+        triEdge.v2 = triToClip.vertices[(i + 1) % 3]; //wrap around to the first vertex on the last iteration to check the last edge
 
         //Both inside -- keep second vertex only
         if(VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
-            newVertices.push_back(triVertex.vertices[i + 1]);
+            newVertices.push_back(triEdge.v2);
         }
         //First inside, second outside -- keep only point of intersection w/ first point
         else if(VertexInside(clipWindowEdge, triEdge.v1) && !VertexInside(clipWindowEdge, triEdge.v2)){
@@ -48,13 +49,12 @@ std::vector<Vec2> ClipVertices(const Edge& clipWindowEdge, const Triangle2D& tri
         }
         //First outside, second inside -- keep only point of intersection w/ second point
         else if(!VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
-            intercept = {FindXIntercept(clipWindowEdge, triEdge.v2), FindYIntercept(clipWindowEdge, triEdge.v2)};
+            intercept = FindIntercept(clipWindowEdge, triEdge);
             newVertices.push_back(intercept);
         }
         //If none of these are eval. to true, then the verts are both outside -- do not keep any vertices
-
-        return newVertices;
-    }   
+    }  
+    return newVertices; 
 }
 
 float GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex){ //Computes cross product between edge v1 -> v2 with respect to currVertex
@@ -64,15 +64,15 @@ float GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex){ //
 }
 
 //if clipper vertices are defined counter-clockwise (they will be), then all points to the LEFT are inside the clipper boundaries
-bool VertexInside(float determinant, const Vec2& v1, const Vec2& v2, const Vec2& currVertex){
+bool VertexInside(float determinant, const Edge& clipWindowEdge, const Vec2& currVertex){
     return GetEdgeFunctionDet(clipWindowEdge, currVertex) >= 0;
 }
 
 //Assume clip boundary = v1 -> v2 and polygon edge = v3 -> v4
 //v1 = (x1, y1), v2 = (x2, y2), v3 = (x3, y3), v4 = (x4, y4) 
 
-Vec2 FindIntercept(const Edge& clipWindowEdge, const Edge& triangleEdge){
-    Vec2 v1 = clipWindowEdge.v1, v2 = clipWindowEdge.v2, v3 = triangleEdge.v1, v4 = triangleEdge.v2;
+Vec2 FindIntercept(const Edge& clipWindowEdge, const Edge& triEdge){
+    Vec2 v1 = clipWindowEdge.v1, v2 = clipWindowEdge.v2, v3 = triEdge.v1, v4 = triEdge.v2;
 
     Vec2 output;
 
