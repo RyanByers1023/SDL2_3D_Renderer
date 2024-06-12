@@ -28,6 +28,7 @@
     //5. save intersections in new list respective to four above relationships
     //6. repeat steps 4 and 5 for all edges of clipping window
 
+//Note: maybe make a polygon2D object to peform the same task that newVertices is performing below...
 void ClipVertices(std::vector<Vec2>& newVertices, const Edge& clipWindowEdge, const Triangle2D& triToClip){ //return a list of vertices that should have an edge rendered between them
     Vec2 intercept; //used to store intercept between triangle edge and clipWindowEdge
     Edge triEdge; //stores current edge this function is trying to clip
