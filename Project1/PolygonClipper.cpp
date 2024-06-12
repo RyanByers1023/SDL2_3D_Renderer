@@ -39,24 +39,30 @@ bool VertexInside(float determinant, const Vec2& v1, const Vec2& v2, const Vec2&
 }
 
 //assume v1 and v2 make up the edge of the clipping window
-void HandleVertices(const Vec2& v1, const Vec2& v2, const Vec2& triVertex1, const Vec2& triVertex2){
-    //Both inside
-    if(VertexInside(v1, v2, triVertex1) && VertexInside(v1, v2, triVertex2)){
-        
-    }
-    //Both outside
-    else if(!VertexInside(v1, v2, triVertex1) && !VertexInside(v1, v2, triVertex2)){
+std::vector<Vec2> ClipVertices(const Vec2& v1, const Vec2& v2, const Triangle2D& triToClip){
+    std::vector<Vec2> newVertices;
+    for(int i = 0; i < triToClip.vertices.size(); ++i){
+        if(i + 1 == 3) triVertex2 = triToClip.vertices[0];
+        else triVertex2 = triToClip.vertices[i + 1];
+        //Both inside -- keep second vertex only
+        if(VertexInside(v1, v2, triVertex1) && VertexInside(v1, v2, triVertex2)){
+            newVertices.push_back(triVertex.vertices[i + 1]);
+        }
+        //First inside, second outside -- keep only point of intersection w/ first point
+        else if(VertexInside(v1, v2, triVertex1) && !VertexInside(v1, v2, triVertex2)){
+            Vec2 intercept = {FindXIntercept(v1, v2, triVertex1), FindYIntercept(v1, v2, triVertex2)};
+            newVertices.push_back(intercept);
+        }
+        //First outside, second inside -- keep only point of intersection w/ second point
+        else if(!VertexInside(v1, v2, triVertex1) && VertexInside(v1, v2, triVertex2)){
+            Vec2 intercept = {FindXIntercept(v1, v2, triVertex2), FindYIntercept(v1, v2, triVertex2)};
+            newVertices.push_back(intercept);
+        }
+        //If none of these are eval. to true, then the verts are both outside -- do not keep any vertices
 
+        return newVertices;
     }
-    //First inside, second outside
-    else if(VertexInside(v1, v2, triVertex1) && !VertexInside(v1, v2, triVertex2)){
-
-    }
-    //First outside, second inside
-    else if(!VertexInside(v1, v2, triVertex1) && VertexInside(v1, v2, triVertex2)){
-
-    }
-
+    
 }
 
 //Assume clip boundary = v1 -> v2 and polygon edge = v3 -> v4
