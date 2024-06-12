@@ -3,6 +3,8 @@
 
     //the goal is to clip the polygons on the x-axis at screenWidth, and the y-axis at screenHeight. (if needed at all)
     //when clipping is performed, a modification is directly made to the projected 2-D triangle's vertices
+    //these vertices will change only for that frame though...
+    //when the next frame occurs, the 3-D -> 2-D transformation and will overwrite these changes and the process will begin again
     //Clipping area vertices, assume 1920x1080 resolution: (0, 1080), (1920, 1080), (1920, 0), (0,0)  <--- counter-clockwise order
 
     //How to determine what side of the window an edge lies?:
@@ -10,12 +12,7 @@
     //Evaluate this using these rules:
     //P < 0 ---> point on right side of line
     //P = 0 ---> point on the line
-    //P > 0 ---> point on the left side of the line
-
-    //if clipper vertices are defined counter-clockwise (like above), then all points to the LEFT are inside the clipper boundaries
-
-    //---Finding intersection of two edges---
-    
+    //P > 0 ---> point on the left side of the line  
 
     //---Process to clip edges---
     //Cases to handle (4)
@@ -31,13 +28,35 @@
     //5. save intersections in new list respective to four above relationships
     //6. repeat steps 4 and 5 for all edges of clipping window
 
-float GetEdgeFunctionDet(const Vec2& v1, const Vec2& v2, const Vec2& currPoint){ //Computes cross product between edge v1 -> v2 with respect to currPoint
+float GetEdgeFunctionDet(const Vec2& v1, const Vec2& v2, const Vec2& currVertex){ //Computes cross product between edge v1 -> v2 with respect to currVertex
     //Eqn: P = (x2 - x1) * (y - y1) - (y2 -y1) * (x - x1)
-    return (v2.x - v1.x) * (currPoint.y - v1.y) - (v2.y - v1.y) * (currPoint.x - v1.x);
+    return (v2.x - v1.x) * (currVertex.y - v1.y) - (v2.y - v1.y) * (currVertex.x - v1.x);
 }
 
-bool AnalyzeEdgeFunctionDet(float determinant, const Vec2& v1, const Vec2& v2, const Vec2& currPoint){
-    return GetEdgeFunctionDet(currPoint, v1, v2) >= 0;
+//if clipper vertices are defined counter-clockwise (they will be), then all points to the LEFT are inside the clipper boundaries
+bool VertexInside(float determinant, const Vec2& v1, const Vec2& v2, const Vec2& currVertex){
+    return GetEdgeFunctionDet(v1, v2, currVertex) >= 0;
+}
+
+//assume v1 and v2 make up the edge of the clipping window
+void HandleVertices(const Vec2& v1, const Vec2& v2, const Vec2& triVertex1, const Vec2& triVertex2){
+    //Both inside
+    if(VertexInside(v1, v2, triVertex1) && VertexInside(v1, v2, triVertex2)){
+        
+    }
+    //Both outside
+    else if(!VertexInside(v1, v2, triVertex1) && !VertexInside(v1, v2, triVertex2)){
+
+    }
+    //First inside, second outside
+    else if(VertexInside(v1, v2, triVertex1) && !VertexInside(v1, v2, triVertex2)){
+
+    }
+    //First outside, second inside
+    else if(!VertexInside(v1, v2, triVertex1) && VertexInside(v1, v2, triVertex2)){
+
+    }
+
 }
 
 //Assume clip boundary = v1 -> v2 and polygon edge = v3 -> v4
