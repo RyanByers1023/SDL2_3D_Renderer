@@ -11,6 +11,11 @@ public:
 	float y;
 };
 
+struct Edge{
+    Vec2 v1;
+    Vec2 v2;
+}
+
 struct Triangle2D {
 	Vec2 point[3];
 };
