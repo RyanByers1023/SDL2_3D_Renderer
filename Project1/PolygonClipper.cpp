@@ -42,16 +42,16 @@ void ClipVertices(std::vector<Vec2>& newVertices, const Edge& clipWindowEdge, co
         if(VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
             newVertices.push_back(triEdge.v2);
         }
-        //FIX-ME: Error relating to which intersection point is added to newVertices (first should add only intersection with first point, second w/ second)
-        //First inside, second outside -- keep only point of intersection w/ first point
+        //First inside, second outside -- keep only point of intersection
         else if(VertexInside(clipWindowEdge, triEdge.v1) && !VertexInside(clipWindowEdge, triEdge.v2)){
             intercept = FindIntercept(clipWindowEdge, triEdge);
             newVertices.push_back(intercept);
         }
-        //First outside, second inside -- keep only point of intersection w/ second point
+        //First outside, second inside -- keep point of intersection and second point
         else if(!VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
             intercept = FindIntercept(clipWindowEdge, triEdge);
             newVertices.push_back(intercept);
+            newVertices.push_back(triEdge.v2);
         }
         //If none of these are eval. to true, then the verts are both outside -- do not keep any vertices
     } 
