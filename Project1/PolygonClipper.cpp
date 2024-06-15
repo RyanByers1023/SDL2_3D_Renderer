@@ -58,6 +58,8 @@ void ClipVertices(std::vector<Vec2>& newVertices, const Edge& clipWindowEdge, co
 
 float GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex){ //Computes cross product between edge v1 -> v2 with respect to currVertex
     //Eqn: P = (x2 - x1) * (y - y1) - (y2 -y1) * (x - x1)
+
+    //extract vertices defining the edge
     Vec2 v1 = clipWindowEdge.v1, v2 = clipWindowEdge.v2;
     return (v2.x - v1.x) * (currVertex.y - v1.y) - (v2.y - v1.y) * (currVertex.x - v1.x);
 }
@@ -67,21 +69,23 @@ bool VertexInside(float determinant, const Edge& clipWindowEdge, const Vec2& cur
     return GetEdgeFunctionDet(clipWindowEdge, currVertex) >= 0;
 }
 
-//Assume clip boundary = v1 -> v2 and polygon edge = v3 -> v4
-//v1 = (x1, y1), v2 = (x2, y2), v3 = (x3, y3), v4 = (x4, y4) 
-
 Vec2 FindIntercept(const Edge& clipWindowEdge, const Edge& triEdge){
+    //extract vertices defining all relevant edges
     Vec2 v1 = clipWindowEdge.v1, v2 = clipWindowEdge.v2, v3 = triEdge.v1, v4 = triEdge.v2;
 
     Vec2 output;
 
+    float denom = (v1.x - v2.x) * (v3.y - v4.y) - (v1.y - v2.y) * (v3.x - v4.x);
+
+    if(denom == 0){ //lines are parallel or conincident
+        return output; //this indicates no intersection, return default initialized vector
+    }
+
     //x-intercept = ((x1y2 - y1x2)(x3 - x4) - (x1 - x2)(x3y4 - y3x4)) / ((x1 - x2)(y3 - y4) - (y1 - y2)(x3 - x4))
-    output.x = ((v1.x * v2.y) - (v1.y * v2.x) * (v3.x - v4.x) - (v1.x - v2.x) * (v3.x * v4.y) - (v3.y * v4.x)) / 
-               ((v1.x - v2.x) * (v3.y - v4.y) - (v1.y - v2.y) * (v3.x - v4.x));
+    output.x = ((v1.x * v2.y - v1.y * v2.x) * (v3.x - v4.x) - (v1.x - v2.x) * (v3.x * v4.y - v3.y * v4.x)) / denom;
 
     //y-intercept = ((x1y2 - y1x2)(y3 -y4) - (y1 - y2)(x3y4 - y3x4)) / ((x1 - x2)(y3 - y4) - (y1 - y2)(x3 -x4))
-    output.y = ((v1.x * v2.y) - (v1.y * v2.x) * (v3.y - v4.y) - (v1.y - v2.y) * (v3.x * v4.y) - (v3.y * v4.x))/
-               ((v1.x - v2.x) * (v3.y - v4.y) - (v1.y - v2.y) * (v3.x - v4.x));
+    output.y = ((v1.x * v2.y - v1.y * v2.x) * (v3.y - v4.y) - (v1.y - v2.y) * (v3.x * v4.y - v3.y * v4.x)) / denom;
 
     return output;
 }
