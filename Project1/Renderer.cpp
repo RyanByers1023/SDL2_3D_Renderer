@@ -59,6 +59,7 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 				//now newPolygon holds a clipped version of projectedTriangle
 
 				//draw the polygon to the screen (NOT IMPLEMENTED)
+				//fill the area between the vertices of the polygon using a scanline algorithm (NOT IMPLEMENTED)
 
 			}
 		}		
