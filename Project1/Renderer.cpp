@@ -35,6 +35,7 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 			if (ShouldRender(tri3D, normal, cameraLocation)) { //only project and draw a part of a mesh if it should be visible with respect to the camera object
 				Triangle2D projectedTriangle;
 
+				//project the triangle to 2-space
 				for (int i = 0; i < 3; i++) {
 					projectedTriangle.point[i] = tri3D.point[i] * *projMatrixPtr;
 				}
@@ -46,30 +47,19 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 				std::cout << "\n\n\n";
 				*/
 
-				//make sure when we draw our objects, we draw them in front of the camera
-				//this is only for when I DO NOT have a camera object with clipping enabled
-				//once I implement this, there will be no need for the below code
+				//this will store the clipped version of the triangle
+				Polygon2D newPolygon;
 
-				//make the x and y values at least 1 so they can be scaled
-				projectedTriangle.point[0].x += 1.0f; projectedTriangle.point[0].y += 1.0f; 
-				projectedTriangle.point[1].x += 1.0f; projectedTriangle.point[1].y += 1.0f;
-				projectedTriangle.point[2].x += 1.0f; projectedTriangle.point[2].y += 1.0f;
+				//clip counterclockwise with regard to the screen's boundaries
+				ClipVertices(projectedTriangle, newPolygon, boundingEdgeBottom);	
+				ClipVertices(projectedTriangle, newPolygon, boundingEdgeLeft);
+				ClipVertices(projectedTriangle, newPolygon, boundingEdgeTop);
+				ClipVertices(projectedTriangle, newPolygon, boundingEdgeRight);
 
-				//get the values corresponding to the middle of the screen
-				//later on I will have a camera object that will use clipping to determine whether or not a triangle should be rendered on the screen (and where it should be rendered)
-				float halfScreenWidth = static_cast<float>(screenPtr->width) * 0.5f;
-				float halfScreenHeight = static_cast<float>(screenPtr->height) * 0.5f;
+				//now newPolygon holds a clipped version of projectedTriangle
 
-				//apply the scalars calculated above to the projected triangle
-				//this will position the triangle in the center of the screen, assuming the triangle was 
-				projectedTriangle.point[0].x *= halfScreenWidth; projectedTriangle.point[0].y *= halfScreenHeight; 
-				projectedTriangle.point[1].x *= halfScreenWidth; projectedTriangle.point[1].y *= halfScreenHeight;
-				projectedTriangle.point[2].x *= halfScreenWidth; projectedTriangle.point[2].y *= halfScreenHeight;
+				//draw the polygon to the screen (NOT IMPLEMENTED)
 
-				//create bounding box (four edges defined by the 2-D screen space)
-				//evaluate all edges of the projectedTriangle with the edges of the bounding box
-				//this creates a new 2-D polygon, render this
-				ClipVertices()		
 			}
 		}		
 	}
