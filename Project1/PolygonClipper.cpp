@@ -28,8 +28,8 @@
     //5. save intersections in new list respective to four above relationships
     //6. repeat steps 4 and 5 for all edges of clipping window
 
-//Note: maybe make a polygon2D object to peform the same task that newVertices is performing below...
-void ClipVertices(std::vector<Vec2>& newVertices, const Edge& clipWindowEdge, const Triangle2D& triToClip){ //return a list of vertices that should have an edge rendered between them
+//Note: maybe make a polygon2D object to peform the same task that newPolygon.vertices is performing below...
+void ClipVertices(const Triangle2D& triToClip, Polygon2D& newPolygon, const Edge& clipWindowEdge){ //return a list of vertices that should have an edge rendered between them
     Vec2 intercept; //used to store intercept between triangle edge and clipWindowEdge
     Edge triEdge; //stores current edge this function is trying to clip
 
@@ -40,18 +40,18 @@ void ClipVertices(std::vector<Vec2>& newVertices, const Edge& clipWindowEdge, co
 
         //Both inside -- keep second vertex only
         if(VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
-            newVertices.push_back(triEdge.v2);
+            newPolygon.vertices.push_back(triEdge.v2);
         }
         //First inside, second outside -- keep only point of intersection
         else if(VertexInside(clipWindowEdge, triEdge.v1) && !VertexInside(clipWindowEdge, triEdge.v2)){
             intercept = FindIntercept(clipWindowEdge, triEdge);
-            newVertices.push_back(intercept);
+            newPolygon.vertices.push_back(intercept);
         }
         //First outside, second inside -- keep point of intersection and second point
         else if(!VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
             intercept = FindIntercept(clipWindowEdge, triEdge);
-            newVertices.push_back(intercept);
-            newVertices.push_back(triEdge.v2);
+            newPolygon.vertices.push_back(intercept);
+            newPolygon.vertices.push_back(triEdge.v2);
         }
         //If none of these are eval. to true, then the verts are both outside -- do not keep any vertices
     } 
