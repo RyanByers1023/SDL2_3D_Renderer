@@ -6,6 +6,11 @@ Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjects
 	this->shaderPtr = new Shader(screenPtr);
 	this->worldObjectsPtr = worldObjectsPtr;
 
+	this->boundingEdgeLeft.v1 = {0, screenPtr->height}; this->boundingEdgeLeft.v2 = {0, 0}; //left boundary of screen
+	this->boundingEdgeRight.v1 = {screenPtr->width, screenPtr-> height}; this->boundingEdgeRight.v2 = {screenPtr->width, 0}; //right boundary of screen
+	this->boundingEdgeTop.v1 = {0,0}; this->boundingEdgeTop.v2 = {screenPtr->width, 0}; //top boundary of screen
+	this->boundingEdgeBottom.v1 = {0, screenPtr->height}; this->boundingEdgeBottom.v2 = {screenPtr->width, screenPtr->height}; //bottom boundary of screen
+
 	//this is temporary:
 	cameraLocation = { 0.0f, 0.0f, 0.0f };
 }
@@ -61,7 +66,10 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 				projectedTriangle.point[1].x *= halfScreenWidth; projectedTriangle.point[1].y *= halfScreenHeight;
 				projectedTriangle.point[2].x *= halfScreenWidth; projectedTriangle.point[2].y *= halfScreenHeight;
 
-				shaderPtr->ShadeTriangle(projectedTriangle);		
+				//create bounding box (four edges defined by the 2-D screen space)
+				//evaluate all edges of the projectedTriangle with the edges of the bounding box
+				//this creates a new 2-D polygon, render this
+				ClipVertices()		
 			}
 		}		
 	}
