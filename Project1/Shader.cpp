@@ -13,23 +13,11 @@ Shader::Shader(Screen* screenPtr) {
 //leaving above for later reference but this is possibly fixed due to the implementation of the bounding box?
 //would like to introduce triangle clipping at a later point, but for now, this should work decently well
 
-void Shader::ShadeTriangle(const Triangle2D& projTriangle) {
-    BoundingBox boundingBox = GetBoundingBox(projTriangle); //check for pixel only within this area
-
-    for(int y = boundingBox.minPoint.y; y <= boundingBox.maxPoint.y; y++){ //area to search in y
-        for(int x = boundingBox.minPoint.x; x <= boundingBox.maxPoint.x; x++){ //area to search in x
-            Vec2 currPoint = Vec2{x, y}; //create a Vec2 that represents the current point within the boundingbox we are currently checking for intersections with the projected triangle projTriangle
-            if(IntersectsTriangle(currPoint, projTriangle)){ //determine if the pixel we are looking at is within or on one of the edges of the triangle. If it is, draw it to the screen
-                //Apply light based shadinh to pixel (not implemented as of yet)
-                //Color pixel (not implemented as of yet)
-
-                //Draw the pixel (add to list of pixels that are to be rendered in screen object)
-                screenPtr->CreatePixel(currPoint);
-            }
-        }
-    }
+void Shader::ShadePolygon(const Polygon2D& polygon) {
+    
 }
 
+/*
 //the below function is not required for the rasterization process... but significantly improves performance. Caps the number of pixels that are required to be checked for itersection with the triangle's edges
 //"Sutherland-Hodgeman" algo was recommended by chatGPT for a replacement for this process
 BoundingBox Shader::GetBoundingBox(const Triangle2d& projTriangle){
@@ -79,4 +67,5 @@ float Shader::GetEdgeFunctionDet(const Vec2& currPoint, const Vec2& v0, const Ve
     float edgeFunctionValue = (v1.x - v0.x) * (currPoint.y - v0.y) - (v1.y - v0.y) * (currPoint.x - v0.x);
     return edgeFunctionValue; //return value for above evaluation in IntersectsTriangle
 }
+*/
 
