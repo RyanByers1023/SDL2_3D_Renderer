@@ -30,6 +30,7 @@ private:
 	Edge boundingEdgeTop;
 	Edge boundingEdgeBottom;
 	//private methods
+	void SetScreenSpaceBoundaries();
 	void GetClippedPolygons();
 	void DrawPolygons();
 };

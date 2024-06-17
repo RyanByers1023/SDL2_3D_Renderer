@@ -1,26 +1,41 @@
 #include "Renderer.h"
 
 Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjectsPtr) {
-	//get all of the needed parameters from the starter file
+	//get all of the needed parameters from the runner file
 	this->screenPtr = new Screen(windowWidth, windowHeight);
 	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
 	this->shaderPtr = new Shader(screenPtr);
 	this->worldObjectsPtr = worldObjectsPtr;
 
-	//set up the screen space boundaries
-	this->boundingEdgeLeft.v1 = {0, screenPtr->height}; this->boundingEdgeLeft.v2 = {0, 0}; //left boundary of screen
-	this->boundingEdgeRight.v1 = {screenPtr->width, screenPtr-> height}; this->boundingEdgeRight.v2 = {screenPtr->width, 0}; //right boundary of screen
-	this->boundingEdgeTop.v1 = {0,0}; this->boundingEdgeTop.v2 = {screenPtr->width, 0}; //top boundary of screen
-	this->boundingEdgeBottom.v1 = {0, screenPtr->height}; this->boundingEdgeBottom.v2 = {screenPtr->width, screenPtr->height}; //bottom boundary of screen
+	//set up the screen space boundaries:
+	SetScreenSpaceBoundaries();
 
 	//this is temporary:
-	cameraLocation = { 0.0f, 0.0f, 0.0f };
+	cameraLocation = { 0.0f, 0.0f, 0.0f }; //initalize camera location to origin
 }
 
 Renderer::~Renderer() {
 	delete this->screenPtr;
 	delete this->projMatrixPtr;
 	delete this->shaderPtr;
+}
+
+void Renderer::SetScreenSpaceBoundaries(){
+	//left boundary of screen
+	this->boundingEdgeLeft.v1 = {0, screenPtr->height};
+	this->boundingEdgeLeft.v2 = {0, 0};
+
+	//right boundary of screen
+	this->boundingEdgeRight.v1 = {screenPtr->width, screenPtr-> height};
+	this->boundingEdgeRight.v2 = {screenPtr->width, 0};
+
+	//top boundary of screen
+	this->boundingEdgeTop.v1 = {0,0};
+	this->boundingEdgeTop.v2 = {screenPtr->width, 0};
+
+	//bottom boundary of screen
+	this->boundingEdgeBottom.v1 = {0, screenPtr->height};
+	this->boundingEdgeBottom.v2 = {screenPtr->width, screenPtr->height};
 }
 
 bool Renderer::Render() { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
@@ -33,10 +48,10 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	//get a list of all polygons that are within the screen space and clip them, store in polygonList
 	GetClippedPolygons();
 
-	//draw the polygon to the screen
+	//draw the polygon(s) to the screen
 	DrawPolygons();
 
-	//fill the area between the vertices of the polygon using a scanline algorithm (NOT IMPLEMENTED)
+	//fill the area between the vertices of the polygon using a scanline algorithm (SHADING NOT YET IMPLEMENTED)
 	screenPtr->Show(); //will go through screen.vertices and draw each vertex (pixel) to the screen
 	screenPtr->Clear(); //clear the screen (will also clear out screen.vertices)
 	SDL_Delay(15); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Is normalized using Time.deltaTime;
@@ -51,7 +66,7 @@ void Renderer::GetClippedPolygons(){
 			//get the normal vector relative to the current triangle and the pov
 			Vec3 normal = CalculateNormalVector(tri3D);
 
-			if (ShouldRender(tri3D, normal, cameraLocation)) { //only project and draw a part of a mesh if it should be visible with respect to the camera object
+			if (ShouldRender(tri3D, normal, cameraLocation)) { //only consider a part of a mesh for rendering if it should be visible with respect to the camera object
 				Triangle2D projectedTriangle;
 
 				//project the triangle to 2-space
@@ -82,8 +97,7 @@ void Renderer::GetClippedPolygons(){
 	}
 }
 
-//all this does is draw lines from one edge of the polygon to another
-//if i were to implement scanline shading (which I plan on doing) i dont think this will be necessary...
+//draw edges of polygons in polygonList to the screen (DOES NOT PERFORM SHADING)
 void Renderer::DrawPolygons(){
 	//create line to hold edge of polygon
 	Line newLine(screenPtr);
