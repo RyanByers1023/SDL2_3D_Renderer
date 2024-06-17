@@ -22,10 +22,14 @@ private:
 	ProjectionMatrix* projMatrixPtr;
 	Shader* shaderPtr;
 	WorldObjects* worldObjectsPtr; //use this to store all of the objects and their respective names. names are currently used to differentiate between objects in the game world.
+	std::vector<Polygon2D> polygonList;
 	Vec3 normal;
 	Vec3 cameraLocation; //this will be its own object at one point or another (playerCamera.cpp or something or another)
 	Edge boundingEdgeLeft;
 	Edge boundingEdgeRight;
 	Edge boundingEdgeTop;
 	Edge boundingEdgeBottom;
+	//private methods
+	void GetClippedPolygons();
+	void DrawPolygons();
 };

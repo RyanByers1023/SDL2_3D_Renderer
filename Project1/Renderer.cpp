@@ -1,11 +1,13 @@
 #include "Renderer.h"
 
 Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjectsPtr) {
+	//get all of the needed parameters from the starter file
 	this->screenPtr = new Screen(windowWidth, windowHeight);
 	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
 	this->shaderPtr = new Shader(screenPtr);
 	this->worldObjectsPtr = worldObjectsPtr;
 
+	//set up the screen space boundaries
 	this->boundingEdgeLeft.v1 = {0, screenPtr->height}; this->boundingEdgeLeft.v2 = {0, 0}; //left boundary of screen
 	this->boundingEdgeRight.v1 = {screenPtr->width, screenPtr-> height}; this->boundingEdgeRight.v2 = {screenPtr->width, 0}; //right boundary of screen
 	this->boundingEdgeTop.v1 = {0,0}; this->boundingEdgeTop.v2 = {screenPtr->width, 0}; //top boundary of screen
@@ -22,11 +24,27 @@ Renderer::~Renderer() {
 }
 
 bool Renderer::Render() { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
+	polygonList.clear(); //reset the list of 2D polygons for the current frame
 	if (worldObjectsPtr->objects.empty()) {
 		std::cout << "There are no objects to render. Renderer shutting down..." << std::endl;
 		return false;
 	}
 
+	//get a list of all polygons that are within the screen space and clip them, store in polygonList
+	GetClippedPolygons();
+
+	//draw the polygon to the screen
+	DrawPolygons();
+
+	//fill the area between the vertices of the polygon using a scanline algorithm (NOT IMPLEMENTED)
+	screenPtr->Show(); //will go through screen.vertices and draw each vertex (pixel) to the screen
+	screenPtr->Clear(); //clear the screen (will also clear out screen.vertices)
+	SDL_Delay(15); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Is normalized using Time.deltaTime;
+
+	return true;
+}
+
+void Renderer::GetClippedPolygons(){
 	for (const auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map///
 		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project and draw each triangle that is a part of their mesh one at a time
 			
@@ -48,26 +66,25 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 				*/
 
 				//this will store the clipped version of the triangle
-				Polygon2D newPolygon;
+				Polygon2D clippedTriangle;
 
-				//clip counterclockwise with regard to the screen's boundaries
-				ClipVertices(projectedTriangle, newPolygon, boundingEdgeBottom);	
-				ClipVertices(projectedTriangle, newPolygon, boundingEdgeLeft);
-				ClipVertices(projectedTriangle, newPolygon, boundingEdgeTop);
-				ClipVertices(projectedTriangle, newPolygon, boundingEdgeRight);
+				//clip counterclockwise starting at the bottom of the screen with regard to the screen's boundaries
+				ClipVertices(projectedTriangle, clippedTriangle, boundingEdgeBottom);	
+				ClipVertices(projectedTriangle, clippedTriangle, boundingEdgeRight);
+				ClipVertices(projectedTriangle, clippedTriangle, boundingEdgeTop);
+				ClipVertices(projectedTriangle, clippedTriangle, boundingEdgeLeft);
 
-				//now newPolygon holds a clipped version of projectedTriangle
-
-				//draw the polygon to the screen (NOT IMPLEMENTED)
-				//fill the area between the vertices of the polygon using a scanline algorithm (NOT IMPLEMENTED)
-
+				//now clippedTriangle holds a clipped version of projectedTriangle		
+				polygonList.push_back(clippedTriangle); //store it in polygonList
 			}
 		}		
 	}
+}
 
-	screenPtr->Show(); //will go through screen.vertices and draw each vertex (pixel) to the screen
-	screenPtr->Clear(); //clear the screen (will also clear out screen.vertices)
-	SDL_Delay(15); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Is normalized using Time.deltaTime;
+//all this does is draw lines from one edge of the polygon to another
+//if i were to implement scanline shading (which I plan on doing) i dont think this will be necessary...
+void Renderer::DrawPolygons(){
+ 	for(auto& poly : polygonList){
 
-	return true;
+	}
 }
