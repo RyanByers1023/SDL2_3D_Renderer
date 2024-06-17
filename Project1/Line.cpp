@@ -1,19 +1,32 @@
 #include "Line.h"
 
 Line::Line(Screen* screenPtr) {
-    this->x1 = 0.0f;
-    this->x2 = 0.0f;
-    this->y1 = 0.0f;
-    this->y2 = 0.0f;
+	this->line.v1.x = 0.0f;
+    this->line.v2.x = 0.0f;
+    this->line.v1.y = 0.0f;
+    this->line.v2.y = 0.0f;
     this->screenPtr = screenPtr;
 }
 
-Line::Line(Screen* screenPtr, float x1, float y1, float x2, float y2) {
-	this->x1 = x1;
-	this->x2 = x2;
-	this->y1 = y1;
-	this->y2 = y2;
+Line::Line(Screen* screenPtr, const float& x1, const float& y1, const float& x2, const float& y2) {
+	this->line.v1.x = x1;
+    this->line.v2.x = x2;
+    this->line.v1.y = y1;
+    this->line.v2.y = y2;
 	this->screenPtr = screenPtr;
+}
+
+Line::Line(Screen* screenPtr, const Vec2& v1, const Vec2& v2){
+    this->line.v1.x = v1.x;
+    this->line.v2.x = v2.x;
+    this->line.v1.y = v1.y;
+    this->line.v2.y = v2.y;
+    this->screenPtr = screenPtr;
+}
+
+Line::Line(Screen* screenPtr, const Edge& line){
+    this->line = line;
+    this->screenPtr = screenPtr;
 }
 
 void Line::Draw() {
@@ -35,11 +48,5 @@ void Line::Draw() {
     // Draw each pixel along the line
     for (int i = 0; i <= steps; i++) {
         screenPtr->CreatePixel(round(x1 + i * deltaX), round(y1 + i * deltaY));
-    }
-}
-
-void Line::DrawHorizontalLine() { //uses y1 as the vertical coordinate
-    for (int x = this->x1; x < this->x2; ++x) { //WRONG x2 is going to +inf
-        screenPtr->CreatePixel(round(x), round(y1));
     }
 }
