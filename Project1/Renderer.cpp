@@ -84,11 +84,19 @@ void Renderer::GetClippedPolygons(){
 //all this does is draw lines from one edge of the polygon to another
 //if i were to implement scanline shading (which I plan on doing) i dont think this will be necessary...
 void Renderer::DrawPolygons(){
+	Line newLine(screenPtr);
 	//access list of polygons
  	for(auto& poly : polygonList){
 		//access list of vertices for each polygon
-		for(auto& vertex : poly.vertices){
+		for(int i = 0; i < poly.vertices.size(); ++i){
+			//get the two vertices that make up the
+			Vec2 v1 = poly.vertices[i];
+			Vec2 v2 = poly.vertices[(i + 1) % 4]; //choose the next vertex in the list, if i == the second to last index, loop back around to complete the shape
+			//create the line that defines this edge of the polygon
+			newLine.line.v1.x = v1.x; newLine.line.v1.y = v1.y;
+			newLine.line.v2.x = v2.x; newLine.line.v2.y = v2.y;
 			//add to screenPtr's pixel list (this can be done using line.cpp's draw function)
+			newLine.Draw();
 		}
 	}
 }
