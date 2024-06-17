@@ -85,6 +85,6 @@ void Renderer::GetClippedPolygons(){
 //if i were to implement scanline shading (which I plan on doing) i dont think this will be necessary...
 void Renderer::DrawPolygons(){
  	for(auto& poly : polygonList){
-
+		for(int i = 0; i < polygonList.)
 	}
 }
