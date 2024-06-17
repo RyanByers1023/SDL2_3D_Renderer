@@ -12,6 +12,7 @@ Shader::Shader(Screen* screenPtr) {
 
 //leaving above for later reference but this is possibly fixed due to the implementation of the bounding box?
 //would like to introduce triangle clipping at a later point, but for now, this should work decently well
+//DONE--implemented via "PolygonClipper.h"
 
 void Shader::ShadePolygon(const Polygon2D& polygon) {
     
