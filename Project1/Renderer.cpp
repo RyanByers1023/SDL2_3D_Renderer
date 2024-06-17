@@ -46,8 +46,9 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 
 void Renderer::GetClippedPolygons(){
 	for (const auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map///
-		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project and draw each triangle that is a part of their mesh one at a time
+		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 			
+			//get the normal vector relative to the current triangle and the pov
 			Vec3 normal = CalculateNormalVector(tri3D);
 
 			if (ShouldRender(tri3D, normal, cameraLocation)) { //only project and draw a part of a mesh if it should be visible with respect to the camera object
