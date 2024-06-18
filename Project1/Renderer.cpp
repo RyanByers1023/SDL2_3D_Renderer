@@ -6,6 +6,7 @@ Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjects
 	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
 	this->shaderPtr = new Shader(screenPtr);
 	this->worldObjectsPtr = worldObjectsPtr;
+	this->clipperPtr = new PolygonClipper();
 
 	//set up the screen space boundaries:
 	SetScreenSpaceBoundaries();
@@ -18,6 +19,7 @@ Renderer::~Renderer() {
 	delete this->screenPtr;
 	delete this->projMatrixPtr;
 	delete this->shaderPtr;
+	delete this->clipperPtr;
 }
 
 void Renderer::SetScreenSpaceBoundaries(){
@@ -71,7 +73,7 @@ void Renderer::GetClippedPolygons(){
 
 				//project the triangle to 2-space
 				for (int i = 0; i < 3; i++) {
-					projectedTriangle.point[i] = tri3D.point[i] * *projMatrixPtr;
+					projectedTriangle.vertices[i] = tri3D.point[i] * *projMatrixPtr;
 				}
 
 				/*
@@ -85,10 +87,10 @@ void Renderer::GetClippedPolygons(){
 				Polygon2D clippedTriangle;
 
 				//clip counterclockwise starting at the bottom of the screen with regard to the screen's boundaries
-				ClipVertices(projectedTriangle, clippedTriangle, boundingEdgeBottom);	
-				ClipVertices(projectedTriangle, clippedTriangle, boundingEdgeRight);
-				ClipVertices(projectedTriangle, clippedTriangle, boundingEdgeTop);
-				ClipVertices(projectedTriangle, clippedTriangle, boundingEdgeLeft);
+				clipperPtr->Clip(projectedTriangle, clippedTriangle, boundingEdgeBottom);	
+				clipperPtr->Clip(projectedTriangle, clippedTriangle, boundingEdgeRight);
+				clipperPtr->Clip(projectedTriangle, clippedTriangle, boundingEdgeTop);
+				clipperPtr->Clip(projectedTriangle, clippedTriangle, boundingEdgeLeft);
 
 				//now clippedTriangle holds a clipped version of projectedTriangle		
 				polygonList.push_back(clippedTriangle); //store it in polygonList
