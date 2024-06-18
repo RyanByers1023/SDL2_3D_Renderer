@@ -6,15 +6,14 @@
 
 #include "Vec3.h"
 
-class ObjFile{
+class ObjFile {
 public:
-    ObjFile(string fileName);
+    ObjFile(std::string fileName);
 private:
-    mesh GetMesh(std::string fileName);
-    bool OpenObjFile(string fileName);
-    void IterateThroughObjFile(const std::ifstream& objFile);
+    void GetMesh(std::string fileName);
+    bool OpenObjFile(std::string fileName, std::ifstream& objFile);
+    void IterateThroughObjFile(std::ifstream& objFile);
     Triangle3D CreateTriangle(std::istringstream& vertexStream);
-    Vec3 CreateVertex(std::istringstream& vertexStream, Vec3 newVertex)
-    std::vector<Triangle3D> mesh;
-}
-
+    Vec3 CreateVertex(std::istringstream&);
+    mesh newMesh;
+};
