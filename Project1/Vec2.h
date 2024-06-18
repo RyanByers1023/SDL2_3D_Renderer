@@ -1,5 +1,4 @@
 #pragma once
-#include "Vec3.h"
 #include <vector>
 
 class Vec2 {
@@ -12,9 +11,6 @@ public:
 
 	//contructor with int parameters
 	Vec2(int x, int y) : x(static_cast<float>(x)), y(static_cast<float>(y)) {};
-
-	//assignment operator to assign from Vec3
-	Vec2& operator=(const Vec3& otherVector);
 
 	//public member variables
 	float x;
