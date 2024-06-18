@@ -13,24 +13,35 @@ class Renderer {
 public:
 	//default constructor
 	Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjects);
+
 	//destructor
 	~Renderer();
-	//public methods:
-	bool Render(); //render objects to the screen. Returns false if there was an error (no items to render)
+
+	//render objects to the screen. Returns false if there was an error (no items to render)
+	bool Render(); 
 private:
+	//private member variables
 	Screen* screenPtr;
 	ProjectionMatrix* projMatrixPtr;
 	Shader* shaderPtr;
-	WorldObjects* worldObjectsPtr; //use this to store all of the objects and their respective names. names are currently used to differentiate between objects in the game world.
+	WorldObjects* worldObjectsPtr; //used to store all objects in game world and respective names.
+	PolygonClipper* clipperPtr;
 	std::vector<Polygon2D> polygonList;
 	Vec3 normal;
-	Vec3 cameraLocation; //this will be its own object at one point or another (playerCamera.cpp or something or another)
+	Vec3 cameraLocation;
+
+	//screen space bounding box member variables
 	Edge boundingEdgeLeft;
 	Edge boundingEdgeRight;
 	Edge boundingEdgeTop;
 	Edge boundingEdgeBottom;
-	//private methods
+
+	//set screen space bounding box
 	void SetScreenSpaceBoundaries();
+
+	//clip triangles from mesh
 	void GetClippedPolygons();
+
+	//draw polygons to the screen
 	void DrawPolygons();
 };
