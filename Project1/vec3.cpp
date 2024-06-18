@@ -1,23 +1,5 @@
 #include "Vec3.h"
 
-Vec3::Vec3() {
-	this->x = 0.0f;
-	this->y = 0.0f;
-	this->z = 0.0f;
-}
-
-Vec3::Vec3(float x, float y, float z) {
-    this->x = x;
-    this->y = y;
-    this->z = z;
-}
-
-Vec3::Vec3(int x, int y, int z) {
-    this->x = static_cast<float>(x);
-    this->y = static_cast<float>(y);
-    this->z = static_cast<float>(z);
-}
-
 Vec3& Vec3::operator*=(const Matrix4x4& transformationMatrix) {
     // Perform the transformation in place
     float newX = x * transformationMatrix.matrix[0][0] + y * transformationMatrix.matrix[1][0] + z * transformationMatrix.matrix[2][0] + transformationMatrix.matrix[3][0];
