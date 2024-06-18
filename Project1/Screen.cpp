@@ -10,11 +10,11 @@ Screen::Screen(int screenWidth, int screenHeight) {
 }
 
 void Screen::CreatePixel(float x, float y) {
-	SDL_FPoint newPoint = { x, y };
+	Vec2 newPoint = { x, y };
 	vertices.push_back(newPoint); //create new SDL_FPoint object and push to vertices vector
 }
 
-void Screen:CreatePixel(Vec2 newPoint){
+void Screen::CreatePixel(Vec2 newPoint){
 	vertices.push_back(newPoint);
 }
 

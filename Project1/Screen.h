@@ -2,12 +2,13 @@
 #include <SDL.h>
 #include <vector>
 #include <chrono>
+#include "Vec2.h"
 
 class Screen {
 private:
 	SDL_Window* window;
 	SDL_Renderer* SDLRenderer;
-	std::vector<SDL_FPoint> vertices;	
+	std::vector<Vec2> vertices;	
 public:
 	Screen(int screenWidth, int screenHeight); //initialize SDL_VIDEO, create window and renderer, and set scale of renderer
 	void CreatePixel(float x, float y); //enter new vertex into vertices vector
