@@ -15,11 +15,14 @@ public:
 	//contructor with int parameters
 	Vec3(int x, int y, int z) : x(static_cast<float>(x)), y(static_cast<float>(y)), z(static_cast<float>(z)) {};
 
-	//*= operator overloader
+	//*= operator overloader for Matrix4x4
 	Vec3& operator*=(const Matrix4x4& transformationMatrix);
 
+	//*= operator overloader for ProjectionMatrix
+	Vec3& operator*=(ProjectionMatrix* projectionMatrix);
+
 	//* operator overloader
-	Vec3 operator*(const Matrix4x4& transformationMatrix) const;
+	Vec3& operator*(const Matrix4x4& transformationMatrix) const;
 
 	//public member variables
 	float x;
