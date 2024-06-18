@@ -1,6 +1,5 @@
 #include "PolygonClipper.h"
     //Process overview:
-
     //the goal is to clip the polygons on the x-axis at screenWidth, and the y-axis at screenHeight. (if needed at all)
     //when clipping is performed, a modification is directly made to the projected 2-D triangle's vertices
     //these vertices will change only for that frame though...
@@ -10,9 +9,9 @@
     //How to determine what side of the window an edge lies?:
     //Eqn: P = (x2 - x1) * (y - y1) - (y2 -y1) * (x - x1)
     //Evaluate this using these rules:
-    //P < 0 ---> point on right side of line
-    //P = 0 ---> point on the line
-    //P > 0 ---> point on the left side of the line  
+    //P < 0 ---> vertices on right side of line
+    //P = 0 ---> vertices on the line
+    //P > 0 ---> vertices on the left side of the line  
 
     //---Process to clip edges---
     //Cases to handle (4)
@@ -28,12 +27,12 @@
     //5. save intersections in new list respective to four above relationships
     //6. repeat steps 4 and 5 for all edges of clipping window
 
-//Note: maybe make a polygon2D object to peform the same task that newPolygon.vertices is performing below...
-void ClipVertices(const Triangle2D& triToClip, Polygon2D& newPolygon, const Edge& clipWindowEdge){ //return a list of vertices that should have an edge rendered between them
-    Vec2 intercept; //used to store intercept between triangle edge and clipWindowEdge
-    Edge triEdge; //stores current edge this function is trying to clip
+//return a list of vertices that should have an edge rendered between them
+void PolygonClipper::Clip(Triangle2D& triToClip, Polygon2D& newPolygon, const Edge& clipWindowEdge){ 
+    Vec2 intercept; //store intercept between triangle edge and clipWindowEdge
+    Edge triEdge; //store current edge this function is trying to clip
 
-    for(int i = 0; i < triToClip.vertices.size(); ++i){
+    for(int i = 0; i < 3; ++i){
         //set up vertices vi -> vi+1 that make up the edge I want to check for
         triEdge.v1 = triToClip.vertices[i];
         triEdge.v2 = triToClip.vertices[(i + 1) % 3]; //wrap around to the first vertex on the last iteration to check the last edge
@@ -42,12 +41,12 @@ void ClipVertices(const Triangle2D& triToClip, Polygon2D& newPolygon, const Edge
         if(VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
             newPolygon.vertices.push_back(triEdge.v2);
         }
-        //First inside, second outside -- keep only point of intersection
+        //First inside, second outside -- keep only vertices of intersection
         else if(VertexInside(clipWindowEdge, triEdge.v1) && !VertexInside(clipWindowEdge, triEdge.v2)){
             intercept = FindIntercept(clipWindowEdge, triEdge);
             newPolygon.vertices.push_back(intercept);
         }
-        //First outside, second inside -- keep point of intersection and second point
+        //First outside, second inside -- keep vertices of intersection and second vertices
         else if(!VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
             intercept = FindIntercept(clipWindowEdge, triEdge);
             newPolygon.vertices.push_back(intercept);
@@ -57,7 +56,7 @@ void ClipVertices(const Triangle2D& triToClip, Polygon2D& newPolygon, const Edge
     } 
 }
 
-float GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex){ //Computes cross product between edge v1 -> v2 with respect to currVertex
+float PolygonClipper::GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex){ //Computes cross product between edge v1 -> v2 with respect to currVertex
     //Eqn: P = (x2 - x1) * (y - y1) - (y2 -y1) * (x - x1)
 
     //extract vertices defining the edge
@@ -65,12 +64,12 @@ float GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex){ //
     return (v2.x - v1.x) * (currVertex.y - v1.y) - (v2.y - v1.y) * (currVertex.x - v1.x);
 }
 
-//if clipper vertices are defined counter-clockwise (they will be), then all points to the LEFT are inside the clipper boundaries
-bool VertexInside(float determinant, const Edge& clipWindowEdge, const Vec2& currVertex){
+//if clipper vertices are defined counter-clockwise (they will be), then all verticess to the LEFT are inside the clipper boundaries
+bool PolygonClipper::VertexInside(const Edge& clipWindowEdge, const Vec2& currVertex){
     return GetEdgeFunctionDet(clipWindowEdge, currVertex) >= 0;
 }
 
-Vec2 FindIntercept(const Edge& clipWindowEdge, const Edge& triEdge){
+Vec2 PolygonClipper::FindIntercept(const Edge& clipWindowEdge, const Edge& triEdge){
     //extract vertices defining all relevant edges
     Vec2 v1 = clipWindowEdge.v1, v2 = clipWindowEdge.v2, v3 = triEdge.v1, v4 = triEdge.v2;
 
