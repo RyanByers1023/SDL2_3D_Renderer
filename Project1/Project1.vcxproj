@@ -135,9 +135,12 @@
   <ItemGroup>
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="ObjParser.cpp" />
+    <ClCompile Include="PolygonClipper.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="RendererHelperFunctions.cpp" />
+    <ClCompile Include="ScanlineFill.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Line.cpp" />
@@ -153,7 +156,10 @@
     <ClCompile Include="WorldObjects.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ObjParser.h" />
+    <ClInclude Include="PolygonClipper.h" />
     <ClInclude Include="RendererHelperFunctions.h" />
+    <ClInclude Include="ScanlineFill.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Controller.h" />

@@ -44,6 +44,15 @@
     <Filter Include="Source Files\Renderer\Shader">
       <UniqueIdentifier>{e8070acd-acef-46aa-b452-0472898585bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Input\File Input">
+      <UniqueIdentifier>{606cc800-4d3a-4ce3-bb43-7606de35688c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input\User Input">
+      <UniqueIdentifier>{4a941071-3b41-4347-8452-2e39fc75d7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Renderer\Clipper">
+      <UniqueIdentifier>{2a8431a5-7b2d-46f5-8e75-09a87598f355}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldObjects.cpp">
@@ -66,12 +75,6 @@
     </ClCompile>
     <ClCompile Include="Basic4x4Matrices.cpp">
       <Filter>Source Files\Matrices</Filter>
-    </ClCompile>
-    <ClCompile Include="InputHandler.cpp">
-      <Filter>Source Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller.cpp">
-      <Filter>Source Files\Input</Filter>
     </ClCompile>
     <ClCompile Include="StartMe.cpp">
       <Filter>Source Files\Starter Files</Filter>
@@ -100,6 +103,21 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Renderer\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="ObjParser.cpp">
+      <Filter>Source Files\Input\File Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Source Files\Input\User Input</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Source Files\Input\User Input</Filter>
+    </ClCompile>
+    <ClCompile Include="PolygonClipper.cpp">
+      <Filter>Source Files\Renderer\Clipper</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanlineFill.cpp">
+      <Filter>Source Files\Renderer\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube.h">
@@ -123,12 +141,6 @@
     <ClInclude Include="Basic4x4Matrices.h">
       <Filter>Source Files\Matrices</Filter>
     </ClInclude>
-    <ClInclude Include="Controller.h">
-      <Filter>Source Files\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="InputHandler.h">
-      <Filter>Source Files\Input</Filter>
-    </ClInclude>
     <ClInclude Include="StartMe.h">
       <Filter>Source Files\Starter Files</Filter>
     </ClInclude>
@@ -151,6 +163,21 @@
       <Filter>Source Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
+      <Filter>Source Files\Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjParser.h">
+      <Filter>Source Files\Input\File Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Source Files\Input\User Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Source Files\Input\User Input</Filter>
+    </ClInclude>
+    <ClInclude Include="PolygonClipper.h">
+      <Filter>Source Files\Renderer\Clipper</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanlineFill.h">
       <Filter>Source Files\Renderer\Shader</Filter>
     </ClInclude>
   </ItemGroup>
