@@ -30,14 +30,14 @@ Line::Line(Screen* screenPtr, const Edge& line){
 }
 
 void Line::Draw() {
-    float dx = x2 - x1; // Change in x
-    float dy = y2 - y1; // Change in y
+    float dx = line.v2.x - line.v1.x; // Change in x
+    float dy = line.v2.y - line.v1.y; // Change in y
 
     // Calculate the absolute value of dx and dy, take the largest value
     float steps = std::max(abs(dx), abs(dy));
 
     if (steps == 0) { //there is no change in x or y. this is a single point
-        screenPtr->CreatePixel(round(x1), round(y1)); // Draw a single pixel
+        screenPtr->CreatePixel(round(line.v1.x), round(line.v1.y)); // Draw a single pixel
         return; // End the function after drawing the pixel
     }
 
@@ -47,6 +47,6 @@ void Line::Draw() {
 
     // Draw each pixel along the line
     for (int i = 0; i <= steps; i++) {
-        screenPtr->CreatePixel(round(x1 + i * deltaX), round(y1 + i * deltaY));
+        screenPtr->CreatePixel(round(line.v1.x + i * deltaX), round(line.v1.y + i * deltaY));
     }
 }
