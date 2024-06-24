@@ -34,6 +34,8 @@ void ObjFile::IterateThroughObjFile(std::ifstream& objFile){
             //parse the vertex
             newTriangle = CreateTriangle(lineStream); //next 3 rows are vertices
             this->newMesh.triangles.push_back(newTriangle); //store newTriangle as a part of the mesh
+            //note: obj files store vertices counterclockwise
+            //this is important info for the calculation of face normals
         }  
     }
 }

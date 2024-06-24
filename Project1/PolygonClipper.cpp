@@ -32,7 +32,7 @@ void PolygonClipper::Clip(Triangle2D& triToClip, Polygon2D& newPolygon, const Ed
     Vec2 intercept; //store intercept between triangle edge and clipWindowEdge
     Edge triEdge; //store current edge this function is trying to clip
 
-    for(int i = 0; i < 3; ++i){
+    for(int i = 0; i < 3; ++i){ //loop through all edges of triangle (3)
         //set up vertices vi -> vi+1 that make up the edge I want to check for
         triEdge.v1 = triToClip.vertices[i];
         triEdge.v2 = triToClip.vertices[(i + 1) % 3]; //wrap around to the first vertex on the last iteration to check the last edge
@@ -44,12 +44,20 @@ void PolygonClipper::Clip(Triangle2D& triToClip, Polygon2D& newPolygon, const Ed
         //First inside, second outside -- keep only vertices of intersection
         else if(VertexInside(clipWindowEdge, triEdge.v1) && !VertexInside(clipWindowEdge, triEdge.v2)){
             intercept = FindIntercept(clipWindowEdge, triEdge);
-            newPolygon.vertices.push_back(intercept);
+
+            //only keep intersection point if it exists
+            if (!std::isnan(intercept.x) && !std::isnan(intercept.y)) {
+                newPolygon.vertices.push_back(intercept);
+            }
         }
         //First outside, second inside -- keep vertices of intersection and second vertices
         else if(!VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
             intercept = FindIntercept(clipWindowEdge, triEdge);
-            newPolygon.vertices.push_back(intercept);
+
+            //only keep intersection point if it exists
+            if (!std::isnan(intercept.x) && !std::isnan(intercept.y)) {
+                newPolygon.vertices.push_back(intercept);
+            }
             newPolygon.vertices.push_back(triEdge.v2);
         }
         //If none of these are eval. to true, then the verts are both outside -- do not keep any vertices
@@ -77,8 +85,12 @@ Vec2 PolygonClipper::FindIntercept(const Edge& clipWindowEdge, const Edge& triEd
 
     float denom = (v1.x - v2.x) * (v3.y - v4.y) - (v1.y - v2.y) * (v3.x - v4.x);
 
-    if(denom == 0){ //lines are parallel or conincident
-        return output; //this indicates no intersection, return default initialized vector
+    //if (!std::isnan(intersection.x) && !std::isnan(intersection.y)) use this to check for this scenario
+    if(denom == 0){ //lines are parallel or conincident -- no intersection can exist
+        //set output vector to represent this using NaN values
+        output.x = std::numeric_limits<float>::quiet_NaN();
+        output.y = std::numeric_limits<float>::quiet_NaN();
+        return output;
     }
 
     //x-intercept = ((x1y2 - y1x2)(x3 - x4) - (x1 - x2)(x3y4 - y3x4)) / ((x1 - x2)(y3 - y4) - (y1 - y2)(x3 - x4))
