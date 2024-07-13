@@ -37,28 +37,28 @@ void PolygonClipper::Clip(Triangle2D& triToClip, Polygon2D& newPolygon, const Ed
         triEdge.v1 = triToClip.vertices[i];
         triEdge.v2 = triToClip.vertices[(i + 1) % 3]; //wrap around to the first vertex on the last iteration to check the last edge
 
-        //Both inside -- keep second vertex only
-        if(VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
-            newPolygon.vertices.push_back(triEdge.v2);
+        //Both inside -- keep vertices: second vertex only
+        if(VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){ //both inside
+            newPolygon.vertices.push_back(triEdge.v2); //keep second vertex
         }
-        //First inside, second outside -- keep only vertices of intersection
-        else if(VertexInside(clipWindowEdge, triEdge.v1) && !VertexInside(clipWindowEdge, triEdge.v2)){
-            intercept = FindIntercept(clipWindowEdge, triEdge);
+        //First inside, second outside -- keep vertices: intersection w/ clipWindowEdge
+        else if(VertexInside(clipWindowEdge, triEdge.v1) && !VertexInside(clipWindowEdge, triEdge.v2)){ //1st inside, 2nd not
+            intercept = FindIntercept(clipWindowEdge, triEdge); //find intercept
 
             //only keep intersection point if it exists
-            if (!std::isnan(intercept.x) && !std::isnan(intercept.y)) {
-                newPolygon.vertices.push_back(intercept);
+            if (!std::isnan(intercept.x) && !std::isnan(intercept.y)) { //both not invalid (x and y)
+                newPolygon.vertices.push_back(intercept); //keep intercept
             }
         }
-        //First outside, second inside -- keep vertices of intersection and second vertices
-        else if(!VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){
-            intercept = FindIntercept(clipWindowEdge, triEdge);
+        //First outside, second inside -- keep vertices: intersection w/ clipWindowEdge + second vertex
+        else if(!VertexInside(clipWindowEdge, triEdge.v1) && VertexInside(clipWindowEdge, triEdge.v2)){ //1st outside, 2nd inside
+            intercept = FindIntercept(clipWindowEdge, triEdge); //find intercept
 
             //only keep intersection point if it exists
-            if (!std::isnan(intercept.x) && !std::isnan(intercept.y)) {
-                newPolygon.vertices.push_back(intercept);
+            if (!std::isnan(intercept.x) && !std::isnan(intercept.y)) { //both not invalid (x and y)
+                newPolygon.vertices.push_back(intercept); //keep intercept
             }
-            newPolygon.vertices.push_back(triEdge.v2);
+            newPolygon.vertices.push_back(triEdge.v2); //keep second vertex
         }
         //If none of these are eval. to true, then the verts are both outside -- do not keep any vertices
     } 
