@@ -9,5 +9,6 @@ public:
 	bool VertexInside(const Edge& clipWindowEdge, const Vec2& currVertex);
 	Vec2 FindIntercept(const Edge& clipWindowEdge, const Edge& triEdge);
 private:
-
+	const float EPSILON = 1e-6;
+	bool IsNearlyEqual(float a, float b, float epsilon = EPSILON);
 };

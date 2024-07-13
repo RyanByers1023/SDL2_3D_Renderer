@@ -86,7 +86,7 @@ Vec2 PolygonClipper::FindIntercept(const Edge& clipWindowEdge, const Edge& triEd
     float denom = (v1.x - v2.x) * (v3.y - v4.y) - (v1.y - v2.y) * (v3.x - v4.x);
 
     //if (!std::isnan(intersection.x) && !std::isnan(intersection.y)) use this to check for this scenario
-    if(denom == 0){ //lines are parallel or conincident -- no intersection can exist
+    if(IsNearlyEqual(denom, 0.0f)){ //lines are parallel or conincident -- no intersection can exist
         //set output vector to represent this using NaN values
         output.x = std::numeric_limits<float>::quiet_NaN();
         output.y = std::numeric_limits<float>::quiet_NaN();
@@ -100,4 +100,9 @@ Vec2 PolygonClipper::FindIntercept(const Edge& clipWindowEdge, const Edge& triEd
     output.y = ((v1.x * v2.y - v1.y * v2.x) * (v3.y - v4.y) - (v1.y - v2.y) * (v3.x * v4.y - v3.y * v4.x)) / denom;
 
     return output;
+}
+
+//sometimes denom will not be exactly 0, but so small it can be deemed close enough
+bool IsNearlyEqual(float a, float b, float epsilon = EPSILON) {
+    return fabs(a - b) < epsilon;
 }
