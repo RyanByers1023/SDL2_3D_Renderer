@@ -72,9 +72,9 @@ void Renderer::GetClippedPolygons(){
 				Triangle2D projectedTriangle;
 
 				//project the triangle to 2-space
-				for (int i = 0; i < 3; i++) {
-					tri3D.point[i] *= projMatrixPtr;
-					projectedTriangle.vertices[i];
+				for (auto& vertex : tri3D.point) {
+					vertex *= projMatrixPtr;
+					projectedTriangle.vertices.push_back(vertex);
 				}
 
 				/*
