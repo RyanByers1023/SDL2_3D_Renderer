@@ -22,8 +22,9 @@ struct Edge {
 	Vec2 v2;
 };
 
-struct Triangle2D {
-	Vec2 vertices[3];
+class Triangle2D {
+public:
+	std::vector<Vec2> vertices;
 };
 
 struct Polygon2D{
