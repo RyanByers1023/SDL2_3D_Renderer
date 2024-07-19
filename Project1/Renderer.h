@@ -39,6 +39,8 @@ private:
 	//set screen space bounding box
 	void SetScreenSpaceBoundaries();
 
+	Vec2 GetScreenSpaceVertex(const Vec3& vertex, const Vec3& cameraLocation, const float& width, const float& height) const;
+
 	//clip triangles from mesh
 	void GetClippedPolygons();
 
