@@ -28,7 +28,7 @@
     //6. repeat steps 4 and 5 for all edges of clipping window
 
 //return a list of vertices that should have an edge rendered between them
-void PolygonClipper::Clip(Triangle2D& triToClip, Polygon2D& newPolygon, const Edge& clipWindowEdge){ 
+void PolygonClipper::Clip(const Triangle2D& triToClip, Polygon2D& newPolygon, const Edge& clipWindowEdge){ 
     Vec2 intercept; //store intercept between triangle edge and clipWindowEdge
     Edge triEdge; //store current edge this function is trying to clip
 
@@ -102,7 +102,8 @@ Vec2 PolygonClipper::FindIntercept(const Edge& clipWindowEdge, const Edge& triEd
     return output;
 }
 
+
 //sometimes denom will not be exactly 0, but so small it can be deemed close enough
-bool IsNearlyEqual(float a, float b, float epsilon = EPSILON) {
-    return fabs(a - b) < epsilon;
+bool PolygonClipper::IsNearlyEqual(float a, float b) const {
+    return fabs(a - b) < EPSILON;
 }
