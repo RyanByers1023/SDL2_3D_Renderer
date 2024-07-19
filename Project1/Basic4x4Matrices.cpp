@@ -30,13 +30,13 @@ Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& other) { //standard 4x4 x 4x4 
 ProjectionMatrix::ProjectionMatrix(int screenWidth, int screenHeight, float fov, float fFar, float fNear) {
 
 	float fAspectRatio = static_cast<float>(screenHeight) / screenWidth;
-	float fFovRad = 1.0f / tanf(fov * 0.5f / 180.0f * 3.14159f);
+	float fFovRad = 1.0f / tanf(fov * 0.5f * (M_PI / 180.0f));
 
 	this->matrix[0][0] = fAspectRatio * fFovRad;
 	this->matrix[1][1] = fFovRad;
 	this->matrix[2][2] = fFar / (fFar - fNear);
-	this->matrix[3][2] = (-fFar * fNear) / (fFar - fNear);
 	this->matrix[2][3] = 1.0f;
+	this->matrix[3][2] = (-fFar * fNear) / (fFar - fNear);
 	this->matrix[3][3] = 0.0f;
 }
 
