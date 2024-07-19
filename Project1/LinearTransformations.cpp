@@ -10,8 +10,8 @@ void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* t
 
 	if (inputHandlerPtr->leftInput) yRadians = radiansToRotate * timePtr->deltaTime;
 	if (inputHandlerPtr->rightInput) yRadians = -radiansToRotate * timePtr->deltaTime;
-	if (inputHandlerPtr->upInput) xRadians = -radiansToRotate * timePtr->deltaTime;
-	if (inputHandlerPtr->downInput) xRadians = radiansToRotate * timePtr->deltaTime;
+	if (inputHandlerPtr->upInput) xRadians = radiansToRotate * timePtr->deltaTime;
+	if (inputHandlerPtr->downInput) xRadians = -radiansToRotate * timePtr->deltaTime;
 
 	for (auto& tri : object.primitiveMesh.triangles) { //normalization
 		for (int i = 0; i < 3; ++i) {
@@ -50,9 +50,9 @@ void LinearTransformations::ApplyTransformation(InputHandler* inputHandlerPtr, T
 	float distanceToMove = 80.0f;
 
 	
-	if (inputHandlerPtr->wInput) dy = -distanceToMove * timePtr->deltaTime;
+	if (inputHandlerPtr->wInput) dy = distanceToMove * timePtr->deltaTime;
 	if (inputHandlerPtr->aInput) dx = -distanceToMove * timePtr->deltaTime;
-	if (inputHandlerPtr->sInput) dy = distanceToMove * timePtr->deltaTime;
+	if (inputHandlerPtr->sInput) dy = -distanceToMove * timePtr->deltaTime;
 	if (inputHandlerPtr->dInput) dx = distanceToMove * timePtr->deltaTime;
 	if (inputHandlerPtr->zInput) dz = distanceToMove * timePtr->deltaTime;
 	if (inputHandlerPtr->xInput) dz = -distanceToMove * timePtr->deltaTime;
