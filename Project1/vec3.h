@@ -24,6 +24,8 @@ public:
 	//* operator overloader
 	Vec3& operator*(const Matrix4x4& transformationMatrix) const;
 
+	Vec2 operator*(const ProjectionMatrix* projectionMatrix) const;
+
 	//public member variables
 	float x;
 	float y;
