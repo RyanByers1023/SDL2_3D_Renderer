@@ -9,7 +9,7 @@
 
 class StartMe {
 public:
-	StartMe(int windowWidth = 1920, int windowHeight = 1080);
+	StartMe(int windowWidth = 1280, int windowHeight = 720);
 	~StartMe();
 	void StartRendering();
 private:
