@@ -3,7 +3,7 @@
 Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjectsPtr) {
 	//get all of the needed parameters from the runner file
 	this->screenPtr = new Screen(windowWidth, windowHeight);
-	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight, 90.0f, 100.0f, 0.1f);
+	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
 	this->worldObjectsPtr = worldObjectsPtr;
 	this->clipperPtr = new PolygonClipper();
 
@@ -21,21 +21,22 @@ Renderer::~Renderer() {
 }
 
 void Renderer::SetScreenSpaceBoundaries(){
-	//left boundary of screen
-	this->boundingEdgeLeft.v1 = { 0, 0 };
-	this->boundingEdgeLeft.v2 = {0, screenPtr->height};
+	// left boundary of screen
+	//assume 1920x1080 resolution for ex. vals:
+	this->boundingEdgeLeft.v1 = { 0, 0 }; //(0,0) -- top left corner
+	this->boundingEdgeLeft.v2 = { 0, screenPtr->height }; //(0, 1080) -- bottom left corner
 
-	//right boundary of screen
-	this->boundingEdgeRight.v1 = { screenPtr->width, 0 };
-	this->boundingEdgeRight.v2 = {screenPtr->width, screenPtr-> height};
+	// bottom boundary of screen
+	this->boundingEdgeBottom.v1 = { 0, screenPtr->height }; //(0, 1080) -- bottom left corner
+	this->boundingEdgeBottom.v2 = { screenPtr->width, screenPtr->height }; //(1920, 1080) -- bottom right corner
 
-	//top boundary of screen
-	this->boundingEdgeTop.v1 = {0,0};
-	this->boundingEdgeTop.v2 = {screenPtr->width, 0};
+	// right boundary of screen
+	this->boundingEdgeRight.v1 = { screenPtr->width, screenPtr->height }; //(1920, 1080) -- bottom right corner
+	this->boundingEdgeRight.v2 = { screenPtr->width, 0 }; //(1920, 0) -- top right corner
 
-	//bottom boundary of screen
-	this->boundingEdgeBottom.v1 = {0, screenPtr->height};
-	this->boundingEdgeBottom.v2 = {screenPtr->width, screenPtr->height};
+	// top boundary of screen
+	this->boundingEdgeTop.v1 = { screenPtr->width, 0 }; //(1920, 0) -- top right corner
+	this->boundingEdgeTop.v2 = { 0, 0 }; //(0,0) -- top left corner
 }
 
 bool Renderer::Render() { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
@@ -53,22 +54,22 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	DrawPolygons();
 
 	//fill the area between the vertices of the polygon using a scanline algorithm (SHADING NOT YET IMPLEMENTED)
-	screenPtr->Show(); //will go through screen.vertices and draw each vertex (pixel) to the screen
-	screenPtr->Clear(); //clear the screen (will also clear out screen.vertices)
+	screenPtr->Show(); //will go through screen.vertices and show each vertex (pixel) on the screen
+	screenPtr->Clear(); //clear the screen (will also clear out screenPtr->vertices)
 	SDL_Delay(15); //this will determine the frame rate of the simulation. set to update every 15 msecs. lower value == higher framerate. Is normalized using Time.deltaTime;
 
 	return true;
 }
 
 void Renderer::GetClippedPolygons(){
-	for (const auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map///
+	for (const auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
 		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 			
 			//get the normal vector relative to the current triangle and the pov
 			Vec3 normal = CalculateNormalVector(tri3D);
 
 			if (ShouldRender(tri3D, normal, cameraLocation)) { //only consider a part of a mesh for rendering if it should be visible with respect to the camera object
-				Triangle2D projectedTriangle;
+				Polygon2D projectedTriangle;
 
 				//project the triangle to 2-space
 				for (auto& vertex : tri3D.point) {
@@ -100,19 +101,43 @@ void Renderer::GetClippedPolygons(){
 				std::cout << "Projected Triangle point[2].x = " << projectedTriangle.vertices[2].x << "  Projected Triangle point[0].y = " << projectedTriangle.vertices[2].y << std::endl;
 				std::cout << "\n\n\n";
 				*/
-				
 
-				//this will store the clipped version of the triangle
-				Polygon2D clippedTriangle;
+				//clip in counterclockwise order starting at screen's left boundary
+				// This will store the intermediate clipped version of the triangle
+				Polygon2D intermediateClippedTriangle;
 
-				//clip counterclockwise starting at the bottom of the screen with regard to the screen's boundaries
-				clipperPtr->Clip(projectedTriangle, clippedTriangle, boundingEdgeBottom);	
-				clipperPtr->Clip(projectedTriangle, clippedTriangle, boundingEdgeRight);
-				clipperPtr->Clip(projectedTriangle, clippedTriangle, boundingEdgeTop);
-				clipperPtr->Clip(projectedTriangle, clippedTriangle, boundingEdgeLeft);
+				// Step 1: Clip against the left boundary
+				clipperPtr->Clip(projectedTriangle, intermediateClippedTriangle, boundingEdgeLeft);
 
-				//now clippedTriangle holds a clipped version of projectedTriangle		
-				polygonList.push_back(clippedTriangle); //store it in polygonList
+				// Step 2: Clip against the bottom boundary
+				Polygon2D clippedAgainstBottom;
+				clipperPtr->Clip(intermediateClippedTriangle, clippedAgainstBottom, boundingEdgeBottom);
+
+				// Step 3: Clip against the right boundary
+				Polygon2D clippedAgainstRight;
+				clipperPtr->Clip(clippedAgainstBottom, clippedAgainstRight, boundingEdgeRight);
+
+				// Step 4: Clip against the top boundary
+				Polygon2D finalClippedTriangle;
+				clipperPtr->Clip(clippedAgainstRight, finalClippedTriangle, boundingEdgeTop);
+
+				/*
+				// Debug output to check clipped values
+				for (int i = 0; i < finalClippedTriangle.vertices.size(); ++i) {
+					std::cout << "Vertex " << i << ".x: " << finalClippedTriangle.vertices[i].x << std::endl;
+					std::cout << "Vertex " << i << ".y: " << finalClippedTriangle.vertices[i].y << std::endl;
+				}
+				*/
+
+				//now clippedTriangle holds a clipped version of projectedTriangle
+				if (!finalClippedTriangle.vertices.empty()) { //make sure it has at least one vertex
+					polygonList.push_back(finalClippedTriangle); //store it in polygonList
+				}
+				/*
+				else {
+					std::cout << "List of vertices is empty..." << std::endl;
+				}
+				*/
 			}
 		}		
 	}
