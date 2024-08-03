@@ -40,7 +40,7 @@ void Renderer::SetScreenSpaceBoundaries(){
 }
 
 bool Renderer::Render() { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
-	polygonList.clear(); //reset the list of 2D polygons for the current frame
+	std::vector<Polygon2D> polygonList;
 
 	if (worldObjectsPtr->objects.empty()) {
 		std::cout << "There are no objects to render. Renderer shutting down..." << std::endl;
@@ -48,10 +48,10 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	}
 
 	//get a list of all polygons that are within the screen space and clip them, store in polygonList
-	GetClippedPolygons();
+	GetClippedPolygons(polygonList);
 
 	//draw the polygon(s) to the screen
-	DrawPolygons();
+	DrawPolygons(polygonList);
 
 	//fill the area between the vertices of the polygon using a scanline algorithm (SHADING NOT YET IMPLEMENTED)
 	screenPtr->Show(); //will go through screen.vertices and show each vertex (pixel) on the screen
@@ -61,86 +61,51 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	return true;
 }
 
-void Renderer::GetClippedPolygons(){
+void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList){
 	for (const auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
 		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 			
-			//get the normal vector relative to the current triangle and the pov
+			//get the normal vector of tri3D
 			Vec3 normal = CalculateNormalVector(tri3D);
 
 			if (ShouldRender(tri3D, normal, cameraLocation)) { //only consider a part of a mesh for rendering if it should be visible with respect to the camera object
 				Polygon2D projectedTriangle;
 
 				//project the triangle to 2-space
-				for (auto& vertex : tri3D.point) {
-
-					/*
-					std::cout << "3D Triangle point[0].x = " << tri3D.point[0].x << "  3D Triangle point[0].y = " << tri3D.point[0].y << std::endl;
-					std::cout << "3D Triangle point[1].x = " << tri3D.point[1].x << "  3D Triangle point[1].y = " << tri3D.point[1].y << std::endl;
-					std::cout << "3D Triangle point[2].x = " << tri3D.point[2].x << "  3D Triangle point[2].y = " << tri3D.point[2].y << std::endl;
-					std::cout << "3D Triangle point[0].z = " << tri3D.point[0].z << std::endl;
-					std::cout << "3D Triangle point[1].z = " << tri3D.point[1].z << std::endl;
-					std::cout << "3D Triangle point[2].z = " << tri3D.point[2].z << std::endl;
-					std::cout << "\n\n\n";
-					*/
-					
-					
+				for (auto& vertex : tri3D.point) {					
 					Vec2 newVertex = GetScreenSpaceVertex(vertex, cameraLocation, screenPtr->width, screenPtr->height);
-
-					// Debug output to check values
-					//std::cout << "Projected Vertex: (" << newVertex.x << ", " << newVertex.y << ")" << std::endl;
-
 					projectedTriangle.vertices.push_back(newVertex);
-
-					//std::cout << "Projected Vertex: (" << projectedTriangle.vertices.back().x << ", "  << projectedTriangle.vertices.back().y << ")" << std::endl;
 				}
 
-				/*
-				std::cout << "Projected Triangle point[0].x = " << projectedTriangle.vertices[0].x << "  Projected Triangle point[0].y = " << projectedTriangle.vertices[0].y << std::endl;
-				std::cout << "Projected Triangle point[1].x = " << projectedTriangle.vertices[1].x << "  Projected Triangle point[0].y = " << projectedTriangle.vertices[1].y << std::endl;
-				std::cout << "Projected Triangle point[2].x = " << projectedTriangle.vertices[2].x << "  Projected Triangle point[0].y = " << projectedTriangle.vertices[2].y << std::endl;
-				std::cout << "\n\n\n";
-				*/
+				Polygon2D clippedTriangle = PerformClipping(projectedTriangle);		
 
-				//clip in counterclockwise order starting at screen's left boundary
-				// This will store the intermediate clipped version of the triangle
-				Polygon2D intermediateClippedTriangle;
-
-				// Step 1: Clip against the left boundary
-				clipperPtr->Clip(projectedTriangle, intermediateClippedTriangle, boundingEdgeLeft);
-
-				// Step 2: Clip against the bottom boundary
-				Polygon2D clippedAgainstBottom;
-				clipperPtr->Clip(intermediateClippedTriangle, clippedAgainstBottom, boundingEdgeBottom);
-
-				// Step 3: Clip against the right boundary
-				Polygon2D clippedAgainstRight;
-				clipperPtr->Clip(clippedAgainstBottom, clippedAgainstRight, boundingEdgeRight);
-
-				// Step 4: Clip against the top boundary
-				Polygon2D finalClippedTriangle;
-				clipperPtr->Clip(clippedAgainstRight, finalClippedTriangle, boundingEdgeTop);
-
-				/*
-				// Debug output to check clipped values
-				for (int i = 0; i < finalClippedTriangle.vertices.size(); ++i) {
-					std::cout << "Vertex " << i << ".x: " << finalClippedTriangle.vertices[i].x << std::endl;
-					std::cout << "Vertex " << i << ".y: " << finalClippedTriangle.vertices[i].y << std::endl;
+				if (!clippedTriangle.vertices.empty()) { //make sure it has at least one vertex
+					polygonList.push_back(clippedTriangle); //store it in polygonList
 				}
-				*/
-
-				//now clippedTriangle holds a clipped version of projectedTriangle
-				if (!finalClippedTriangle.vertices.empty()) { //make sure it has at least one vertex
-					polygonList.push_back(finalClippedTriangle); //store it in polygonList
-				}
-				/*
-				else {
-					std::cout << "List of vertices is empty..." << std::endl;
-				}
-				*/
 			}
 		}		
 	}
+}
+
+Polygon2D Renderer::PerformClipping(const Polygon2D& projectedTriangle) {
+	//clip in counterclockwise order starting at screen's left boundary
+	Polygon2D clippedTriangle;
+
+	//clip against the left boundary
+	clippedTriangle = clipperPtr->Clip(projectedTriangle, boundingEdgeLeft);
+
+	//clip against the bottom boundary
+	clippedTriangle = clipperPtr->Clip(clippedTriangle, boundingEdgeBottom);
+
+	//clip against the right boundary
+	clippedTriangle = clipperPtr->Clip(clippedTriangle, boundingEdgeRight);
+
+	//clip against the top boundary
+	clippedTriangle = clipperPtr->Clip(clippedTriangle, boundingEdgeTop);
+
+	//now clippedTriangle holds a clipped version of projectedTriangle
+	return clippedTriangle;
+	
 }
 
 Vec2 Renderer::GetScreenSpaceVertex(const Vec3 &vertex, const Vec3& cameraLocation, const float& width, const float& height) const {
@@ -170,9 +135,10 @@ Vec2 Renderer::GetScreenSpaceVertex(const Vec3 &vertex, const Vec3& cameraLocati
 }
 
 //draw edges of polygons in polygonList to the screen (DOES NOT PERFORM SHADING)
-void Renderer::DrawPolygons(){
+void Renderer::DrawPolygons(const std::vector<Polygon2D>& polygonList){
 	//create line to hold edge of polygon
 	Line newLine(screenPtr);
+
 	//access list of polygons
  	for(auto& poly : polygonList){
 		//access list of vertices for each polygon
