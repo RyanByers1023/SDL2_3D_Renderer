@@ -26,8 +26,6 @@ private:
 	Shader* shaderPtr;
 	WorldObjects* worldObjectsPtr; //used to store all objects in game world and respective names.
 	PolygonClipper* clipperPtr;
-	std::vector<Polygon2D> polygonList;
-	Vec3 normal;
 	Vec3 cameraLocation;
 
 	//screen space bounding box member variables
@@ -42,8 +40,10 @@ private:
 	Vec2 GetScreenSpaceVertex(const Vec3& vertex, const Vec3& cameraLocation, const float& width, const float& height) const;
 
 	//clip triangles from mesh
-	void GetClippedPolygons();
+	void GetClippedPolygons(std::vector<Polygon2D>& polygonList);
+
+	Polygon2D PerformClipping(const Polygon2D& projectedTriangle);
 
 	//draw polygons to the screen
-	void DrawPolygons();
+	void DrawPolygons(const std::vector<Polygon2D>& polygonList);
 };
