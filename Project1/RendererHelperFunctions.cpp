@@ -1,16 +1,14 @@
 #include "RendererHelperFunctions.h"
 
-//calculate the dot product between the normal, the camera and a triangle that is on the same plane.
-//if this outputs a positive value, then this face is facing the camera, render it
-bool ShouldRender(const Triangle3D tri, Vec3 normal, Vec3 cameraLocation) {	
-	return (normal.x * (tri.point[0].x - cameraLocation.x) +
-		    normal.y * (tri.point[0].y - cameraLocation.y) +
-		    normal.z * (tri.point[0].z - cameraLocation.z)) < 0.0f;
+//if this outputs a positive value, then this face is facing the camera, the object is facing the camera, it needs to be rendered (eg. don't render the back side of the triangle if we are viewing the front)...
+//process is known as "back face culling"
+bool ShouldRender(const Triangle3D& tri, const Vec3& triNormal, const Vec3& cameraLocation) {	
+	return (triNormal.x * (tri.point[0].x - cameraLocation.x) +
+			triNormal.y * (tri.point[0].y - cameraLocation.y) +
+			triNormal.z * (tri.point[0].z - cameraLocation.z)) < 0.0f;
 }
 
-//determines whether or not we need to draw the triangle based on perspective (eg. we don't want to render the back side of the triangle if we are viewing the front)...
-Vec3 CalculateNormalVector(const Triangle3D tri) {	
-	//this angle is useful to determine if a certain triangle should be visible to the camera or not
+Vec3 CalculateNormalVector(const Triangle3D& tri) {	
 	Vec3 normal, lineA, lineB;
 
 	//calculate line A and line B
