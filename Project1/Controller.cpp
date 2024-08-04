@@ -6,7 +6,7 @@ void Controller::ChangeControllerFocus() {
 	}
 
 	if (inputHandlerPtr->qInput) {
-		SDL_Delay(100); //delay to prevent multiple inputs from being registered
+		SDL_Delay(50); //delay to prevent multiple inputs from being registered
 		if (selectedObject == worldObjectsPtr->objects.begin()) {
 			selectedObject = worldObjectsPtr->objects.end(); //if we reach the beginning of the unordered_map, loop back to the end
 		}
@@ -14,7 +14,7 @@ void Controller::ChangeControllerFocus() {
 	}
 
 	 if (inputHandlerPtr->eInput) {
-		SDL_Delay(100); //delay to prevent multiple inputs from being registered
+		SDL_Delay(50); //delay to prevent multiple inputs from being registered
 		selectedObject++; //move to the next object in the worldObjects unordered_map
 		if (selectedObject == worldObjectsPtr->objects.end()) {
 			selectedObject = worldObjectsPtr->objects.begin(); //if we reach the end of the unordered_map, loop back to the beginning
