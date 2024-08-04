@@ -1,34 +1,5 @@
 #include "Line.h"
 
-Line::Line(Screen* screenPtr) {
-	this->line.v1.x = 0.0f;
-    this->line.v2.x = 0.0f;
-    this->line.v1.y = 0.0f;
-    this->line.v2.y = 0.0f;
-    this->screenPtr = screenPtr;
-}
-
-Line::Line(Screen* screenPtr, const float& x1, const float& y1, const float& x2, const float& y2) {
-	this->line.v1.x = x1;
-    this->line.v2.x = x2;
-    this->line.v1.y = y1;
-    this->line.v2.y = y2;
-	this->screenPtr = screenPtr;
-}
-
-Line::Line(Screen* screenPtr, const Vec2& v1, const Vec2& v2){
-    this->line.v1.x = v1.x;
-    this->line.v2.x = v2.x;
-    this->line.v1.y = v1.y;
-    this->line.v2.y = v2.y;
-    this->screenPtr = screenPtr;
-}
-
-Line::Line(Screen* screenPtr, const Edge& line){
-    this->line = line;
-    this->screenPtr = screenPtr;
-}
-
 void Line::Draw() {
     float dx = line.v2.x - line.v1.x; // Change in x
     float dy = line.v2.y - line.v1.y; // Change in y
