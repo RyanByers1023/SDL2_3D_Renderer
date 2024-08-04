@@ -7,7 +7,7 @@
 
 class Controller {
 public:
-	Controller(InputHandler* inputHandlerPtr, WorldObjects* worldObjectsPtr);
+	Controller(InputHandler* inputHandlerPtr, WorldObjects* worldObjectsPtr) : inputHandlerPtr(inputHandlerPtr), worldObjectsPtr(worldObjectsPtr), selectedObject(worldObjectsPtr->objects.begin()) {};
 	PrimitiveObject* GetCurrentlyControlledObject();
 	void ChangeControllerFocus();
 private:

@@ -1,11 +1,5 @@
 #include "Controller.h"
 
-Controller::Controller(InputHandler* inputHandlerPtr, WorldObjects* worldObjectsPtr) {
-	this->inputHandlerPtr = inputHandlerPtr;
-	this->worldObjectsPtr = worldObjectsPtr;
-	this->selectedObject = worldObjectsPtr->objects.begin();
-}
-
 void Controller::ChangeControllerFocus() {
 	if (selectedObject == worldObjectsPtr->objects.end()) { //this can occur when we spawn a new object in, always check for this when trying to access the selectedObject
 		selectedObject = worldObjectsPtr->objects.begin();
