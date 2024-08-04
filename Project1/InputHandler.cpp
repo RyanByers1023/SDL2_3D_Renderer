@@ -1,21 +1,22 @@
 #include "InputHandler.h"
 
 void InputHandler::CheckForInput() { 
-	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_QUIT) { //user is trying to exit the program via the exit button
+	SDL_Event event;	
+	while (SDL_PollEvent(&event)) { //check for any event
+		if (event.type == SDL_QUIT) { //program exit event (pressed red "x" button)
 			SDL_Quit();
 			exit(0);
 		}
-		if (event.type == SDL_KEYDOWN) { //user has pressed a key
+		if (event.type == SDL_KEYDOWN) { //key depress event
 			HandleKeyDown(event);
 		}
-		if (event.type == SDL_KEYUP) { //a key that was pressed down has been let go
+		if (event.type == SDL_KEYUP) { //key up event
 			HandleKeyUp(event);
 		}
 	}
 }
 
-void InputHandler::HandleKeyDown(SDL_Event event) {
+void InputHandler::HandleKeyDown(const SDL_Event& event) {
 	switch (event.key.keysym.sym) { //switch used to determine which key has been pressed
 		//arrow keys
 	case SDLK_LEFT:
@@ -71,7 +72,7 @@ void InputHandler::HandleKeyDown(SDL_Event event) {
 	}
 }
 
-void InputHandler::HandleKeyUp(SDL_Event event){
+void InputHandler::HandleKeyUp(const SDL_Event& event){
 	switch (event.key.keysym.sym) { //switch used to determine which key was undepressed
 	case SDLK_LEFT:
 		leftInput = false;
