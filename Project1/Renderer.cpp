@@ -62,17 +62,17 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 }
 
 void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList){
-	for (const auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
+	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
 		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 			
 			//get the normal vector of tri3D
-			Vec3 normal = CalculateNormalVector(tri3D);
+			tri3D.faceNormal = CalculateNormalVector(tri3D); //store it within the mesh for later use
 
-			if (ShouldRender(tri3D, normal, cameraLocation)) { //only consider a part of a mesh for rendering if it should be visible with respect to the camera object
+			if (ShouldRender(tri3D, tri3D.faceNormal, cameraLocation)) { //only consider a part of a mesh for rendering if it should be visible with respect to the camera object
 				Polygon2D projectedTriangle;
 
 				//project the triangle to 2-space
-				for (auto& vertex : tri3D.point) {					
+				for (auto& vertex : tri3D.vertices) {					
 					Vec2 newVertex = GetScreenSpaceVertex(vertex, cameraLocation, screenPtr->width, screenPtr->height);
 					projectedTriangle.vertices.push_back(newVertex);
 				}
@@ -131,6 +131,7 @@ Vec2 Renderer::GetScreenSpaceVertex(const Vec3 &vertex, const Vec3& cameraLocati
 	float screenSpaceX = (newX + 1.0f) * 0.5f * width;
 	float screenSpaceY = (1.0f - newY) * 0.5f * height;
 
+	//FIX-ME: float being used for screen space coordinates (is this a problem?)
 	return Vec2(screenSpaceX, screenSpaceY);
 }
 
