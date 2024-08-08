@@ -13,10 +13,6 @@
 
 //note: this algorithm benefits visually from an increased poly count -- Diminishing returns as poly count increases past a certain point
 
-Shader::Shader(Screen* screenPtr) {
-	this->screenPtr = screenPtr;
-}
-
 void Shader::ShadePolygon(const Polygon2D& polygon) {
     
 }
@@ -47,7 +43,7 @@ void Shader::ClampBoundingBox(BoundingBox& boundingBox) {//process that clamps t
 
 //check for intersections:
 
-bool Shader::IntersectsTriangle(const Vec2& currPoint, const Polygon2D& polygon) { //if all of the below statements equate to true (all cross product operations >= 0) the point intersects polygon, therfore we want to draw this point.
+bool Shader::IntersectsPolygon(const Vec2& currPoint, const Polygon2D& polygon) { //if all of the below statements equate to true (all cross product operations >= 0) the point intersects polygon, therfore we want to draw this point.
     return GetEdgeFunctionDet(currPoint, polygon.vertices[0], polygon.vertices[1]) >= 0 && //edge from v0 to v1
         GetEdgeFunctionDet(currPoint, polygon.vertices[1], polygon.vertices[2]) >= 0 && //edge from v1 to v2
         GetEdgeFunctionDet(currPoint, polygon.vertices[2], polygon.vertices[0]) >= 0;   //edge from v2 to v0
@@ -57,4 +53,37 @@ float Shader::GetEdgeFunctionDet(const Vec2& currPoint, const Vec2& v0, const Ve
     float edgeFunctionValue = (v1.x - v0.x) * (currPoint.y - v0.y) - (v1.y - v0.y) * (currPoint.x - v0.x);
     return edgeFunctionValue; //return value for above evaluation in IntersectsTriangle
 }
+
+//obtain normals corresponding to vertices:
+
+void Shader::GetVertexNormals(mesh& triangleMesh) {
+    std::map<Vec3, Vec3> vertexNormalMap;
+
+    //below loop visits each within the mesh multiple times...
+    //this process causes each vertex to eventually have each face it is a part of to have its face normal added to it
+    
+    //accumulate face normals for each vertex
+    for (Triangle3D& tri3D : triangleMesh.triangles) { //visit every triangle that makes up triangleMesh.triangles
+        for (int i = 0; i < 3; ++i) { //add all face normal adajacent to this vertex together
+            vertexNormalMap[tri3D.vertices[i]] += tri3D.faceNormal; //add face normal corresponding to this vertex to this vertex's entry
+        }
+    }
+
+    //turn accumulation of face vertices into vertex normals
+    for (Triangle3D& tri3D : triangleMesh.triangles) {
+        //turn the summation of the face normals adjacent to this vertex into averages of the face normals adajacent to this vertex
+        for (int i = 0; i < 3; ++i) { //iterate through each vertex in the triangle
+            vertexNormalMap[tri3D.vertices[i]] = vertexNormalMap[tri3D.vertices[i]].Normalize(); //normalize it (take average), store at global level
+            tri3D.vertexNormals[i] = vertexNormalMap[tri3D.vertices[i]]; //store normalized vertex normal at local level
+        }
+    }
+
+    //store the vertexMap in the mesh of the 3D triangle
+    triangleMesh.vertexNormalMap = vertexNormalMap;
+}
+
+Vec3 Shader::CalculateVertexColor(const Vec3& vertexPos, const Vec3& vertexNormal, const Light& light, const Vec3& cameraPos, const Material& material) {
+    Vec3 ambientColor = light.ambient * material.ambient;
+
+    Vec3 lightDir = (light.position - vertexPos).Normalize();
 
