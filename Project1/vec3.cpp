@@ -1,5 +1,51 @@
 #include "Vec3.h"
 
+//handle addition of vectors
+Vec3 Vec3::operator+(const Vec3& other) const {
+    return Vec3(x + other.x, y + other.y, z + other.z);
+}
+
+//handle in place addition
+Vec3& Vec3::operator+=(const Vec3& other){
+    x + other.x;
+    y + other.y;
+    z + other.z;
+    return *this;
+}
+
+Vec3 Vec3::operator-(const Vec3& other) const {
+    return Vec3(x - other.x, y - other.y, z - other.z);
+}
+
+Vec3& Vec3::operator-(const Vec3& other) {
+    x - other.x;
+    y - other.y;
+    z - other.z;
+    return *this;
+}
+
+Vec3 Vec3::operator*(const Vec3& other) const {
+    return Vec3(x * other.x, y * other.y, z * other.z);
+}
+
+Vec3& Vec3::operator*(const Vec3& other) {
+    x* other.x;
+    y* other.y;
+    z* other.z;
+    return *this;
+}
+
+//handle vec3 scalar division
+Vec3 Vec3::operator/(const float& scalar) const {
+    return Vec3(x / scalar, y / scalar, z / scalar);
+}
+
+bool Vec3::operator<(const Vec3& other) const {
+    if (x != other.x) return x < other.x;
+    if (y != other.y) return y < other.y;
+    return z < other.z;
+}
+
 //used for rotations, transforms, etc.
 Vec3& Vec3::operator*=(const Matrix4x4& transformationMatrix) {
     float newX = x * transformationMatrix.matrix[0][0] + y * transformationMatrix.matrix[1][0] + z * transformationMatrix.matrix[2][0] + transformationMatrix.matrix[3][0];
@@ -61,4 +107,11 @@ Vec2 Vec3::operator*(const ProjectionMatrix* projectionMatrix) const {
 
     // Return the 2D vector
     return Vec2(newX, newY);
+}
+
+//return a normal unit vector
+Vec3 Vec3::Normalize() const {
+    float length = (x * x + y * y + z * z);
+
+    return Vec3(x / length, y / length, z / length);
 }
