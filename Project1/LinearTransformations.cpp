@@ -15,9 +15,9 @@ void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* t
 
 	for (auto& tri : object.primitiveMesh.triangles) { //normalization
 		for (int i = 0; i < 3; ++i) {
-			tri.point[i].x -= centeroid.x;
-			tri.point[i].y -= centeroid.y;
-			tri.point[i].z -= centeroid.z;
+			tri.vertices[i].x -= centeroid.x;
+			tri.vertices[i].y -= centeroid.y;
+			tri.vertices[i].z -= centeroid.z;
 		}
 		
 		//Debugging code for testing radian values
@@ -33,13 +33,13 @@ void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* t
 		*/
 
 		for (int i = 0; i < 3; i++) {
-			tri.point[i] *= rotationMatrix;
+			tri.vertices[i] *= rotationMatrix;
 		}
 
 		for (int i = 0; i < 3; ++i) { //revert normalization operation
-			tri.point[i].x += centeroid.x;
-			tri.point[i].y += centeroid.y;
-			tri.point[i].z += centeroid.z;
+			tri.vertices[i].x += centeroid.x;
+			tri.vertices[i].y += centeroid.y;
+			tri.vertices[i].z += centeroid.z;
 		}
 	}
 }
@@ -60,9 +60,9 @@ void LinearTransformations::ApplyTransformation(InputHandler* inputHandlerPtr, T
 
 	for (auto& tri : object.primitiveMesh.triangles) {
 		for (int i = 0; i < 3; ++i) {
-			tri.point[i].x += dx;
-			tri.point[i].y += dy;
-			tri.point[i].z += dz;
+			tri.vertices[i].x += dx;
+			tri.vertices[i].y += dy;
+			tri.vertices[i].z += dz;
 		}
 	}
 	
