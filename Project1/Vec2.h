@@ -17,7 +17,10 @@ public:
 	float y;
 };
 
-struct Edge {
+class Edge {
+public:
+	Edge() : v1(0.0f, 0.0f), v2(0.0f, 0.0f) {}
+	Edge(Vec2 v1, Vec2 v2) : v1(v1), v2(v2) {}
 	Vec2 v1;
 	Vec2 v2;
 };
