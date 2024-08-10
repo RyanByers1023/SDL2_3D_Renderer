@@ -30,7 +30,7 @@ void Renderer::SetScreenSpaceBoundaries(){
 	this->boundingEdgeTop.v2 = { 0, 0 }; //(0,0) -- top left corner
 }
 
-bool Renderer::Render() { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
+bool Renderer::Render(std::shared_ptr<WorldObjects> worldObjectsPtr) { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
 	std::vector<Polygon2D> polygonList;
 
 	if (worldObjectsPtr->objects.empty()) {
@@ -39,7 +39,7 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	}
 
 	//get a list of all polygons that are within the screen space and clip them, store in polygonList
-	GetClippedPolygons(polygonList);
+	GetClippedPolygons(polygonList, worldObjectsPtr);
 
 	//draw the polygon(s) to the screen
 	DrawPolygons(polygonList);
@@ -52,7 +52,7 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	return true;
 }
 
-void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList){
+void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList, std::shared_ptr<WorldObjects> worldObjectsPtr){
 	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
 		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 			
