@@ -1,40 +1,49 @@
 #include "StartMe.h"
 
-StartMe::StartMe(int windowWidth, int windowHeight) {
-	this->inputHandlerPtr = new InputHandler();
-	this->timePtr = new Time();
-	this->worldObjectsPtr = new WorldObjects();
-	this->controllerPtr = new Controller(inputHandlerPtr, worldObjectsPtr);
-	this->rendererPtr = new Renderer(windowWidth, windowHeight, worldObjectsPtr);
-}
+StartMe::StartMe(int windowWidth, int windowHeight)
+   : inputHandlerPtr(std::make_shared<InputHandler>()), //accessed by StartMe and Controller
+	 timePtr(std::make_shared<Time>()), //accessed by StartMe and LinearTransformations
+	 worldObjectsPtr(std::make_shared<WorldObjects>()), //accessed by renderer and controller
+	 controllerPtr(std::make_unique<Controller>(worldObjectsPtr)), //accessed only by StartMe
+	 rendererPtr(std::make_unique<Renderer>(windowWidth, windowHeight, worldObjectsPtr)), //accessed only by StartMe
+	 selectedObjectPtr(std::make_shared<PrimitiveObject>()) {} //accessed by controller and linearTransformations, and StartMe 
 
-StartMe::~StartMe(){
-	delete this->inputHandlerPtr;
-	delete this->timePtr;
-	delete this->worldObjectsPtr;
-	delete this->controllerPtr;
-}
 
 void StartMe::StartRendering() {
-	SpawnCube(worldObjectsPtr, "cube1"); //spawner needs access to the renderer and it also needs a unique name for the object to be spawned
-	//SpawnCube(worldObjectsPtr, "cube2");
-	//SpawnCube(worldObjectsPtr, "cube3");
+	Spawner spawner;
+	
+	//spawn a single cube in the world
+	spawner.SpawnCube(worldObjectsPtr, "cube1");
 
 	while (true) {
-		timePtr->Tick(); //calculate the time since the last frame has occured
-		inputHandlerPtr->CheckForInput(); //check for user input
-		controllerPtr->ChangeControllerFocus(); //change the selected object (if needed)
-		if (!rendererPtr->Render()) break; //this adds all of the pixels needed to draw all shapes in worldObjects vector into screen.vertices
+		//calculate the time since the last frame has occured, store this value as deltaTime
+		timePtr->Tick(); 
 
-		PrimitiveObject* selectedObject = controllerPtr->GetCurrentlyControlledObject(); //get the currently selected object
+		//check for user input
+		inputHandlerPtr->CheckForInput(); 
 
-		LinearTransformations transform;
+		//handle user input
+		HandleInput();
 
-		if (inputHandlerPtr->leftInput || inputHandlerPtr->rightInput || inputHandlerPtr->upInput || inputHandlerPtr->downInput) transform.ApplyRotation(inputHandlerPtr, timePtr, *selectedObject);
-		if (inputHandlerPtr->wInput || inputHandlerPtr->aInput || inputHandlerPtr->sInput || inputHandlerPtr->dInput || inputHandlerPtr->zInput || inputHandlerPtr->xInput) transform.ApplyTransformation(inputHandlerPtr, timePtr, *selectedObject);
-		//if (inputHandlerPtr->minusInput || inputHandlerPtr->plusInput) transform.ApplyScaling(inputHandlerPtr, *selectedObject, timePtr);
+		//perform rendering, if an error occurs within the rendering pipeline, break this loop
+		if (!rendererPtr->Render()) break; 
 	}
 
 	std::cout << "Renderer has been shut down due to an unexpected error. Check above message for details. Force closing in 5 seconds..." << std::endl;
 	SDL_Delay(5000); //wait for 5 seconds to allow user to see this error message
+}
+
+void StartMe::HandleInput(){
+	//LinearTransformations object created to access linear transformation methods
+	LinearTransformations transform;
+
+	//handle input relevant to linear transformations
+	if (inputHandlerPtr->leftInput || inputHandlerPtr->rightInput || inputHandlerPtr->upInput || inputHandlerPtr->downInput) transform.ApplyRotation(inputHandlerPtr, timePtr, selectedObjectPtr);
+	if (inputHandlerPtr->wInput || inputHandlerPtr->aInput || inputHandlerPtr->sInput || inputHandlerPtr->dInput || inputHandlerPtr->zInput || inputHandlerPtr->xInput) transform.ApplyTransformation(inputHandlerPtr, timePtr, selectedObjectPtr);
+
+	//handle input relevant to object controller
+	if(inputHandlerPtr->qInput || inputHandlerPtr->eInput) controllerPtr->ChangeControllerFocus(inputHandlerPtr, worldObjectsPtr); 
+
+	//get the currently selected object
+	std::shared_ptr<PrimitiveObject> selectedObjectPtr = controllerPtr->GetCurrentlyControlledObject(); 
 }
