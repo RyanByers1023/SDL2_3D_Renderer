@@ -7,25 +7,22 @@
 #include "PolygonClipper.h"
 #include <vector>
 #include <iostream>
+#include <memory>
 
 
 class Renderer {
 public:
 	//default constructor
-	Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjects);
+	Renderer(int windowWidth, int windowHeight);
 
-	//destructor
-	~Renderer();
-
-	//render objects to the screen. Returns false if there was an error (no items to render)
+	//draw objects to the screen
 	bool Render(); 
 private:
 	//private member variables
-	Screen* screenPtr;
-	ProjectionMatrix* projMatrixPtr;
-	Shader* shaderPtr;
-	WorldObjects* worldObjectsPtr; //used to store all objects in game world and respective names.
-	PolygonClipper* clipperPtr;
+	std::shared_ptr<Screen> screenPtr;
+	std::unique_ptr<ProjectionMatrix> projMatrixPtr;
+	Shader shader;
+	PolygonClipper clipper;
 	Vec3 cameraLocation;
 
 	//screen space bounding box member variables

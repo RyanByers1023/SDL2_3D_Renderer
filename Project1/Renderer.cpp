@@ -1,23 +1,14 @@
 #include "Renderer.h"
 
-Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjectsPtr) {
-	//get all of the needed parameters from the runner file
-	this->screenPtr = new Screen(windowWidth, windowHeight);
-	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
-	this->worldObjectsPtr = worldObjectsPtr;
-	this->clipperPtr = new PolygonClipper();
+Renderer::Renderer(const int& windowWidth, const int& windowHeight) 
+    : screenPtr(std::make_shared<Screen>(windowWidth, windowHeight)),
+	  projectionMatrixPtr(std::make_unique<ProjectionMatrix>(windowWidth, windowHeight)),
 
-	//set up the screen space boundaries:
-	SetScreenSpaceBoundaries();
-
-	//this is temporary:
-	cameraLocation = { 80.0f, 60.0f, 0.0f };
-}
-
-Renderer::~Renderer() {
-	delete this->screenPtr;
-	delete this->projMatrixPtr;
-	delete this->clipperPtr;
+	  //intialize camera location (location is trivial)
+	  cameraLocation(Vec3(80.0f, 60.0f, 0.0f))
+{
+	  //set up the screen space boundaries:
+	  SetScreenSpaceBoundaries();
 }
 
 void Renderer::SetScreenSpaceBoundaries(){
@@ -92,16 +83,16 @@ Polygon2D Renderer::PerformClipping(const Polygon2D& projectedTriangle) {
 	Polygon2D clippedTriangle;
 
 	//clip against the left boundary
-	clippedTriangle = clipperPtr->Clip(projectedTriangle, boundingEdgeLeft);
+	clippedTriangle = clipperPtr.Clip(projectedTriangle, boundingEdgeLeft);
 
 	//clip against the bottom boundary
-	clippedTriangle = clipperPtr->Clip(clippedTriangle, boundingEdgeBottom);
+	clippedTriangle = clipperPtr.Clip(clippedTriangle, boundingEdgeBottom);
 
 	//clip against the right boundary
-	clippedTriangle = clipperPtr->Clip(clippedTriangle, boundingEdgeRight);
+	clippedTriangle = clipperPtr.Clip(clippedTriangle, boundingEdgeRight);
 
 	//clip against the top boundary
-	clippedTriangle = clipperPtr->Clip(clippedTriangle, boundingEdgeTop);
+	clippedTriangle = clipperPtr.Clip(clippedTriangle, boundingEdgeTop);
 
 	//now clippedTriangle holds a clipped version of projectedTriangle
 	return clippedTriangle;
