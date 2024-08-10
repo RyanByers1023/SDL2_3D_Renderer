@@ -26,7 +26,7 @@ void StartMe::StartRendering() {
 		HandleInput();
 
 		//perform rendering, if an error occurs within the rendering pipeline, break this loop
-		if (!rendererPtr->Render()) break; 
+		if (!rendererPtr->Render(worldObjectsPtr)) break; 
 	}
 
 	std::cout << "Renderer has been shut down due to an unexpected error. Check above message for details. Force closing in 5 seconds..." << std::endl;
