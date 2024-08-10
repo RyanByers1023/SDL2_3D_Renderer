@@ -1,9 +1,17 @@
 #include "Cube.h"
 
-Cube::Cube(Vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below commented values are constructed with these inputs in mind as an example
-	this->position = position;
+Cube::Cube(const Vec3& position, const float& size, const string& name)
+	: position(position), size(size), name(name)
+{
+	CalcCenteroid();
+	InitializeVertices();
+}
 
-	// Definition of the vertices of the cube
+//Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 40.0} - origin.
+//Below commented values are constructed with these inputs in mind as an example
+void Cube::InitializeVertices(){
+
+	//definition of the vertices of the cube
 	vertices.push_back({ position.x, position.y, position.z });                        // (0, 0, 0) --- [0]
 	vertices.push_back({ position.x + size, position.y, position.z });                 // (1, 0, 0) --- [1]
 	vertices.push_back({ position.x + size, position.y + size, position.z });          // (1, 1, 0) --- [2]
@@ -38,7 +46,5 @@ Cube::Cube(Vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. De
 		// BOTTOM FACE
 		{vertices[4], vertices[0], vertices[1]},
 		{vertices[4], vertices[1], vertices[5]}
-	};
-
-	CalcCenteroid();
+	}
 }
