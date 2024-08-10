@@ -22,6 +22,6 @@ void Controller::ChangeControllerFocus() {
 	 }
 }
 
-PrimitiveObject* Controller::GetCurrentlyControlledObject() {
-	return &(selectedObject->second); // Return the iterator in its current form for worldObject list
+std::shared_ptr<PrimitiveObject> Controller::GetCurrentlyControlledObject() {
+	return &(selectedObject->second); // Return the object the player has control over
 }
