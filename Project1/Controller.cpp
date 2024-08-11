@@ -1,7 +1,7 @@
 #include "Controller.h"
 
 std::shared_ptr<PrimitiveObject> Controller::ChangeControllerFocus(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<WorldObjects>& worldObjects) {
-	if (selectedObject == worldObjectsPtr->objects.end()) { //this can occur when we spawn a new object in, always check for this when trying to access the selectedObject
+	if (selectedObject == worldObjectsPtr->objects.end()) { //this can occur when a new object is spawned in, always check for this when trying to access the selectedObject
 		selectedObject = worldObjectsPtr->objects.begin();
 	}
 
@@ -22,5 +22,5 @@ std::shared_ptr<PrimitiveObject> Controller::ChangeControllerFocus(const std::un
 	 }
 
 	 //return the newly selected object
-	 return &(selectedObject->second);
+	 return selectedObject->second;
 }
