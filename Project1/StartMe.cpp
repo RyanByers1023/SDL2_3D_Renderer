@@ -1,11 +1,11 @@
 #include "StartMe.h"
 
-StartMe::StartMe(int windowWidth, int windowHeight)
-   : inputHandlerPtr(std::make_shared<InputHandler>()), //accessed by StartMe and Controller
+StartMe::StartMe(const int& windowWidth, const int& windowHeight)
+   : inputHandlerPtr(std::make_unique<InputHandler>()), //accessed by StartMe, LinearTransformations, and Controller
 	 timePtr(std::make_unique<Time>()), //accessed by StartMe and LinearTransformations (passed by reference)
 	 worldObjectsPtr(std::make_unique<WorldObjects>()), //accessed by renderer, spawner, and controller (passed by reference)
 	 controllerPtr(std::make_unique<Controller>()), //accessed only by StartMe
-	 rendererPtr(std::make_unique<Renderer>(windowWidth, windowHeight, worldObjectsPtr)), //accessed only by StartMe
+	 rendererPtr(std::make_unique<Renderer>(windowWidth, windowHeight)), //accessed only by StartMe
 	 selectedObjectPtr(std::make_shared<PrimitiveObject>()) {} //accessed by controller and linearTransformations, and StartMe 
 
 

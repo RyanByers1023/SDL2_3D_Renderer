@@ -14,7 +14,7 @@ public:
 	void StartRendering();
 private:
 	//pointers
-	std::shared_ptr<InputHandler> inputHandlerPtr;
+	std::unique_ptr<InputHandler> inputHandlerPtr;
 	std::unique_ptr<Controller> controllerPtr;
 	std::unique_ptr<Time> timePtr;
 	std::unique_ptr<WorldObjects> worldObjectsPtr;
