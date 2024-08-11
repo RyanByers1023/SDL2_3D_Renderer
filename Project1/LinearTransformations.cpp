@@ -1,7 +1,6 @@
 #include "LinearTransformations.h"
-#include <iostream>
 
-void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object) { //rotates radiansToRotate/sec when corresponding input is held down
+void LinearTransformations::ApplyRotation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unqiue_ptr<Time>& timePtr, PrimitiveObject& object) { //rotates radiansToRotate/sec when corresponding input is held down
 	float xRadians = 0, yRadians = 0, zRadians = 0;
 	float radiansToRotate = 1;
 
