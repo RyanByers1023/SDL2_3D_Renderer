@@ -13,10 +13,10 @@
 class Renderer {
 public:
 	//default constructor
-	Renderer(int windowWidth, int windowHeight);
+	Renderer(const int& windowWidth, const int& windowHeight);
 
 	//draw objects to the screen
-	bool Render(std::shared_ptr<WorldObjects> worldObjectsPtr); 
+	bool Render(const std::unique_ptr<WorldObjects> worldObjectsPtr); 
 private:
 	//private member variables
 	std::shared_ptr<Screen> screenPtr;
@@ -37,7 +37,7 @@ private:
 	Vec2 GetScreenSpaceVertex(const Vec3& vertex, const Vec3& cameraLocation, const float& width, const float& height) const;
 
 	//clip triangles from mesh
-	void GetClippedPolygons(std::vector<Polygon2D>& polygonList, std::shared_ptr<WorldObjects> worldObjectsPtr);
+	void GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList);
 
 	Polygon2D PerformClipping(const Polygon2D& projectedTriangle);
 

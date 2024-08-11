@@ -30,7 +30,7 @@ void Renderer::SetScreenSpaceBoundaries(){
 	this->boundingEdgeTop.v2 = { 0, 0 }; //(0,0) -- top left corner
 }
 
-bool Renderer::Render(std::shared_ptr<WorldObjects> worldObjectsPtr) { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
+bool Renderer::Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr) { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
 	std::vector<Polygon2D> polygonList;
 
 	if (worldObjectsPtr->objects.empty()) {
@@ -52,9 +52,9 @@ bool Renderer::Render(std::shared_ptr<WorldObjects> worldObjectsPtr) { //draws a
 	return true;
 }
 
-void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList, std::shared_ptr<WorldObjects> worldObjectsPtr){
-	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
-		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
+void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList){
+	for (const auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
+		for (const auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 			
 			//get the normal vector of tri3D
 			tri3D.faceNormal = CalculateNormalVector(tri3D); //store it within the mesh for later use
@@ -63,7 +63,7 @@ void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList, std::shar
 				Polygon2D projectedTriangle;
 
 				//project the triangle to 2-space
-				for (auto& vertex : tri3D.vertices) {					
+				for (const auto& vertex : tri3D.vertices) {					
 					Vec2 newVertex = GetScreenSpaceVertex(vertex, cameraLocation, screenPtr->width, screenPtr->height);
 					projectedTriangle.vertices.push_back(newVertex);
 				}
