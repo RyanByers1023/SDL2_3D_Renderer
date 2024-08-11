@@ -1,6 +1,6 @@
 #include "Controller.h"
 
-void Controller::ChangeControllerFocus() {
+std::shared_ptr<PrimitiveObject> Controller::ChangeControllerFocus(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<WorldObjects>& worldObjects) {
 	if (selectedObject == worldObjectsPtr->objects.end()) { //this can occur when we spawn a new object in, always check for this when trying to access the selectedObject
 		selectedObject = worldObjectsPtr->objects.begin();
 	}
@@ -20,8 +20,7 @@ void Controller::ChangeControllerFocus() {
 			selectedObject = worldObjectsPtr->objects.begin(); //if we reach the end of the unordered_map, loop back to the beginning
 		}
 	 }
-}
 
-std::shared_ptr<PrimitiveObject> Controller::GetCurrentlyControlledObject() {
-	return &(selectedObject->second); // Return the object the player has control over
+	 //return the newly selected object
+	 return &(selectedObject->second);
 }
