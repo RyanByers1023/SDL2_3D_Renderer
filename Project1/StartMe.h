@@ -15,8 +15,8 @@ public:
 	void StartRendering();
 private:
 	std::unique_ptr<InputHandler> inputHandlerPtr;
+	std::unique_ptr<Time> timePtr;
 	Controller* controllerPtr;
-	Time* timePtr;
 	WorldObjects* worldObjectsPtr;
 	Renderer* rendererPtr;
 };

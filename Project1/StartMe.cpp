@@ -2,22 +2,19 @@
 
 StartMe::StartMe(int windowWidth, int windowHeight) {
 	inputHandlerPtr = std::make_unique<InputHandler>();
-	this->timePtr = new Time();
+	timePtr = std::make_unique<Time>();
 	this->worldObjectsPtr = new WorldObjects();
 	this->controllerPtr = new Controller(worldObjectsPtr);
 	this->rendererPtr = new Renderer(windowWidth, windowHeight, worldObjectsPtr);
 }
 
 StartMe::~StartMe(){
-	delete this->timePtr;
 	delete this->worldObjectsPtr;
 	delete this->controllerPtr;
 }
 
 void StartMe::StartRendering() {
 	SpawnCube(worldObjectsPtr, "cube1"); //spawner needs access to the renderer and it also needs a unique name for the object to be spawned
-	//SpawnCube(worldObjectsPtr, "cube2");
-	//SpawnCube(worldObjectsPtr, "cube3");
 
 	while (true) {
 		timePtr->Tick(); //calculate the time since the last frame has occured
