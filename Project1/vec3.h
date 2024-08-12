@@ -31,6 +31,9 @@ public:
 	//handle multiplication of vectors
 	Vec3 operator*(const Vec3& other) const;
 
+	//handle scalar multiplication
+	Vec3 operator*(const float& scalar) const;
+
 	//handle multiplication of vectors (by reference)
 	Vec3& operator*(const Vec3& other);
 
@@ -47,6 +50,8 @@ public:
 	Vec3& operator*(const Matrix4x4& transformationMatrix) const;
 
 	Vec2 operator*(const ProjectionMatrix* projectionMatrix) const;
+
+	float Dot(const Vec3& other) const;
 
 	//normalize this vector
 	Vec3 Normalize() const;
@@ -73,5 +78,5 @@ public:
 //stores entire mesh (comprised of triangles)
 struct mesh {
 	std::vector<Triangle3D> triangles; //the mesh
-	std::map<Vec3, Vec3> vertexNormalMap; //normals corresponding to each vertex
+	std::map<Vec3, Vec3> vertexNormalMap; //normals corresponding to each vertex --> <vertex, normal>
 };
