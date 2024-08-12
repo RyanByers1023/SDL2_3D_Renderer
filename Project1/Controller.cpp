@@ -1,10 +1,6 @@
 #include "Controller.h"
 
-void Controller::ChangeControllerFocus() {
-	if (selectedObject == worldObjectsPtr->objects.end()) { //this can occur when we spawn a new object in, always check for this when trying to access the selectedObject
-		selectedObject = worldObjectsPtr->objects.begin();
-	}
-
+void Controller::ChangeControllerFocus(std::shared_ptr<WorldObjects> worldObjectsPtr) {
 	if (inputHandlerPtr->qInput) {
 		SDL_Delay(50); //delay to prevent multiple inputs from being registered
 		if (selectedObject == worldObjectsPtr->objects.begin()) {
@@ -20,8 +16,14 @@ void Controller::ChangeControllerFocus() {
 			selectedObject = worldObjectsPtr->objects.begin(); //if we reach the end of the unordered_map, loop back to the beginning
 		}
 	 }
+
+	 // Ensure selectedObject is valid before using
+	 if (selectedObject == worldObjectsPtr->objects.end()) {
+		 std::cerr << "selectedObject is out of bounds" << std::endl;
+		 return;
+	 }
 }
 
-PrimitiveObject* Controller::GetCurrentlyControlledObject() {
-	return &(selectedObject->second); // Return the iterator in its current form for worldObject list
+std::shared_ptr<PrimitiveObject> Controller::GetCurrentlyControlledObject() {
+	return (selectedObject->second); // Return the iterator in its current form for worldObject list
 }
