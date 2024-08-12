@@ -4,14 +4,16 @@
 #include "WorldObjects.h"
 #include <string>
 #include <unordered_map>
+#include <memory>
+#include <iostream>
 
 class Controller {
 public:
-	Controller(InputHandler* inputHandlerPtr, WorldObjects* worldObjectsPtr) : inputHandlerPtr(inputHandlerPtr), worldObjectsPtr(worldObjectsPtr), selectedObject(worldObjectsPtr->objects.begin()) {};
-	PrimitiveObject* GetCurrentlyControlledObject();
-	void ChangeControllerFocus();
+	Controller(std::shared_ptr<InputHandler> inputHandlerPtr) : inputHandlerPtr(inputHandlerPtr) {}
+	std::shared_ptr<PrimitiveObject> GetCurrentlyControlledObject();
+	void ChangeControllerFocus(std::shared_ptr<WorldObjects> worldObjectsPtr);
 private:
-	InputHandler* inputHandlerPtr;
-	WorldObjects* worldObjectsPtr;
-	std::unordered_map<std::string, PrimitiveObject>::iterator selectedObject;
+	void RevalidateSelectedObject(std::shared_ptr<WorldObjects> worldObjectsPtr);
+	std::shared_ptr<InputHandler> inputHandlerPtr;
+	std::unordered_map<std::string, std::shared_ptr<PrimitiveObject>>::iterator selectedObject;
 };
