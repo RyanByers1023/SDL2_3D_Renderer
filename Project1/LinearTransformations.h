@@ -6,7 +6,7 @@
 
 class LinearTransformations {
 public:
-	void ApplyTransformation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object);
-	void ApplyRotation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object);
-	//void ApplyScaling(InputHandler* inputHandlerPtr, PrimitiveObject& object, Time* timePtr, float scalar = 1.1f);
+	void ApplyTransformation(std::shared_ptr<InputHandler> inputHandlerPtr, std::shared_ptr<Time> timePtr, std::shared_ptr<PrimitiveObject> object);
+	void ApplyRotation(std::shared_ptr<InputHandler> inputHandlerPtr, std::shared_ptr<Time> timePtr, std::shared_ptr<PrimitiveObject> object);
+	//void ApplyScaling(std::shared_ptr<InputHandler> inputHandlerPtr, PrimitiveObject& object, std::shared_ptr<Time> timePtr, float scalar = 1.1f);
 };

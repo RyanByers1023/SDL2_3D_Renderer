@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "Time.h"
 #include "InputHandler.h"
 #include "Renderer.h"
@@ -10,12 +11,10 @@
 class StartMe {
 public:
 	StartMe(int windowWidth = 1280, int windowHeight = 720);
-	~StartMe();
 	void StartRendering();
 private:
-	InputHandler* inputHandlerPtr;
-	Controller* controllerPtr;
-	Time* timePtr;
-	WorldObjects* worldObjectsPtr;
-	Renderer* rendererPtr;
+	std::shared_ptr<InputHandler> inputHandlerPtr;
+	std::shared_ptr<Controller> controllerPtr;
+	std::shared_ptr<Time> timePtr;
+	std::shared_ptr<Renderer> rendererPtr;
 };
