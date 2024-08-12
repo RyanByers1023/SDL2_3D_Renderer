@@ -28,6 +28,10 @@ Vec3 Vec3::operator*(const Vec3& other) const {
     return Vec3(x * other.x, y * other.y, z * other.z);
 }
 
+Vec3 Vec3::operator*(const float& scalar) const {
+    return Vec3(x * scalar, y * scalar, z * scalar);
+}
+
 Vec3& Vec3::operator*(const Vec3& other) {
     x* other.x;
     y* other.y;
@@ -109,7 +113,11 @@ Vec2 Vec3::operator*(const ProjectionMatrix* projectionMatrix) const {
     return Vec2(newX, newY);
 }
 
-//return a normal unit vector
+float Vec3::Dot(const Vec3& other) const {
+    return(x * other.x + y * other.y + z * other.z);
+}
+
+//return a normalized vector
 Vec3 Vec3::Normalize() const {
     float length = (x * x + y * y + z * z);
 
