@@ -1,23 +1,14 @@
 #include "Renderer.h"
 
-Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjectsPtr) {
-	//get all of the needed parameters from the runner file
-	this->screenPtr = new Screen(windowWidth, windowHeight);
-	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
-	this->worldObjectsPtr = worldObjectsPtr;
-	this->clipperPtr = new PolygonClipper();
-
-	//set up the screen space boundaries:
-	SetScreenSpaceBoundaries();
-
-	//this is temporary:
-	cameraLocation = { 80.0f, 60.0f, 0.0f };
-}
-
-Renderer::~Renderer() {
-	delete this->screenPtr;
-	delete this->projMatrixPtr;
-	delete this->clipperPtr;
+Renderer::Renderer(int windowWidth, int windowHeight)
+	: screenPtr(std::make_shared<Screen>(windowWidth, windowHeight)),
+	  projMatrixPtr(std::make_shared<ProjectionMatrix>(windowWidth, windowHeight)),
+	  worldObjectsPtr(std::make_shared<WorldObjects>()),
+	  clipperPtr(std::make_shared<PolygonClipper>()),
+	  cameraLocation{ 80.0f, 60.0f, 0.0f } //initialize cameraLocation directly
+{
+	//set up screen space boundaries:
+	  SetScreenSpaceBoundaries();
 }
 
 void Renderer::SetScreenSpaceBoundaries(){
@@ -42,10 +33,13 @@ void Renderer::SetScreenSpaceBoundaries(){
 bool Renderer::Render() { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
 	std::vector<Polygon2D> polygonList;
 
-	if (worldObjectsPtr->objects.empty()) {
+	if (worldObjectsPtr->objects.empty()) { 
 		std::cout << "There are no objects to render. Renderer shutting down..." << std::endl;
 		return false;
 	}
+
+	//get mesh normals
+	GetAllNormals();
 
 	//get a list of all polygons that are within the screen space and clip them, store in polygonList
 	GetClippedPolygons(polygonList);
@@ -61,21 +55,61 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	return true;
 }
 
-void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList){
-	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
-		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
-			
-			//get the normal vector of tri3D
+void Renderer::GetAllNormals() {
+	GetAllFaceNormals();
+	GetAllVertexNormals();
+}
+
+//grab normal vector of all tri3D faces
+void Renderer::GetAllFaceNormals() {
+	for (const auto& it : worldObjectsPtr->objects) {
+		for (auto& tri3D : it.second->primitiveMesh.triangles) {
 			tri3D.faceNormal = CalculateNormalVector(tri3D); //store it within the mesh for later use
+		}
+	}
+}
+
+//grab normals of all tri3D vertices
+void Renderer::GetAllVertexNormals() {
+	for (const auto& it : worldObjectsPtr->objects) {
+		StoreVertexNormals(it.second->primitiveMesh);
+	}
+}
+
+//obtain normals corresponding to vertices:
+//and store within the mesh for easy access
+void Renderer::StoreVertexNormals(mesh& triangleMesh) {
+	std::map<Vec3, Vec3> vertexNormalMap;
+
+	//below loop visits each within the mesh multiple times...
+	//this process causes each vertex to eventually have each face it is adjacent of to have its face normal added to it
+
+	//accumulate face normals for each vertex
+	for (Triangle3D& tri3D : triangleMesh.triangles) { //visit every triangle that makes up triangleMesh.triangles
+		for (int i = 0; i < 3; ++i) { //add all face normal adajacent to this vertex together
+			vertexNormalMap[tri3D.vertices[i]] += tri3D.faceNormal; //add face normal corresponding to this vertex to this vertex's entry
+		}
+	}
+
+	//turn accumulation of face vertices into vertex normals
+	for (Triangle3D& tri3D : triangleMesh.triangles) {
+		//turn the summation of the face normals adjacent to this vertex into averages of the face normals adajacent to this vertex
+		for (int i = 0; i < 3; ++i) { //iterate through each vertex in the triangle
+			vertexNormalMap[tri3D.vertices[i]] = vertexNormalMap[tri3D.vertices[i]].Normalize(); //normalize it (take average), store at global level
+			tri3D.vertexNormals[i] = vertexNormalMap[tri3D.vertices[i]]; //store normalized vertex normal at local level
+		}
+	}
+
+	//store the vertexMap in the mesh of the 3D triangle
+	triangleMesh.vertexNormalMap = vertexNormalMap;
+}
+
+void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList){
+	for (const auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
+		for (auto& tri3D : it.second->primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 
 			if (ShouldRender(tri3D, tri3D.faceNormal, cameraLocation)) { //only consider a part of a mesh for rendering if it should be visible with respect to the camera object
-				Polygon2D projectedTriangle;
-
-				//project the triangle to 2-space
-				for (auto& vertex : tri3D.vertices) {					
-					Vec2 newVertex = GetScreenSpaceVertex(vertex, cameraLocation, screenPtr->width, screenPtr->height);
-					projectedTriangle.vertices.push_back(newVertex);
-				}
+				Polygon2D projectedTriangle = ProjectTriangle(tri3D);
 
 				Polygon2D clippedTriangle = PerformClipping(projectedTriangle);		
 
@@ -85,6 +119,18 @@ void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList){
 			}
 		}		
 	}
+}
+
+Polygon2D Renderer::ProjectTriangle(const Triangle3D& tri3D) {
+	Polygon2D projectedTriangle;
+
+	//project the triangle to 2-space
+	for (auto& vertex : tri3D.vertices) {
+		Vec2 newVertex = GetScreenSpaceVertex(vertex, cameraLocation, screenPtr->width, screenPtr->height);
+		projectedTriangle.vertices.push_back(newVertex);
+	}
+
+	return projectedTriangle;
 }
 
 Polygon2D Renderer::PerformClipping(const Polygon2D& projectedTriangle) {
