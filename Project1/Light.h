@@ -30,9 +30,4 @@ public:
 	//point light source
 	Light(const Vec3& position, const Vec3& ambient, const Vec3& diffuse, const Vec3& specular, const Vec3& direction)
 		: position(position), ambient(ambient), diffuse(diffuse), specular(specular), direction(direction), isDirectional(false) {}
-
-	//clamps all RGB values between 0.0 and 1.0
-	void ClampColors();
-private:
-	Vec3 Clamp(const Vec3& color);
 };
