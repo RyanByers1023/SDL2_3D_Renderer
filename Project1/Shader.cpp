@@ -82,8 +82,9 @@ void Shader::GetVertexNormals(mesh& triangleMesh) {
     triangleMesh.vertexNormalMap = vertexNormalMap;
 }
 
+/*
 Vec3 Shader::CalculateVertexColor(const Vec3& vertexPos, const Vec3& vertexNormal, const Light& light, const Vec3& cameraPos, const Material& material) {
     Vec3 ambientColor = light.ambient * material.ambient;
 
     Vec3 lightDir = (light.position - vertexPos).Normalize();
-
+*/
