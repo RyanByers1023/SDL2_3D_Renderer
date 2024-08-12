@@ -3,10 +3,10 @@
 #include "PrimitiveObject.h"
 #include "InputHandler.h"
 #include "Time.h"
+#include <memory>
 
 class LinearTransformations {
 public:
-	void ApplyTransformation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object);
-	void ApplyRotation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object);
-	//void ApplyScaling(InputHandler* inputHandlerPtr, PrimitiveObject& object, Time* timePtr, float scalar = 1.1f);
+	void ApplyTransformation(std::unique_ptr<InputHandler>& inputHandlerPtr, Time* timePtr, PrimitiveObject& object);
+	void ApplyRotation(std::unique_ptr<InputHandler>& inputHandlerPtr, Time* timePtr, PrimitiveObject& object);
 };

@@ -1,7 +1,7 @@
 #include "LinearTransformations.h"
 #include <iostream>
 
-void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object) { //rotates radiansToRotate/sec when corresponding input is held down
+void LinearTransformations::ApplyRotation(std::unique_ptr<InputHandler>& inputHandlerPtr, Time* timePtr, PrimitiveObject& object) { //rotates radiansToRotate/sec when corresponding input is held down
 	float xRadians = 0, yRadians = 0, zRadians = 0;
 	float radiansToRotate = 1;
 
@@ -44,7 +44,7 @@ void LinearTransformations::ApplyRotation(InputHandler* inputHandlerPtr, Time* t
 	}
 }
 
-void LinearTransformations::ApplyTransformation(InputHandler* inputHandlerPtr, Time* timePtr, PrimitiveObject& object) {
+void LinearTransformations::ApplyTransformation(std::unique_ptr<InputHandler>& inputHandlerPtr, Time* timePtr, PrimitiveObject& object) {
 	float dx = 0, dy = 0, dz = 0;
 
 	float distanceToMove = 80.0f;
@@ -75,21 +75,4 @@ void LinearTransformations::ApplyTransformation(InputHandler* inputHandlerPtr, T
 	object.position = object.vertices[0]; //we've moved the object, the position needs to be updated
 	object.CalcCenteroid(); //we've moved the object. Centeroid has changed, need to recalculate it.
 }
-
-/*
-void LinearTransformations::ApplyScaling(InputHandler* inputHandlerPtr, PrimitiveObject& object, Time* timePtr, float scalar) {
-	if (inputHandlerPtr->minusInput) scalar -= 0.2f;
-
-	float normalizedScalar = scalar * timePtr->deltaTime;
-
-	for (auto point : object.vertices) {
-		point.x *= normalizedScalar;
-		point.y *= normalizedScalar;
-		point.z *= normalizedScalar;
-	}
-
-	for (auto point : object.primitiveMesh.triangles) { //mark work
-		point.point;
-	}
-*/
 

@@ -6,6 +6,7 @@
 #include "LinearTransformations.h"
 #include "Spawner.h"
 #include "Controller.h"
+#include <memory>
 
 class StartMe {
 public:
@@ -13,7 +14,7 @@ public:
 	~StartMe();
 	void StartRendering();
 private:
-	InputHandler* inputHandlerPtr;
+	std::unique_ptr<InputHandler> inputHandlerPtr;
 	Controller* controllerPtr;
 	Time* timePtr;
 	WorldObjects* worldObjectsPtr;

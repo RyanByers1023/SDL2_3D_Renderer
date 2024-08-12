@@ -1,15 +1,14 @@
 #include "StartMe.h"
 
 StartMe::StartMe(int windowWidth, int windowHeight) {
-	this->inputHandlerPtr = new InputHandler();
+	inputHandlerPtr = std::make_unique<InputHandler>();
 	this->timePtr = new Time();
 	this->worldObjectsPtr = new WorldObjects();
-	this->controllerPtr = new Controller(inputHandlerPtr, worldObjectsPtr);
+	this->controllerPtr = new Controller(worldObjectsPtr);
 	this->rendererPtr = new Renderer(windowWidth, windowHeight, worldObjectsPtr);
 }
 
 StartMe::~StartMe(){
-	delete this->inputHandlerPtr;
 	delete this->timePtr;
 	delete this->worldObjectsPtr;
 	delete this->controllerPtr;
@@ -23,7 +22,7 @@ void StartMe::StartRendering() {
 	while (true) {
 		timePtr->Tick(); //calculate the time since the last frame has occured
 		inputHandlerPtr->CheckForInput(); //check for user input
-		controllerPtr->ChangeControllerFocus(); //change the selected object (if needed)
+		controllerPtr->ChangeControllerFocus(inputHandlerPtr); //change the selected object (if needed)
 		if (!rendererPtr->Render()) break; //this adds all of the pixels needed to draw all shapes in worldObjects vector into screen.vertices
 
 		PrimitiveObject* selectedObject = controllerPtr->GetCurrentlyControlledObject(); //get the currently selected object
