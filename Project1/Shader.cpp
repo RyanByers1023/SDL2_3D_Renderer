@@ -54,36 +54,25 @@ float Shader::GetEdgeFunctionDet(const Vec2& currPoint, const Vec2& v0, const Ve
     return edgeFunctionValue; //return value for above evaluation in IntersectsTriangle
 }
 
-//obtain normals corresponding to vertices:
-
-void Shader::GetVertexNormals(mesh& triangleMesh) {
-    std::map<Vec3, Vec3> vertexNormalMap;
-
-    //below loop visits each within the mesh multiple times...
-    //this process causes each vertex to eventually have each face it is a part of to have its face normal added to it
-    
-    //accumulate face normals for each vertex
-    for (Triangle3D& tri3D : triangleMesh.triangles) { //visit every triangle that makes up triangleMesh.triangles
-        for (int i = 0; i < 3; ++i) { //add all face normal adajacent to this vertex together
-            vertexNormalMap[tri3D.vertices[i]] += tri3D.faceNormal; //add face normal corresponding to this vertex to this vertex's entry
-        }
-    }
-
-    //turn accumulation of face vertices into vertex normals
-    for (Triangle3D& tri3D : triangleMesh.triangles) {
-        //turn the summation of the face normals adjacent to this vertex into averages of the face normals adajacent to this vertex
-        for (int i = 0; i < 3; ++i) { //iterate through each vertex in the triangle
-            vertexNormalMap[tri3D.vertices[i]] = vertexNormalMap[tri3D.vertices[i]].Normalize(); //normalize it (take average), store at global level
-            tri3D.vertexNormals[i] = vertexNormalMap[tri3D.vertices[i]]; //store normalized vertex normal at local level
-        }
-    }
-
-    //store the vertexMap in the mesh of the 3D triangle
-    triangleMesh.vertexNormalMap = vertexNormalMap;
+Vec3 Shader::ClampColor(const Vec3& color) {
+    return Vec3(std::clamp(color.x, 0.0f, 1.0f),
+                std::clamp(color.y, 0.0f, 1.0f),
+                std::clamp(color.z, 0.0f, 1.0f));
 }
 
 Vec3 Shader::CalculateVertexColor(const Vec3& vertexPos, const Vec3& vertexNormal, const Light& light, const Vec3& cameraPos, const Material& material) {
     Vec3 ambientColor = light.ambient * material.ambient;
 
     Vec3 lightDir = (light.position - vertexPos).Normalize();
+    float diffuseFactor = std::max(vertexNormal.Dot(lightDir), 0.0f);
+    Vec3 diffuseColor = light.diffuse * diffuseFactor * material.diffuse;
+
+    Vec3 viewDir = (cameraPos - vertexPos).Normalize();
+    Vec3 reflectDir = (vertexNormal * 2.0f * vertexNormal.Dot(lightDir) - lightDir).Normalize();
+    float specularFactor = std::pow(std::max(viewDir.Dot(reflectDir), 0.0f), material.shininess);
+    Vec3 specularColor = light.specular * specularFactor * material.specular;
+
+    Vec3 finalColor = ambientColor + diffuseColor + specularColor;
+    return ClampColor(finalColor);
+}
 
