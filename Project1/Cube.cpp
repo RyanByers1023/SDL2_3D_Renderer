@@ -1,8 +1,7 @@
 #include "Cube.h"
 
-Cube::Cube(Vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below commented values are constructed with these inputs in mind as an example
-	this->position = position;
-
+//Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below commented values are constructed with these inputs in mind as an example
+void Cube::InitializeCubeMesh() {
 	// Definition of the vertices of the cube
 	vertices.push_back({ position.x, position.y, position.z });                        // (0, 0, 0) --- [0]
 	vertices.push_back({ position.x + size, position.y, position.z });                 // (1, 0, 0) --- [1]
@@ -11,7 +10,7 @@ Cube::Cube(Vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. De
 	vertices.push_back({ position.x, position.y, position.z + size });                 // (0, 0, 1) --- [4]
 	vertices.push_back({ position.x + size, position.y, position.z + size });          // (1, 0, 1) --- [5]
 	vertices.push_back({ position.x + size, position.y + size, position.z + size });   // (1, 1, 1) --- [6]
-	vertices.push_back({ position.x, position.y + size, position.z + size }); ;		   // (0, 1, 1) --- [7]
+	vertices.push_back({ position.x, position.y + size, position.z + size }); 		   // (0, 1, 1) --- [7]
 
 	//use the above vertices of the cube to make the cube mesh
 	primitiveMesh.triangles = {
