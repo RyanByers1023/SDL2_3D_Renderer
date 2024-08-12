@@ -12,10 +12,13 @@ class Time {
 public:
 	//default contructor
 	Time();
+
 	//public methods:
 	void Tick(); //calulate the time since the last frame
+
 	//public attributes
-	float deltaTime = 0; //time since last frame (float in seconds) Multiply this value by any animations/frame by frame changes to make them frame independent
+	float deltaTime = 0.0f; //time since last frame (float in seconds) Multiply this value by any animations/frame by frame changes to make them frame independent
+
 private:
 	//private attributes:
 	std::chrono::steady_clock::time_point prevTime; //the time measured as the current time in the last frame. Subtracted from the current time in the current frame to net the time since the last fram (deltaTime)
