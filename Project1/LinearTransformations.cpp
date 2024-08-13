@@ -1,7 +1,7 @@
 #include "LinearTransformations.h"
 #include <iostream>
 
-void LinearTransformations::ApplyRotation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<Time>& timePtr, std::shared_ptr<PrimitiveObject> object) { //rotates radiansToRotate/sec when corresponding input is held down
+void LinearTransformations::ApplyRotation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<Time>& timePtr, std::shared_ptr<PrimitiveObject> object) const { //rotates radiansToRotate/sec when corresponding input is held down
 	float xRadians = 0, yRadians = 0, zRadians = 0;
 	float radiansToRotate = 1;
 
@@ -44,7 +44,7 @@ void LinearTransformations::ApplyRotation(const std::unique_ptr<InputHandler>& i
 	}
 }
 
-void LinearTransformations::ApplyTransformation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<Time>& timePtr, std::shared_ptr<PrimitiveObject> object) {
+void LinearTransformations::ApplyTransformation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<Time>& timePtr, std::shared_ptr<PrimitiveObject> object) const{
 	float dx = 0, dy = 0, dz = 0;
 
 	float distanceToMove = 80.0f;

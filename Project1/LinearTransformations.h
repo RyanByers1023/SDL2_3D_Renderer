@@ -7,6 +7,6 @@
 
 class LinearTransformations {
 public:
-	void ApplyTransformation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<Time>& timePtr, std::shared_ptr<PrimitiveObject> object);
-	void ApplyRotation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<Time>& timePtr, std::shared_ptr<PrimitiveObject> object);
+	void ApplyTransformation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<Time>& timePtr, std::shared_ptr<PrimitiveObject> object) const;
+	void ApplyRotation(const std::unique_ptr<InputHandler>& inputHandlerPtr, const std::unique_ptr<Time>& timePtr, std::shared_ptr<PrimitiveObject> object) const;
 };
