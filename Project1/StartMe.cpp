@@ -6,12 +6,8 @@ StartMe::StartMe(int windowWidth, int windowHeight) {
 	inputHandlerPtr = std::make_unique<InputHandler>();
 	timePtr = std::make_unique<Time>();
 	worldObjectsPtr = std::make_unique<WorldObjects>();
-	this->controllerPtr = new Controller();
-	this->rendererPtr = new Renderer(windowWidth, windowHeight);
-}
-
-StartMe::~StartMe(){
-	delete this->controllerPtr;
+	controllerPtr = std::make_unique<Controller>();
+	rendererPtr = std::make_unique<Renderer>(windowWidth, windowHeight);
 }
 
 void StartMe::StartRendering() {
