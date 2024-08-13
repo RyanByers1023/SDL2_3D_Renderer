@@ -1,22 +1,12 @@
 #include "Renderer.h"
 
-Renderer::Renderer(int windowWidth, int windowHeight) {
-	//get all of the needed parameters from the runner file
-	this->screenPtr = new Screen(windowWidth, windowHeight);
-	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
-	this->clipperPtr = new PolygonClipper();
-
-	//set up the screen space boundaries:
+Renderer::Renderer(const int windowWidth, const int windowHeight)
+	: screenPtr(std::make_unique<Screen>(windowWidth, windowHeight)),
+	  projMatrixPtr(std::make_unique<ProjectionMatrix>(windowWidth, windowHeight)),
+	  clipperPtr(std::make_unique<PolygonClipper>()),
+	  cameraLocation(Vec3(80.0f, 60.0f, 0.0f))
+{
 	SetScreenSpaceBoundaries();
-
-	//this is temporary:
-	cameraLocation = { 80.0f, 60.0f, 0.0f };
-}
-
-Renderer::~Renderer() {
-	delete this->screenPtr;
-	delete this->projMatrixPtr;
-	delete this->clipperPtr;
 }
 
 void Renderer::SetScreenSpaceBoundaries(){
@@ -46,6 +36,9 @@ bool Renderer::Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr) { //
 		return false;
 	}
 
+	//Initialize all objects' face normals
+	InitializeFaceNormals(worldObjectsPtr);
+
 	//get a list of all polygons that are within the screen space and clip them, store in polygonList
 	GetClippedPolygons(worldObjectsPtr, polygonList);
 
@@ -60,25 +53,29 @@ bool Renderer::Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr) { //
 	return true;
 }
 
-void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList){
+void Renderer::InitializeFaceNormals(const std::unique_ptr<WorldObjects>& worldObjectsPtr) const {
 	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
 		for (auto& tri3D : it.second->primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
-			
+
 			//get the normal vector of tri3D
 			tri3D.faceNormal = CalculateNormalVector(tri3D); //store it within the mesh for later use
+		}
+	}
+}
+
+void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList) const {
+	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
+		for (auto& tri3D : it.second->primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 
 			if (ShouldRender(tri3D, tri3D.faceNormal, cameraLocation)) { //only consider a part of a mesh for rendering if it should be visible with respect to the camera object
-				Polygon2D projectedTriangle;
+				
+				//project the triangle to 2-space and convert coordinates from NDC coordinates to screen space coordinates
+				Polygon2D projectedTriangle = ProjectTriangle(tri3D);
 
-				//project the triangle to 2-space
-				for (auto& vertex : tri3D.vertices) {					
-					Vec2 newVertex = GetScreenSpaceVertex(vertex, cameraLocation, screenPtr->width, screenPtr->height);
-					projectedTriangle.vertices.push_back(newVertex);
-				}
-
+				//clip the triangle against the screen's borders
 				Polygon2D clippedTriangle = PerformClipping(projectedTriangle);		
 
-				if (!clippedTriangle.vertices.empty()) { //make sure it has at least one vertex
+				if (!clippedTriangle.vertices.empty()) { //make sure the triangle has at least one renderable vertex
 					polygonList.push_back(clippedTriangle); //store it in polygonList
 				}
 			}
@@ -86,7 +83,19 @@ void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObje
 	}
 }
 
-Polygon2D Renderer::PerformClipping(const Polygon2D& projectedTriangle) {
+Polygon2D Renderer::ProjectTriangle(const Triangle3D& tri3D) const{
+	Polygon2D projectedTriangle;
+
+	//project the triangle to 2-space
+	for (auto& vertex : tri3D.vertices) {
+		Vec2 newVertex = GetScreenSpaceVertex(vertex, cameraLocation, screenPtr->width, screenPtr->height);
+		projectedTriangle.vertices.push_back(newVertex);
+	}
+
+	return projectedTriangle;
+}
+
+Polygon2D Renderer::PerformClipping(const Polygon2D& projectedTriangle) const {
 	//clip in counterclockwise order starting at screen's left boundary
 	Polygon2D clippedTriangle;
 
@@ -107,7 +116,7 @@ Polygon2D Renderer::PerformClipping(const Polygon2D& projectedTriangle) {
 	
 }
 
-Vec2 Renderer::GetScreenSpaceVertex(const Vec3 &vertex, const Vec3& cameraLocation, const float& width, const float& height) const {
+Vec2 Renderer::GetScreenSpaceVertex(const Vec3 &vertex, const Vec3& cameraLocation, const float width, const float height) const {
 	//evaluate coordinates relative to camera's position
 	float viewX = vertex.x - cameraLocation.x;
 	float viewY = vertex.y - cameraLocation.y;
@@ -135,9 +144,7 @@ Vec2 Renderer::GetScreenSpaceVertex(const Vec3 &vertex, const Vec3& cameraLocati
 }
 
 //draw edges of polygons in polygonList to the screen (DOES NOT PERFORM SHADING)
-void Renderer::DrawPolygons(const std::vector<Polygon2D>& polygonList){
-	//create line to hold edge of polygon
-	Line newLine(screenPtr);
+void Renderer::DrawPolygons(const std::vector<Polygon2D>& polygonList) {
 
 	//access list of polygons
  	for(auto& poly : polygonList){
@@ -149,12 +156,11 @@ void Renderer::DrawPolygons(const std::vector<Polygon2D>& polygonList){
 			Vec2 v1 = poly.vertices[i];
 			Vec2 v2 = poly.vertices[(i + 1) % poly.vertices.size()]; //choose the next vertex in the list, if i == the second to last index, loop back around to complete the shape
 
-			//create the line that defines this edge of the polygon
-			newLine.line.v1 = v1;
-			newLine.line.v2 = v2;
+			//create line to hold edge of polygon
+			Line newLine(v1, v2);
 			
 			//add to screenPtr's pixel list (this can be done using line.cpp's draw function)
-			newLine.Draw();
+			newLine.Draw(screenPtr);
 		}
 	}
 }

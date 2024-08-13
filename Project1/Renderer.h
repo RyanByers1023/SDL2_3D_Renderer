@@ -7,24 +7,21 @@
 #include "PolygonClipper.h"
 #include <vector>
 #include <iostream>
+#include <memory>
 
 
 class Renderer {
 public:
 	//default constructor
-	Renderer(int windowWidth, int windowHeight);
-
-	//destructor
-	~Renderer();
+	Renderer(const int windowWidth, const int windowHeight);
 
 	//render objects to the screen. Returns false if there was an error (no items to render)
 	bool Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr);
 private:
 	//private member variables
-	Screen* screenPtr;
-	ProjectionMatrix* projMatrixPtr;
-	Shader* shaderPtr;
-	PolygonClipper* clipperPtr;
+	std::unique_ptr<Screen> screenPtr;
+	std::unique_ptr<ProjectionMatrix> projMatrixPtr;
+	std::unique_ptr<PolygonClipper> clipperPtr;
 	Vec3 cameraLocation;
 
 	//screen space bounding box member variables
@@ -36,12 +33,17 @@ private:
 	//set screen space bounding box
 	void SetScreenSpaceBoundaries();
 
-	Vec2 GetScreenSpaceVertex(const Vec3& vertex, const Vec3& cameraLocation, const float& width, const float& height) const;
+	Vec2 GetScreenSpaceVertex(const Vec3& vertex, const Vec3& cameraLocation, const float width, const float height) const;
+
+	void InitializeFaceNormals(const std::unique_ptr<WorldObjects>& worldObjectsPtr) const;
 
 	//clip triangles from mesh
-	void GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList);
+	void GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList) const;
 
-	Polygon2D PerformClipping(const Polygon2D& projectedTriangle);
+	//project a 3-D triangle to 2-space
+	Polygon2D ProjectTriangle(const Triangle3D& tri3D) const;
+
+	Polygon2D PerformClipping(const Polygon2D& projectedTriangle) const;
 
 	//draw polygons to the screen
 	void DrawPolygons(const std::vector<Polygon2D>& polygonList);
