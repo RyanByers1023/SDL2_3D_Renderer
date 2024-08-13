@@ -12,19 +12,18 @@
 class Renderer {
 public:
 	//default constructor
-	Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjects);
+	Renderer(int windowWidth, int windowHeight);
 
 	//destructor
 	~Renderer();
 
 	//render objects to the screen. Returns false if there was an error (no items to render)
-	bool Render(); 
+	bool Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr);
 private:
 	//private member variables
 	Screen* screenPtr;
 	ProjectionMatrix* projMatrixPtr;
 	Shader* shaderPtr;
-	WorldObjects* worldObjectsPtr; //used to store all objects in game world and respective names.
 	PolygonClipper* clipperPtr;
 	Vec3 cameraLocation;
 
@@ -40,7 +39,7 @@ private:
 	Vec2 GetScreenSpaceVertex(const Vec3& vertex, const Vec3& cameraLocation, const float& width, const float& height) const;
 
 	//clip triangles from mesh
-	void GetClippedPolygons(std::vector<Polygon2D>& polygonList);
+	void GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList);
 
 	Polygon2D PerformClipping(const Polygon2D& projectedTriangle);
 

@@ -1,10 +1,9 @@
 #include "Renderer.h"
 
-Renderer::Renderer(int windowWidth, int windowHeight, WorldObjects* worldObjectsPtr) {
+Renderer::Renderer(int windowWidth, int windowHeight) {
 	//get all of the needed parameters from the runner file
 	this->screenPtr = new Screen(windowWidth, windowHeight);
 	this->projMatrixPtr = new ProjectionMatrix(windowWidth, windowHeight);
-	this->worldObjectsPtr = worldObjectsPtr;
 	this->clipperPtr = new PolygonClipper();
 
 	//set up the screen space boundaries:
@@ -39,7 +38,7 @@ void Renderer::SetScreenSpaceBoundaries(){
 	this->boundingEdgeTop.v2 = { 0, 0 }; //(0,0) -- top left corner
 }
 
-bool Renderer::Render() { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
+bool Renderer::Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr) { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
 	std::vector<Polygon2D> polygonList;
 
 	if (worldObjectsPtr->objects.empty()) {
@@ -48,7 +47,7 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	}
 
 	//get a list of all polygons that are within the screen space and clip them, store in polygonList
-	GetClippedPolygons(polygonList);
+	GetClippedPolygons(worldObjectsPtr, polygonList);
 
 	//draw the polygon(s) to the screen
 	DrawPolygons(polygonList);
@@ -61,9 +60,9 @@ bool Renderer::Render() { //draws all objects contained within worldObjects to t
 	return true;
 }
 
-void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList){
+void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList){
 	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
-		for (auto& tri3D : it.second.primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
+		for (auto& tri3D : it.second->primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 			
 			//get the normal vector of tri3D
 			tri3D.faceNormal = CalculateNormalVector(tri3D); //store it within the mesh for later use
