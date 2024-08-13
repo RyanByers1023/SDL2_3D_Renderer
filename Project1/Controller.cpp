@@ -1,6 +1,6 @@
 #include "Controller.h"
 
-void Controller::ChangeControllerFocus(std::unique_ptr<InputHandler>& inputHandlerPtr) {
+void Controller::ChangeControllerFocus(std::unique_ptr<WorldObjects>& worldObjectsPtr, std::unique_ptr<InputHandler>& inputHandlerPtr) {
 	if (selectedObject == worldObjectsPtr->objects.end()) { //this can occur when we spawn a new object in, always check for this when trying to access the selectedObject
 		selectedObject = worldObjectsPtr->objects.begin();
 	}
@@ -23,5 +23,9 @@ void Controller::ChangeControllerFocus(std::unique_ptr<InputHandler>& inputHandl
 }
 
 PrimitiveObject* Controller::GetCurrentlyControlledObject() {
-	return &(selectedObject->second); // Return the iterator in its current form for worldObject list
+	return selectedObject->second; // Return the iterator in its current form for worldObject list
+}
+
+void Controller::InitializeIterator(std::unique_ptr<WorldObjects>& worldObjectsPtr) {
+	selectedObject = worldObjectsPtr->objects.begin();
 }
