@@ -2,7 +2,7 @@
 
 //FIX-ME: initialize selectedObject/controllerPtr
 
-StartMe::StartMe(int windowWidth, int windowHeight) {
+StartMe::StartMe(const int windowWidth, const int windowHeight) {
 	inputHandlerPtr = std::make_unique<InputHandler>();
 	timePtr = std::make_unique<Time>();
 	worldObjectsPtr = std::make_unique<WorldObjects>();
