@@ -1,6 +1,6 @@
 #include "Line.h"
 
-void Line::Draw() {
+void Line::Draw(std::unique_ptr<Screen>& screenPtr) const {
     float dx = line.v2.x - line.v1.x; // Change in x
     float dy = line.v2.y - line.v1.y; // Change in y
 
