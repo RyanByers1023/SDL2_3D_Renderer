@@ -1,19 +1,19 @@
 #include "LinearTransformations.h"
 #include <iostream>
 
-void LinearTransformations::ApplyRotation(std::unique_ptr<InputHandler>& inputHandlerPtr, std::unique_ptr<Time>& timePtr, PrimitiveObject& object) { //rotates radiansToRotate/sec when corresponding input is held down
+void LinearTransformations::ApplyRotation(std::unique_ptr<InputHandler>& inputHandlerPtr, std::unique_ptr<Time>& timePtr, PrimitiveObject* object) { //rotates radiansToRotate/sec when corresponding input is held down
 	float xRadians = 0, yRadians = 0, zRadians = 0;
 	float radiansToRotate = 1;
 
 	
-	Vec3 centeroid = object.centeroid;
+	Vec3 centeroid = object->centeroid;
 
 	if (inputHandlerPtr->leftInput) yRadians = radiansToRotate * timePtr->deltaTime;
 	if (inputHandlerPtr->rightInput) yRadians = -radiansToRotate * timePtr->deltaTime;
 	if (inputHandlerPtr->upInput) xRadians = radiansToRotate * timePtr->deltaTime;
 	if (inputHandlerPtr->downInput) xRadians = -radiansToRotate * timePtr->deltaTime;
 
-	for (auto& tri : object.primitiveMesh.triangles) { //normalization
+	for (auto& tri : object->primitiveMesh.triangles) { //normalization
 		for (int i = 0; i < 3; ++i) {
 			tri.vertices[i].x -= centeroid.x;
 			tri.vertices[i].y -= centeroid.y;
@@ -44,7 +44,7 @@ void LinearTransformations::ApplyRotation(std::unique_ptr<InputHandler>& inputHa
 	}
 }
 
-void LinearTransformations::ApplyTransformation(std::unique_ptr<InputHandler>& inputHandlerPtr, std::unique_ptr<Time>& timePtr, PrimitiveObject& object) {
+void LinearTransformations::ApplyTransformation(std::unique_ptr<InputHandler>& inputHandlerPtr, std::unique_ptr<Time>& timePtr, PrimitiveObject* object) {
 	float dx = 0, dy = 0, dz = 0;
 
 	float distanceToMove = 80.0f;
@@ -58,7 +58,7 @@ void LinearTransformations::ApplyTransformation(std::unique_ptr<InputHandler>& i
 	if (inputHandlerPtr->xInput) dz = -distanceToMove * timePtr->deltaTime;
 	
 
-	for (auto& tri : object.primitiveMesh.triangles) {
+	for (auto& tri : object->primitiveMesh.triangles) {
 		for (int i = 0; i < 3; ++i) {
 			tri.vertices[i].x += dx;
 			tri.vertices[i].y += dy;
@@ -66,13 +66,13 @@ void LinearTransformations::ApplyTransformation(std::unique_ptr<InputHandler>& i
 		}
 	}
 	
-	for (auto& vertex : object.vertices) {
+	for (auto& vertex : object->vertices) {
 		vertex.x += dx;
 		vertex.y += dy;
 		vertex.z += dz;
 	}
 
-	object.position = object.vertices[0]; //we've moved the object, the position needs to be updated
-	object.CalcCenteroid(); //we've moved the object. Centeroid has changed, need to recalculate it.
+	object->position = object->vertices[0]; //we've moved the object, the position needs to be updated
+	object->CalcCenteroid(); //we've moved the object. Centeroid has changed, need to recalculate it.
 }
 
