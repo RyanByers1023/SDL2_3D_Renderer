@@ -16,7 +16,7 @@ public:
 private:
 	std::unique_ptr<InputHandler> inputHandlerPtr;
 	std::unique_ptr<Time> timePtr;
+	std::unique_ptr<WorldObjects> worldObjectsPtr;
 	Controller* controllerPtr;
-	WorldObjects* worldObjectsPtr;
 	Renderer* rendererPtr;
 };
