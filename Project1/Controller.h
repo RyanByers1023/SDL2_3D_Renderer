@@ -8,9 +8,9 @@
 
 class Controller {
 public:
-	void ChangeControllerFocus(std::unique_ptr<WorldObjects>& worldObjectsPtr, std::unique_ptr<InputHandler>& inputHandlerPtr);
-	PrimitiveObject* GetCurrentlyControlledObject();
-	void InitializeIterator(std::unique_ptr<WorldObjects>& worldObjectsPtr);
+	void ChangeControllerFocus(const std::unique_ptr<WorldObjects>& worldObjectsPtr, const std::unique_ptr<InputHandler>& inputHandlerPtr);
+	std::shared_ptr<PrimitiveObject> GetCurrentlyControlledObject();
+	void InitializeIterator(const std::unique_ptr<WorldObjects>& worldObjectsPtr);
 private:
-	std::unordered_map<std::string, PrimitiveObject*>::iterator selectedObject;
+	std::unordered_map<std::string, std::shared_ptr<PrimitiveObject>>::iterator selectedObject;
 };

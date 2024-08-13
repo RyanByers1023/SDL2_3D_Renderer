@@ -11,7 +11,9 @@ StartMe::StartMe(int windowWidth, int windowHeight) {
 }
 
 void StartMe::StartRendering() {
-	SpawnCube(worldObjectsPtr, "cube1"); //spawner needs access to the renderer and it also needs a unique name for the object to be spawned
+	Spawner spawner;
+	spawner.SpawnCube(worldObjectsPtr, "cube1"); //spawner needs access to the renderer and it also needs a unique name for the object to be spawned
+
 	controllerPtr->InitializeIterator(worldObjectsPtr);
 
 	while (true) {
@@ -20,7 +22,7 @@ void StartMe::StartRendering() {
 		controllerPtr->ChangeControllerFocus(worldObjectsPtr, inputHandlerPtr); //change the selected object (if needed)
 		if (!rendererPtr->Render(worldObjectsPtr)) break; //this adds all of the pixels needed to draw all shapes in worldObjects vector into screen.vertices
 
-		PrimitiveObject* selectedObject = controllerPtr->GetCurrentlyControlledObject(); //get the currently selected object
+		std::shared_ptr<PrimitiveObject> selectedObject = controllerPtr->GetCurrentlyControlledObject(); //get the currently selected object
 
 		LinearTransformations transform;
 
