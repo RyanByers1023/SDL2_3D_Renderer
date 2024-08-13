@@ -1,7 +1,8 @@
 #include "Cube.h"
 
-Cube::Cube(Vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below commented values are constructed with these inputs in mind as an example
+Cube::Cube(std::string name, Vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below commented values are constructed with these inputs in mind as an example
 	this->position = position;
+	this->name = name;
 
 	// Definition of the vertices of the cube
 	vertices.push_back({ position.x, position.y, position.z });                        // (0, 0, 0) --- [0]
