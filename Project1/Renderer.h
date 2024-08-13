@@ -16,7 +16,7 @@ public:
 	Renderer(const int windowWidth, const int windowHeight);
 
 	//render objects to the screen. Returns false if there was an error (no items to render)
-	bool Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr);
+	bool Render(std::unique_ptr<WorldObjects>& worldObjectsPtr);
 private:
 	//private member variables
 	std::unique_ptr<Screen> screenPtr;
@@ -35,7 +35,13 @@ private:
 
 	Vec2 GetScreenSpaceVertex(const Vec3& vertex, const Vec3& cameraLocation, const float width, const float height) const;
 
-	void InitializeFaceNormals(const std::unique_ptr<WorldObjects>& worldObjectsPtr) const;
+	void GetAllNormals(std::unique_ptr<WorldObjects>& worldObjectsPtr) const;
+
+	void GetAllFaceNormals(std::unique_ptr<WorldObjects>& worldObjectsPtr) const;
+
+	void GetAllVertexNormals(std::unique_ptr<WorldObjects>& worldObjectsPtr) const;
+
+	void StoreVertexNormals(mesh& triangleMesh) const;
 
 	//clip triangles from mesh
 	void GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList) const;

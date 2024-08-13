@@ -28,7 +28,8 @@ void Renderer::SetScreenSpaceBoundaries(){
 	this->boundingEdgeTop.v2 = { 0, 0 }; //(0,0) -- top left corner
 }
 
-bool Renderer::Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr) { //draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
+//draws all objects contained within worldObjects to the screen. will call shader functions as well, but these will be kept in a seperate module, Shader.cpp 
+bool Renderer::Render(std::unique_ptr<WorldObjects>& worldObjectsPtr) { 
 	std::vector<Polygon2D> polygonList;
 
 	if (worldObjectsPtr->objects.empty()) {
@@ -36,8 +37,8 @@ bool Renderer::Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr) { //
 		return false;
 	}
 
-	//Initialize all objects' face normals
-	InitializeFaceNormals(worldObjectsPtr);
+	//Initialize all objects' face and vertex normals
+	GetAllNormals(worldObjectsPtr);
 
 	//get a list of all polygons that are within the screen space and clip them, store in polygonList
 	GetClippedPolygons(worldObjectsPtr, polygonList);
@@ -53,14 +54,53 @@ bool Renderer::Render(const std::unique_ptr<WorldObjects>& worldObjectsPtr) { //
 	return true;
 }
 
-void Renderer::InitializeFaceNormals(const std::unique_ptr<WorldObjects>& worldObjectsPtr) const {
-	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
-		for (auto& tri3D : it.second->primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
+//grab current normal vector of all vertices and faces within worldObjectsPtr during this current frame
+void Renderer::GetAllNormals(std::unique_ptr<WorldObjects>& worldObjectsPtr) const {
+	GetAllFaceNormals(worldObjectsPtr);
+	GetAllVertexNormals(worldObjectsPtr);
+}
 
-			//get the normal vector of tri3D
+//grab normal vector of all tri3D faces
+void Renderer::GetAllFaceNormals(std::unique_ptr<WorldObjects>& worldObjectsPtr) const {
+	for (const auto& it : worldObjectsPtr->objects) {
+		for (auto& tri3D : it.second->primitiveMesh.triangles) {
 			tri3D.faceNormal = CalculateNormalVector(tri3D); //store it within the mesh for later use
 		}
 	}
+}
+
+//grab normals of all tri3D vertices
+void Renderer::GetAllVertexNormals(std::unique_ptr<WorldObjects>& worldObjectsPtr) const {
+	for (const auto& it : worldObjectsPtr->objects) {
+		StoreVertexNormals(it.second->primitiveMesh);
+	}
+}
+
+//obtain normals corresponding to vertices and store within the mesh for easy access
+void Renderer::StoreVertexNormals(mesh& triangleMesh) const{
+	std::map<Vec3, Vec3> vertexNormalMap;
+
+	//below loop visits each within the mesh multiple times...
+	//this process causes each vertex to eventually have each face it is adjacent of to have its face normal added to it
+
+	//accumulate face normals for each vertex
+	for (Triangle3D& tri3D : triangleMesh.triangles) { //visit every triangle that makes up triangleMesh.triangles
+		for (int i = 0; i < 3; ++i) { //add all face normal adajacent to this vertex together
+			vertexNormalMap[tri3D.vertices[i]] += tri3D.faceNormal; //add face normal corresponding to this vertex to this vertex's entry
+		}
+	}
+
+	//turn accumulation of face vertices into vertex normals
+	for (Triangle3D& tri3D : triangleMesh.triangles) {
+		//turn the summation of the face normals adjacent to this vertex into averages of the face normals adajacent to this vertex
+		for (int i = 0; i < 3; ++i) { //iterate through each vertex in the triangle
+			vertexNormalMap[tri3D.vertices[i]] = vertexNormalMap[tri3D.vertices[i]].Normalize(); //normalize it (take average), store at global level
+			tri3D.vertexNormals[i] = vertexNormalMap[tri3D.vertices[i]]; //store normalized vertex normal at local level
+		}
+	}
+
+	//store the vertexMap in the mesh of the 3D triangle
+	triangleMesh.vertexNormalMap = vertexNormalMap;
 }
 
 void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList) const {
