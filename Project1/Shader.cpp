@@ -1,13 +1,13 @@
 #include "Shader.h"
 //want to implement "gouraud" shading.
-//pretty antiquated: paper was written by gouraud in 1971, but visuals are acceptable for this project imo
+//pretty antiquated: paper was written by gouraud in 1971, but visuals are acceptable for this project
 //could implement a more advanced shading algo, but i personally dont think it is worth it
 //wiki: https://en.wikipedia.org/wiki/Gouraud_shading
 
 //process:
-//1) Get face normals (should already have this)
-//2) Get vertex normals (average of face normals of all adjacent faces to vertex)
-//3) Calculate light intensity relative to ambient and directional light of light sources at vertex normals
+//1) Get face normals --- DONE
+//2) Get vertex normals (average of face normals of all adjacent faces to vertex) -- DONE
+//3) Calculate light intensity relative to ambient and directional light of light sources at vertex normals -- DONE
 //4) draw line within screen-space 2-D poly mesh and --- choose: (linearly) / (non-linearly) interpolate between light intensities using a shaded line to fill polygon
 //5) repeat step 4 until face is shaded
 
@@ -34,7 +34,7 @@ BoundingBox Shader::GetBoundingBox(const Polygon2D& polygon) {
     return boundingBox;
 }
 
-void Shader::ClampBoundingBox(BoundingBox& boundingBox) {//process that clamps the boundingBox to be within the screen space, and convert floats to integers for easy iteration through the bounding box
+void Shader::ClampBoundingBox(std::unique_ptr<Screen> screenPtr, BoundingBox& boundingBox) {//process that clamps the boundingBox to be within the screen space, and convert floats to integers for easy iteration through the bounding box
     boundingBox.minPoint.x = std::max({ 0, static_cast<int>(std::floor(boundingBox.minPoint.x)) }); //clamp between 0 and the min x val of the boundingBox (if a float, it is rounded down)
     boundingBox.minPoint.y = std::max({ 0, static_cast<int>(std::floor(boundingBox.minPoint.y)) }); //clamp between 0 and the min y val of the boundingBox (if a float, it is rounded down)
     boundingBox.maxPoint.x = std::min({ screenPtr->width - 1, static_cast<int>(std::ceil(boundingBox.maxPoint.x)) }); //clamp between screenWidth - 1 and the max x val of the boundingBox (if a float, it is rounded up)
@@ -82,9 +82,24 @@ void Shader::GetVertexNormals(mesh& triangleMesh) {
     triangleMesh.vertexNormalMap = vertexNormalMap;
 }
 
-/*
+Vec3 Shader::ClampColor(const Vec3& color) {
+    return Vec3(std::clamp(color.x, 0.0f, 1.0f),
+                std::clamp(color.y, 0.0f, 1.0f),
+                std::clamp(color.z, 0.0f, 1.0f));
+}
+
 Vec3 Shader::CalculateVertexColor(const Vec3& vertexPos, const Vec3& vertexNormal, const Light& light, const Vec3& cameraPos, const Material& material) {
     Vec3 ambientColor = light.ambient * material.ambient;
 
     Vec3 lightDir = (light.position - vertexPos).Normalize();
-*/
+    float diffuseFactor = std::max(vertexNormal.Dot(lightDir), 0.0f);
+    Vec3 diffuseColor = light.diffuse * diffuseFactor * material.diffuse;
+
+    Vec3 viewDir = (cameraPos - vertexPos).Normalize();
+    Vec3 reflectDir = (vertexNormal * 2.0f * vertexNormal.Dot(lightDir) - lightDir).Normalize();
+    float specularFactor = std::pow(std::max(viewDir.Dot(reflectDir), 0.0f), material.shininess);
+    Vec3 specularColor = light.specular * specularFactor * material.specular;
+
+    Vec3 finalColor = ambientColor + diffuseColor + specularColor;
+    return ClampColor(finalColor);
+}
