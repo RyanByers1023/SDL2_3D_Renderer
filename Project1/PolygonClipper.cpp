@@ -1,7 +1,7 @@
 #include "PolygonClipper.h"
 
 //return a list of vertices that should have an edge rendered between them
-Polygon2D PolygonClipper::Clip(const Polygon2D& inputPolygon, const Edge& clipWindowEdge){ 
+Polygon2D PolygonClipper::Clip(const Polygon2D& inputPolygon, const Edge& clipWindowEdge) const{ 
     Vec2 intercept; //store intercept between triangle edge and clipWindowEdge
     Edge polyEdge; //store current edge this function is trying to clip
     Polygon2D clippedPolygon; //store clipped edges, will build up throughout 4 (# num of clipEdges) iterations of this function
@@ -39,11 +39,11 @@ Polygon2D PolygonClipper::Clip(const Polygon2D& inputPolygon, const Edge& clipWi
 }
 
 //if clipper vertices are defined counter-clockwise (they will be), then all vertices to the LEFT are inside the clipper boundaries
-bool PolygonClipper::VertexInside(const Edge& clipWindowEdge, const Vec2& currVertex) {
+bool PolygonClipper::VertexInside(const Edge& clipWindowEdge, const Vec2& currVertex) const{
     return GetEdgeFunctionDet(clipWindowEdge, currVertex) <= 0; //note: this currently only returns true when vertices are to the right (edge function >= 0); possible problem with clip window edge order being clockwise instead of counter-clockwise?
 }
 
-float PolygonClipper::GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex){ //Computes cross product between edge v1 -> v2 with respect to currVertex
+float PolygonClipper::GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2& currVertex) const{ //Computes cross product between edge v1 -> v2 with respect to currVertex
     //Eqn: P = (x2 - x1) * (y - y1) - (y2 -y1) * (x - x1)
 
     //extract vertices defining the clipping edge
@@ -53,7 +53,7 @@ float PolygonClipper::GetEdgeFunctionDet(const Edge& clipWindowEdge, const Vec2&
 }
 
 
-Vec2 PolygonClipper::FindIntercept(const Edge& clipWindowEdge, const Edge& polyEdge){
+Vec2 PolygonClipper::FindIntercept(const Edge& clipWindowEdge, const Edge& polyEdge) const{
     //extract vertices defining edges of clip boundary (v1 and v2) and triangle edge (v3 and v4)
     Vec2 v1 = clipWindowEdge.v1, v2 = clipWindowEdge.v2, v3 = polyEdge.v1, v4 = polyEdge.v2;
 
