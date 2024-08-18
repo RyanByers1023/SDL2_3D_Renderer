@@ -6,5 +6,5 @@
 
 class WorldObjects {
 public:
-	std::unordered_map<std::string, std::shared_ptr<PrimitiveObject>> objects;
+	std::unordered_map<std::string, std::unique_ptr<PrimitiveObject>> objects;
 };
