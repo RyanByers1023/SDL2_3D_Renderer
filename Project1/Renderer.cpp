@@ -40,10 +40,10 @@ bool Renderer::Render(std::unique_ptr<WorldObjects>& worldObjectsPtr) {
 	//Initialize all objects' face and vertex normals
 	GetAllNormals(worldObjectsPtr);
 	
-	//Obtain a list of all polygons that are within the screen space boundaries
+	//obtain list of all polygons that are within the screen space boundaries, store in polygonList
 	GetProjectedPolygons(worldObjectsPtr, polygonList);
 
-	//get a list of all polygons that are within the screen space and clip them, store in polygonList
+	//clip all polygons in polygonList against the screen boundaries, store in polygonList
 	GetClippedPolygons(polygonList);
 
 	//draw the polygon(s) to the screen
