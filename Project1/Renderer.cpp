@@ -39,9 +39,12 @@ bool Renderer::Render(std::unique_ptr<WorldObjects>& worldObjectsPtr) {
 
 	//Initialize all objects' face and vertex normals
 	GetAllNormals(worldObjectsPtr);
+	
+	//Obtain a list of all polygons that are within the screen space boundaries
+	GetProjectedPolygons(worldObjectsPtr, polygonList);
 
 	//get a list of all polygons that are within the screen space and clip them, store in polygonList
-	GetClippedPolygons(worldObjectsPtr, polygonList);
+	GetClippedPolygons(polygonList);
 
 	//draw the polygon(s) to the screen
 	DrawPolygons(polygonList);
@@ -103,7 +106,14 @@ void Renderer::StoreVertexNormals(mesh& triangleMesh) const{
 	triangleMesh.vertexNormalMap = vertexNormalMap;
 }
 
-void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList) const {
+void Renderer::GetClippedPolygons(std::vector<Polygon2D>& polygonList) const {
+	for(auto& poly: polygonList){
+		//replace the projected ploygon with a clipped polygon
+		poly = PerformClipping(poly);
+	}
+}
+
+void Renderer::GetProjectedPolygons(const std::unique_ptr<WorldObjects>&, std::vector<Polygon2D>& polygonList) const{
 	for (auto& it : worldObjectsPtr->objects) { //for every object contained in the worldObjects->objects unordered_map
 		for (auto& tri3D : it.second->primitiveMesh.triangles) { //project each triangle that is a part of each respective mesh one at a time, and store this projection in polygonList
 
@@ -112,12 +122,8 @@ void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObje
 				//project the triangle to 2-space and convert coordinates from NDC coordinates to screen space coordinates
 				Polygon2D projectedTriangle = ProjectTriangle(tri3D);
 
-				//clip the triangle against the screen's borders
-				Polygon2D clippedTriangle = PerformClipping(projectedTriangle);		
-
-				if (!clippedTriangle.vertices.empty()) { //make sure the triangle has at least one renderable vertex
-					polygonList.push_back(clippedTriangle); //store it in polygonList
-				}
+				//store triangle in polygonList
+				polygonList.push_back(projectedTriangle);
 			}
 		}		
 	}

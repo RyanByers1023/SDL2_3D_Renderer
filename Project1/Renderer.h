@@ -43,8 +43,10 @@ private:
 
 	void StoreVertexNormals(mesh& triangleMesh) const;
 
+	GetProjectedTriangles(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::unique_ptr<Polygon2D>& polygonList) const;
+
 	//clip triangles from mesh
-	void GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList) const;
+	void GetClippedPolygons(std::vector<Polygon2D>& polygonList) const;
 
 	//project a 3-D triangle to 2-space
 	Polygon2D ProjectTriangle(const Triangle3D& tri3D) const;
