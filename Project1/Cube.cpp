@@ -1,9 +1,15 @@
 #include "Cube.h"
 
-Cube::Cube(std::string name, Vec3 position, float size){ //Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below commented values are constructed with these inputs in mind as an example
-	this->position = position;
-	this->name = name;
+Cube::Cube(std::string name, Vec3 position, float size) //Default dimensions: 1px x 1px x 1px. Default position = {0, 0, 0} - origin. Below commented values are constructed with these inputs in mind as an example
+   :  position(position),
+	  name(name)
+{
+	InitializeMesh();
+	CalcCenteroid();
+}
 
+
+void Cube::InitializeMesh(){
 	// Definition of the vertices of the cube
 	vertices.push_back({ position.x, position.y, position.z });                        // (0, 0, 0) --- [0]
 	vertices.push_back({ position.x + size, position.y, position.z });                 // (1, 0, 0) --- [1]
@@ -40,6 +46,4 @@ Cube::Cube(std::string name, Vec3 position, float size){ //Default dimensions: 1
 		{vertices[4], vertices[0], vertices[1]},
 		{vertices[4], vertices[1], vertices[5]}
 	};
-
-	CalcCenteroid();
 }
