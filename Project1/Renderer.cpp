@@ -198,6 +198,8 @@ void Renderer::DrawPolygons(const std::vector<Polygon2D>& polygonList) {
 		for(int i = 0; i < poly.vertices.size(); ++i){
 			if(poly.vertices.size() < 3) continue; //cannot form a closed 2-D shape without more than 2 vertices
 
+			//FIX-ME: implement shading here.
+
 			//get the two vertices that make up the edge
 			Vec2 v1 = poly.vertices[i];
 			Vec2 v2 = poly.vertices[(i + 1) % poly.vertices.size()]; //choose the next vertex in the list, if i == the second to last index, loop back around to complete the shape
