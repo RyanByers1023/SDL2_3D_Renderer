@@ -17,9 +17,4 @@ public:
 	//constructor:
 	Material(const Vec3& ambient, const Vec3& diffuse, const Vec3& specular, const float& shininess)
 		: ambient(ambient), diffuse(diffuse), specular(specular), shininess(shininess) {}
-
-	//clamps all RGB values between 0.0 and 1.0
-	void ClampColors();
-private:
-	Vec3 Clamp(const Vec3& color);
 };
