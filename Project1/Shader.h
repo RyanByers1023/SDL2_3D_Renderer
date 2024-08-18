@@ -15,16 +15,14 @@ struct BoundingBox { //used for determing the area we need to check for intersec
 
 class Shader {
 public:
-	//default constructor
-	Shader(Screen* screenPtr) : screenPtr(screenPtr) {}
 	void ShadePolygon(const Polygon2D& polygon);
 	void GetVertexNormals(mesh& triangleMesh);
 	Vec3 CalculateVertexColor(const Vec3& vertexPos, const Vec3& vertexNormal, const Light& light, const Vec3& cameraPos, const Material& material);
 private:
+	Vec3 ClampColor(const Vec3& color);
 	BoundingBox GetBoundingBox(const Polygon2D& polygon);
 	void ClampBoundingBox(BoundingBox& boundingBox);
 	bool IntersectsPolygon(const Vec2& currPoint, const Polygon2D& polygon);
 	float GetEdgeFunctionDet(const Vec2& currPoint, const Vec2& v0, const Vec2& v1);
 	Vec3 ClampColor(const Vec3& color);
-	Screen* screenPtr;
 };
