@@ -10,7 +10,7 @@
 
 class StartMe {
 public:
-	StartMe(int windowWidth = 1280, int windowHeight = 720);
+	StartMe(const int windowWidth = 1280, const int windowHeight = 720);
 	void StartRendering();
 private:
 	std::unique_ptr<InputHandler> inputHandlerPtr;
@@ -18,4 +18,6 @@ private:
 	std::unique_ptr<WorldObjects> worldObjectsPtr;
 	std::unique_ptr<Controller> controllerPtr;
 	std::unique_ptr<Renderer> rendererPtr;
+
+	void HandleUserInput(std::unique_ptr<PrimitiveObject>& selectedObject);
 };

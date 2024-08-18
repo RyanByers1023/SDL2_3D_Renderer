@@ -1,7 +1,5 @@
 #include "StartMe.h"
 
-//FIX-ME: initialize selectedObject/controllerPtr
-
 StartMe::StartMe(const int windowWidth, const int windowHeight) {
 	inputHandlerPtr = std::make_unique<InputHandler>();
 	timePtr = std::make_unique<Time>();
@@ -12,9 +10,10 @@ StartMe::StartMe(const int windowWidth, const int windowHeight) {
 
 void StartMe::StartRendering() {
 	Spawner spawner;
-	spawner.SpawnCube(worldObjectsPtr, "cube1"); //spawner needs access to the renderer and it also needs a unique name for the object to be spawned
+	spawner.SpawnCube(worldObjectsPtr, "cube1"); //spawner needs a unique name for the object to be spawned, hardcoded as "cube1" for now.
+	std::unique_ptr<PrimitiveObject> selectedObject = controllerPtr->GetCurrentlyControlledObject(); //get the currently selected object
 
-	controllerPtr->InitializeIterator(worldObjectsPtr);
+	controllerPtr->InitializeIterator(worldObjectsPtr); //intialize controller, select first object in map to control
 
 	while (true) {
 		timePtr->Tick(); //calculate the time since the last frame has occured
@@ -22,12 +21,19 @@ void StartMe::StartRendering() {
 		controllerPtr->ChangeControllerFocus(worldObjectsPtr, inputHandlerPtr); //change the selected object (if needed)
 		if (!rendererPtr->Render(worldObjectsPtr)) break; //this adds all of the pixels needed to draw all shapes in worldObjects vector into screen.vertices
 
-		std::shared_ptr<PrimitiveObject> selectedObject = controllerPtr->GetCurrentlyControlledObject(); //get the currently selected object
+		HandleUserInput(selectedObject);	
+	}
 
-		LinearTransformations transform;
+	void StartMe::HandleUserInput(std::unique_ptr<PrimitiveObject>& selectedObject){	
+		LinearTransformations transform;	
 
 		if (inputHandlerPtr->leftInput || inputHandlerPtr->rightInput || inputHandlerPtr->upInput || inputHandlerPtr->downInput) transform.ApplyRotation(inputHandlerPtr, timePtr, selectedObject);
 		if (inputHandlerPtr->wInput || inputHandlerPtr->aInput || inputHandlerPtr->sInput || inputHandlerPtr->dInput || inputHandlerPtr->zInput || inputHandlerPtr->xInput) transform.ApplyTransformation(inputHandlerPtr, timePtr, selectedObject);
+
+		if (inputHandlerPtr->qInput || inputHandlerPtr->eInput){
+			controller->ChangeControllerFocus(worldObjectsPtr, inputHandlerPtr);
+			selectedObject = controllerPtr->GetCurrentlyControlledObject();
+		}
 	}
 
 	std::cout << "Renderer has been shut down due to an unexpected error. Check above message for details. Force closing in 5 seconds..." << std::endl;
