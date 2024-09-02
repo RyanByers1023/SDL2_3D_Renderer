@@ -10,7 +10,7 @@ StartMe::StartMe(const int windowWidth, const int windowHeight) {
 	rendererPtr = std::make_unique<Renderer>(windowWidth, windowHeight);
 }
 
-void StartMe::StartRendering() {
+void StartMe::StartEngine() {
 	Spawner spawner;
 	spawner.SpawnCube(worldObjectsPtr, "cube1"); //spawner needs access to the renderer and it also needs a unique name for the object to be spawned
 

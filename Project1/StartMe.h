@@ -11,7 +11,7 @@
 class StartMe {
 public:
 	StartMe(int windowWidth = 1280, int windowHeight = 720);
-	void StartRendering();
+	void StartEngine();
 private:
 	std::unique_ptr<InputHandler> inputHandlerPtr;
 	std::unique_ptr<Time> timePtr;

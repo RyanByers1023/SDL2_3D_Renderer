@@ -2,7 +2,7 @@
 
 int SDL_main(int arg, char* args[]) {
 	StartMe programHandler;
-	programHandler.StartRendering();
+	programHandler.StartEngine();
 	return 0;
 }
 
