@@ -87,4 +87,15 @@ Vec3 Shader::CalculateVertexColor(const Vec3& vertexPos, const Vec3& vertexNorma
     Vec3 ambientColor = light.ambient * material.ambient;
 
     Vec3 lightDir = (light.position - vertexPos).Normalize();
-*/
+    float diffuseFactor = std::max(vertexNormal.Dot(lightDir), 0.0f);
+    Vec3 diffuseColor = light.diffuse * diffuseFactor * material.diffuse;
+
+    Vec3 viewDir = (cameraPos - vertexPos).Normalize();
+    Vec3 reflectDir = (vertexNormal * 2.0f * vertexNormal.Dot(lightDir) - lightDir).Normalize();
+    float specularFactor = std::pow(std::max(viewDir.Dot(reflectDir), 0.0f), material.shininess);
+    Vec3 specularColor = light.specular * specularFactor * material.specular;
+
+    Vec3 finalColor = ambientColor + diffuseColor + specularColor;
+    return ClampColor(finalColor);
+}
+

@@ -32,7 +32,7 @@ void Renderer::SetScreenSpaceBoundaries(){
 bool Renderer::Render(std::unique_ptr<WorldObjects>& worldObjectsPtr) { 
 	std::vector<Polygon2D> polygonList;
 
-	if (worldObjectsPtr->objects.empty()) {
+	if (worldObjectsPtr->objects.empty()) { 
 		std::cout << "There are no objects to render. Renderer shutting down..." << std::endl;
 		return false;
 	}
@@ -121,6 +121,18 @@ void Renderer::GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObje
 			}
 		}		
 	}
+}
+
+Polygon2D Renderer::ProjectTriangle(const Triangle3D& tri3D) {
+	Polygon2D projectedTriangle;
+
+	//project the triangle to 2-space
+	for (auto& vertex : tri3D.vertices) {
+		Vec2 newVertex = GetScreenSpaceVertex(vertex, cameraLocation, screenPtr->width, screenPtr->height);
+		projectedTriangle.vertices.push_back(newVertex);
+	}
+
+	return projectedTriangle;
 }
 
 Polygon2D Renderer::ProjectTriangle(const Triangle3D& tri3D) const{

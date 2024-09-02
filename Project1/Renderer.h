@@ -43,6 +43,20 @@ private:
 
 	void StoreVertexNormals(mesh& triangleMesh) const;
 
+	//obtain all relevant normals needed for culling and shading
+	void GetAllNormals();
+
+	//get all face normals for objects in 3-space
+	void GetAllFaceNormals();
+
+	//get all vertex normals for objects in 3-space
+	void GetAllVertexNormals();
+
+	void StoreVertexNormals(mesh& triangleMesh);
+
+	//Project 3-D triangles to 2-space
+	Polygon2D ProjectTriangle(const Triangle3D& tri3D);
+
 	//clip triangles from mesh
 	void GetClippedPolygons(const std::unique_ptr<WorldObjects>& worldObjectsPtr, std::vector<Polygon2D>& polygonList) const;
 

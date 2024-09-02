@@ -22,10 +22,6 @@ void Controller::ChangeControllerFocus(const std::unique_ptr<WorldObjects>& worl
 	 }
 }
 
-std::shared_ptr<PrimitiveObject> Controller::GetCurrentlyControlledObject() {
-	return selectedObject->second; // Return the iterator in its current form for worldObject list
-}
-
 void Controller::InitializeIterator(const std::unique_ptr<WorldObjects>& worldObjectsPtr) {
 	selectedObject = worldObjectsPtr->objects.begin();
 }

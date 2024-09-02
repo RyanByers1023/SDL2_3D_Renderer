@@ -7,13 +7,32 @@
 
 class PrimitiveObject {
 public:
-	//public attributes
-	mesh primitiveMesh; //the mesh of the primitive 3-D object is stored here. Made up entirely of triangle objects. Triangle objects store 3 coordinates in 3 space. these are stored as Vec3s. Vec3s are float(x, y, z)
-	std::vector<Vec3> vertices; //stores all of the vertices (corner points) of the object. Helpful in centeroid calculation. Mesh is formed from this vector
-	Vec3 position; //Stores the north face, bottom left vertice. (first vertex in mesh)
-	Vec3 centeroid; //center coordinate of the object.
-	std::string name;
+	//constructor
+	PrimitiveObject(Vec3 position, float size) 
+		: position(position), size(size) {}
+
+	virtual void InitializeMesh() = 0;
+
+	//public attributes:
+
+	//the mesh of the primitive 3-D object is stored here. Made up entirely of triangle objects. Triangle objects store 3 coordinates in 3 space. these are stored as Vec3s. Vec3s are float(x, y, z)
+	mesh primitiveMesh; 
+
+	//stores all of the vertices of the object. Mesh is formed from this vector
+	std::vector<Vec3> vertices;
+
+	//Stores the north face, bottom left vertice. (this is considered the first vertex in mesh)
+	Vec3 position; 
+
+	//a scalar that determines how large the object is
+	float size; 
+
+	//center coordinate of the object in 3-space
+	Vec3 centeroid;
+
 	//public methods:
-	void CalcCenteroid(); //adds all vertices together and divides by number of vertices. Centeroid stored as a Vec3
+
+	//adds all vertices together and divides by number of vertices. Centeroid stored as a Vec3
+	void CalcCenteroid(); 
 };
 
