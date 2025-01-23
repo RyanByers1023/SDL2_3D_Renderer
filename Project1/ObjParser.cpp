@@ -1,4 +1,6 @@
 #include "ObjParser.h"
+//object parser assumes all shapes are triangles
+// FIX-ME: mesh is kept as private attribute until returned to game world: this should be changed (pass as parameter by reference)
 
 ObjFile::ObjFile(std::string fileName){
     GetMesh(fileName);
@@ -13,7 +15,7 @@ void ObjFile::GetMesh(std::string fileName){
 }
 
 bool ObjFile::OpenObjFile(std::string fileName, std::ifstream& objFile){ //this parser assumes the obj file only contains vertex information (will crash otherwise, i should probably handle this)
-    objFile.open(fileName);
+    objFile.open(fileName); //FIX-ME: vulnerabilities: buffer overflow, user controlled raw strings
     if(!objFile.is_open()){ //.obj file was not found in program main directory, return false.
         std::cerr<< "Failed to open object file. File not found. Did you enter the correct .obj File name?"<< std::endl;
         return false;
@@ -23,22 +25,27 @@ bool ObjFile::OpenObjFile(std::string fileName, std::ifstream& objFile){ //this 
 
 void ObjFile::IterateThroughObjFile(std::ifstream& objFile){
     std::string line;
-    Triangle3D newTriangle;
 
-    while(std::getline(objFile, line)){
+    while(std::getline(objFile, line)){ //FIX-ME: vulnerability: pass invalid file w/ commands? buffer overflow.
         std::istringstream lineStream(line);
         char prefix; //first character of a line defining a vertex will be 'v'
         lineStream >> prefix; //stream first character into vertexCheck
 
         if(prefix == 'v'){ //definition for a vertex here...
-            //parse the vertex
-            newTriangle = CreateTriangle(lineStream); //next 3 rows are vertices
-            this->newMesh.triangles.push_back(newTriangle); //store newTriangle as a part of the mesh
-            //note: obj files store vertices counterclockwise
-            //this is important info for the calculation of face normals
+            InitializeVertices();
         }  
     }
 }
+
+Triangle3D ObjFile::InitializeVertices(std::istringstream lineStream){
+    //parse vertex
+    Triangle3D newTriangle = CreateTriangle(lineStream); //next 3 rows are vertices
+    this->newMesh.triangles.push_back(newTriangle); //store newTriangle as a part of the mesh
+    //note: obj files store vertices counterclockwise
+    //this is important info for the calculation of face normals
+}
+
+
 
 //initialize a triangle
 Triangle3D ObjFile::CreateTriangle(std::istringstream& lineStream){
